@@ -1,0 +1,373 @@
+/* pages/detail/detail.wxss */
+@import "/wxParse/wxParse.wxss";
+
+.detail {
+    padding: 0 25rpx;
+    height: 100%;
+}
+.detail .title {
+    display: block;
+    padding-top: 30rpx;
+    line-height: 60rpx;
+    font-size: 50rpx;
+    word-break:break-all;
+}
+.detail .info {
+    display: flex;
+    height: 24rpx;
+    margin: 20rpx 0 0;
+    font-size: 0;
+    line-height: 24rpx;
+    color: #879193;
+    overflow: hidden;
+}
+.detail .author {
+    height: 24rpx;
+    font-size: 24rpx;
+    padding-right: 0.4rem;
+    color: #5193ad;
+    vertical-align: top;
+}
+.detail .date {
+    flex: 2;
+    height: 24rpx;
+    font-size: 24rpx;
+}
+.detail .date::before {
+    content: '';
+    display: inline-block;
+    width: 8rpx;
+    height: 8rpx;
+    margin: -4rpx 10rpx 0 0;
+    background: #879193;
+    border-radius: 100%;
+    vertical-align: middle;
+}
+.detail .view {
+    height: 24rpx;
+    font-size: 24rpx;
+    text-align: right;
+}
+.detail .tips {
+    padding: 20rpx;
+    margin-top: 40rpx;
+    font-size: 28rpx;
+    line-height: 40rpx;
+    color: #485359;
+    background: #f2f2f2;
+}
+.detail .main {
+    padding-top: 70rpx;
+    font-size: 34rpx;
+    line-height: 60rpx;
+    font-weight: normal;
+    word-wrap: break-word; 
+    white-space:pre-wrap; 
+    color: #202d33;
+}
+.detail .main .p {
+    margin: 20rpx 0;
+}
+.detail .main image {
+    display: block;
+    width: 100%;
+    margin: 40rpx auto;
+}
+.detail .warn {
+    padding: 70rpx 0;
+    line-height: 40rpx;
+    font-size: 24rpx;
+    color: #e84c3d;
+}
+.detail .warn image {
+    display: inline-block;
+    width: 19rpx;
+    height: 19rpx;
+}
+.detail .warn.active {
+    margin-bottom: 360rpx;
+}
+
+.access {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 50rpx;
+    padding: 150rpx 0 60rpx;
+    font-size: 0;
+    color: #5193ad;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(248,248,248,0) 0%,rgba(248,248,248,0.9) 10%,rgba(248,248,248,1) 30%,rgba(248,248,248,1) 100%);
+}
+.access .btn {
+    width: 40%;
+    height: 70rpx;
+    line-height: 70rpx;
+    padding: 0;
+    border: 2rpx solid #5193ad;
+    margin-bottom: 25rpx;
+    font-size: 30rpx;
+    border-radius: 70rpx;
+    color: #5193ad;
+    background: none;
+}
+.access .btn view {
+    display: inline-block;
+    max-width: 45%;
+    height: 70rpx;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: top;
+}
+.access .btn text {
+    display: inline-block;
+    padding: 0 4rpx;
+    font-size: 16rpx;
+    vertical-align: top;
+}
+.access .btn-buy {
+    color: #e84c3d;
+    border-color: #e84c3d;
+}
+.access .remind {
+    font-size: 24rpx;
+}
+.access .remind image {
+    display: inline-block;
+    width: 22rpx;
+    height: 20rpx;
+    margin: 6rpx 10rpx 0 0;
+    vertical-align: top;
+}
+
+.sub {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2000;
+    transform: translateY(100%);
+    transition: transform .6s ease;
+    background: #fff;
+}
+.sub.active {
+    transform: translateY(0);
+}
+.sub .sub-main {
+    padding: 0 30rpx;
+}
+.sub .txt {
+    display: inline-block;
+    padding: 20rpx 0;
+    font-size: 34rpx;
+}
+.sub .sub-header {
+    display: flex;
+    line-height: 60rpx;
+    font-size: 0;
+    border-bottom: 2rpx solid #dedede;
+}
+.sub-header .share {
+    flex: 1;
+    padding: 0 0 0 30rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 28rpx;
+    color: #5193ad;
+    text-align: left;
+    background: none;
+}
+.sub-header .useCoupon {
+    flex: 1;
+    display: inline-block;
+    padding: 20rpx;
+    font-size: 28rpx;
+    color: #e84c3d;
+    text-align: right;
+}
+.sub-header .useCoupon view {
+    display: inline-block;
+    width: 20rpx;
+    height: 20rpx;
+    border: 2rpx solid #e84c3d;
+    margin: 18rpx 10rpx 0 0;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 100%;
+}
+.sub-header .useCoupon view icon {
+    display: none;
+    line-height: 20rpx;
+    height: 20rpx;
+    margin-top: 2rpx;
+    vertical-align: top;
+}
+.sub-header .useCoupon .active {
+    background: #e84c3d;
+}
+.sub-header .useCoupon .active icon {
+    display: inline-block;
+}
+.sub-header .goPay {
+    display: inline-block;
+    width: 150rpx;
+    height: 60rpx;
+    padding: 0;
+    margin: 20rpx 0;
+    line-height: 60rpx;
+    font-size: 26rpx;
+    color: #fff;
+    border-radius: 60rpx;
+    vertical-align: top;
+    background: #e84c3d;
+}
+.sub-header .del {
+    text-decoration: line-through;
+}
+.sub-service {
+    padding-bottom: 50rpx;
+}
+.sub-service .sub-type {
+    font-size: 0;
+}
+.sub-service .sub-type.active .goSub {
+    color:#dedede;
+    border: 2rpx solid #dedede;
+}
+.sub-service .type-item {
+    display: flex;
+    height: 60rpx;
+    line-height: 60rpx;
+    padding-bottom: 30rpx;
+}
+.sub-service .name {
+    display: inline-block;
+    width: 120rpx;
+    font-size: 32rpx;
+}
+.sub-service .name image {
+    display: inline-block;
+    width: 36rpx;
+    height: 36rpx;
+    margin-top: 12rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+}
+.sub-service .cost {
+    flex: 1;
+    padding-right: 50rpx;
+    text-align: right;
+    font-size: 32rpx;
+    color: #879193;
+    text-decoration:line-through;
+}
+.sub-service .goSub {
+    display:inline-block;
+    width:150rpx;
+    padding:0;
+    border: 2rpx solid #e84c3d;
+    line-height:56rpx;
+    font-size:26rpx;
+    color:#e84c3d;
+    border-radius:60rpx;
+    vertical-align:top;
+    background: none;
+}
+.sub-service .agreement {
+    padding-bottom: 10rpx;
+    border-bottom: 2rpx solid #dedede;
+    font-size: 24rpx;
+    color: #5193ad;
+}
+.sub-service .agreebtn .active icon {
+    display: inline-block;
+}
+.sub-service .agreebtn view {
+    display: inline-block;
+    width: 20rpx;
+    height: 20rpx;
+    border: 2rpx solid #5193ad;
+    margin: 4rpx 10rpx 0 0;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 100%;
+}
+.sub-service .agreebtn view icon {
+    display: none;
+    line-height: 20rpx;
+    height: 20rpx;
+    margin-top: 2rpx;
+    vertical-align: top;
+}
+.sub-service .agreetext {
+    height: 0;
+    font-size: 0;
+    padding: 4rpx 0 0;
+    line-height: 40rpx;
+    color: #879193;
+    transition: height ease 0.4s;
+    overflow: hidden;
+}
+.sub-service .agreetext text {
+    display: block;
+    font-size: 24rpx;
+}
+.sub-service .agreement.active .agreetext {
+    height: auto;
+    /* height: 130rpx; */
+}
+.sub-service .welfare {
+    display: flex;
+    line-height: 62rpx;
+    font-size: 24rpx;
+    color: #202d33
+}
+.sub-service .welfare image {
+    width: 62rpx;
+    height: 62rpx;
+    margin-right: 15rpx;
+    vertical-align: top;
+}
+.sub-service .welfare view {
+    flex: 1;
+}
+
+.goHome {
+    position: fixed;
+    right: 20rpx;
+    bottom: 300rpx;
+}
+.goHome.active::before {
+    display: block;
+    position: absolute;
+    width: 100rpx;
+    height: 100rpx;
+    margin: 16rpx;
+    content: '';
+    border-radius: 100%;
+    background: rgba(100,100,100,0.2);
+}
+.goHome image {
+    width: 132rpx;
+    height: 132rpx;
+}
+
+.mask {
+  width: 100%;
+  height: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0;
+  overflow: hidden;
+  z-index: 1000;
+  color: #fff;
+  transition: opacity 0.6s ease;
+}
+.mask.active {
+    height: 100%;
+    opacity: 0.4;
+}

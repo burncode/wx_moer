@@ -1,0 +1,75 @@
+/* pages/login/login.wxss */
+.login {
+    position: relative;
+    height: 100%;
+}
+.login .box {
+    padding-top: 60rpx;
+}
+.login .moer {
+    display: block;
+    padding: 0 30rpx;
+    margin-bottom: 25rpx;
+    font-size: 40rpx;
+    font-weight: bold;
+}
+.login input {
+    height: 85rpx;
+    line-height: 85rpx;
+    border-bottom: 2rpx solid #dedede;
+    margin: 0 30rpx 22rpx;
+    font-size: 32rpx;
+}
+.login .input-placeholder {
+    color: #879193;
+}
+.login-btn {
+    width: 520rpx;
+    height: 85rpx;
+    line-height: 85rpx;
+    text-align: center;
+    margin: 65rpx auto 45rpx;
+    border-radius: calc(85rpx / 2); 
+    border: 2rpx solid #e84c3d;
+    font-size: 34rpx;
+    color: #fff;
+    background: #e84c3d;
+}
+.login-btn.button-hover {
+    background: #ce3d2f;
+}
+.login-tips {
+    padding: 0 30rpx;
+    font-size: 28rpx;
+    height: 32rpx;
+    line-height: 32rpx;
+    color: #e84c3d;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+.login-tips.active {
+    opacity: 1;
+}
+.login .contact {
+    position: absolute;
+    bottom: 80rpx;
+    width: 100%;
+    text-align: center;
+    font-size: 28rpx;
+}
+.login .contact .btn {
+    line-height: 36rpx;
+    font-size: 28rpx;
+    color: #3badda;
+    background: #fff;
+}
+.login .contact image {
+    width: 36rpx;
+    height: 36rpx;
+    margin: 0 20rpx 20rpx 0;
+    vertical-align: top;
+}
+.contact .time {
+    font-size: 24rpx;
+    color: #879193;
+}

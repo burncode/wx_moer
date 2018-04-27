@@ -1,0 +1,128 @@
+/* pages/course/course.wxss */
+.course {
+    height: 100%;
+    overflow: hidden;
+}
+/* 课程视频播放顶部 开始 */
+.video {
+    font-size: 0;
+}
+.video .myVideo {
+    width: 100%;
+}
+.video .heading {
+    display: flex;
+    width: 100%;
+    height: 72rpx;
+    line-height: 72rpx;
+    color: #fff;
+    font-size: 28rpx;
+    background: rgba(30, 30, 30, 1);
+}
+.video .heading .topicTitle {
+    display: inline-block;
+    flex: 1;
+    padding: 0 25rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.video .heading .next {
+    height: 72rpx;
+    line-height: 72rpx;
+    background: none;
+    color: #fff;
+    font-size: 28rpx;
+    border-radius: 0;
+    background: rgba(60, 60, 60, 1);
+}
+.video .heading .next  image {
+    display: inline-block;
+    width: 23rpx;
+    height: 18rpx;
+}
+/* 课程视频播放顶部 结束 */
+
+.topic {
+    display: inline-block;
+    padding: 30rpx 30rpx 0;
+    font-size: 38rpx;
+    color: #202d33;
+}
+
+.main {
+    height: calc(100% - 522rpx);
+}
+
+.course .item.active {
+    background: #f4f4f4;
+}
+.course .item-main {
+    padding-bottom: 40rpx;
+    margin: 0 30rpx;
+    border-bottom: 1rpx solid #dedede;
+}
+.course .title {
+    width: 100%;
+    height: 32rpx;
+    line-height: 32rpx;
+    padding: 40rpx 0 30rpx;
+    font-size: 32rpx;
+    color: #202d33;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.course .info {
+    width: 100%;
+    display: flex;
+}
+.course .time, .course .times {
+    flex: 1;
+    font-size: 24rpx;
+    height: 26rpx;
+    line-height: 26rpx;
+    color: #879193;
+}
+.course .times {
+    text-align: right;
+}
+.course .icon-time {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    vertical-align: top;
+}
+.course .showMore {
+    padding: 30rpx 30rpx 0;
+    font-size: 28rpx;
+    height: 28rpx;
+    line-height: 28rpx;
+    color: #879193;
+}
+.course .showMore .hidevideo, .course .showMore.active .showvideo {
+    display: none;
+}
+.course .showMore .showvideo, .course .showMore.active .hidevideo {
+    display: inline-block;
+}
+.course .showMore .icon-more {
+    display: inline-block;
+    width: 28rpx;
+    height: 16rpx;
+    margin-top: 6rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+    transform: rotate(0);
+    transition: transform 0.5s ease;
+}
+.course .showMore.active .icon-more {
+    transform: rotate(180deg);
+}
+
+.summary {
+    padding: 30rpx;
+    line-height: 44rpx;
+    font-size: 28rpx;
+    color: #485359;
+}

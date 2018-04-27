@@ -1,0 +1,248 @@
+/* pages/buy/buy.wxss */
+.container {
+    margin-top: 0;
+    transition: all 0.3s linear;
+}
+.loading {
+    margin-top: 91rpx;
+}
+.list-inner {
+    position: relative;
+    overflow: hidden;
+}
+.order {
+    background: #f2f2f2;
+}
+
+/** 顶部通用样式   开始 **/
+ .header {
+    position: absolute;
+    top: 0;
+    z-index: 9;
+    width: 100%;
+    background: #fff; 
+} 
+.header-title {
+    height: 80rpx;
+    margin: 45rpx 0 20rpx;
+    text-align: center;
+}
+.header-title text {
+    display: inline-block;
+    line-height: 80rpx;
+}
+.tab {
+    display: flex;
+    height: 90rpx;
+    line-height: 90rpx;
+    font-size: 0;
+    border-bottom: 1rpx solid #dedede;
+}
+.tab view {
+    flex: 1;
+    text-align: center;
+}
+.tab text {
+    display: inline-block;
+    font-size: 32rpx;
+}
+.tab .active text {
+    height: 88rpx;
+    color: #e84c3d;
+    border-bottom: 4rpx solid #e84c3d;
+}
+/** 顶部通用样式   结束 **/
+.page {
+    height: calc(100% - 91rpx);
+}
+.more-status .loading-more,  .more-status .no-more {
+    display: none;  
+    padding: 40rpx 0;
+    font-size: 24rpx;
+    line-height: 24rpx;
+    color:#879194;
+    text-align: center;
+}
+.more-status image {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    vertical-align: top;
+}
+.more-status-01 .loading-more {
+    display: block;
+}
+.more-status-02 .no-more {
+    display: block;
+}
+/** 更新消息   开始 **/
+.msg-page {
+    background: #fff;
+}
+.msg-page .item {
+    padding: 40rpx 30rpx 0;
+}
+.msg-page .info {
+    height: 28rpx;
+    line-height: 28rpx;
+    font-size: 0;
+}
+.msg-page .info .name {
+    display: inline-block;
+    width: 50%;
+    font-size: 28rpx;
+    line-height: 32rpx;
+    color: #202d32;
+}
+.msg-page .info .name image {
+    display: inline-block;
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+    border-radius: 100%;
+}
+.msg-page .info .date {
+    display: inline-block;
+    width: 50%;
+    font-size: 24rpx;
+    line-height: 28rpx;
+    color: #879194;
+    text-align: right;
+}
+.msg-page .desc {
+    padding: 18rpx 0 43rpx;
+    font-size: 32rpx;
+    line-height: 44rpx;
+    color: #202d32;
+    border-bottom: 1rpx solid #dedede;
+}
+/** 更新消息   结束 **/
+/** 我的订单   开始 **/
+.order-page {
+    background: #f2f2f2;
+}
+.order-main {
+}
+.order-page .item {
+    padding: 30rpx;
+    margin-bottom: 20rpx;
+    background: #fff;
+}
+.order-page .order-item {
+    padding-top: 20rpx;
+    margin-bottom: -20rpx;
+}
+.order-page .item .top {
+    display: flex;
+    font-size: 0;
+}
+.order-page .item .num, .order-page .item .status {
+    
+    font-size: 24rpx;
+    line-height: 24rpx;
+    color: #313e44;
+}
+.order-page .item .status {
+    flex: 1;
+    text-align: right;
+}
+.order-page .item .info {
+    display: flex;
+    padding: 30rpx 20rpx;
+    margin-top: 25rpx;
+    background: #f8f8f8;
+}
+.order-page .item .avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 100%;
+}
+.order-page .item .theme {
+    flex: 1;
+}
+.order-page .item .title {
+    font-size: 28rpx;
+}
+.order-page .item .name {
+    font-size: 24rpx;
+    color: #b0b0b0;
+}
+.order-page .theme text {
+    display: block;
+    padding-left: 30rpx;
+    line-height: 40rpx;
+}
+.order-page .item .initPrice {
+    display: inline-block;
+    width: 120rpx;
+    line-height: 80rpx;
+    text-align: right;
+    font-size: 24rpx;
+}
+.order-page .initPrice text {
+    font-size: 32rpx;
+}
+.order-page .payPrice {
+    padding-top: 30rpx;
+    font-size: 24rpx;
+    text-align: right;
+}
+.order-page .payPrice .red {
+    display: inline-block;
+    margin: 0 20rpx;
+    color: #e84c3d;
+    font-size: 24rpx;
+}
+.order-page .payPrice .price {
+    display: inline-block;
+    font-size: 32rpx;
+}
+/** 我的订单   结束 **/
+
+.empty {
+    display: block;
+    height: 100%;
+    text-align: center;
+    font-size: 32rpx;
+    color: #879193;
+    background: #fff;
+}
+.empty-bg {
+    display: block;
+    width: 100%;
+    height: 200rpx;
+    padding: 250rpx 0 50rpx; 
+}
+
+.loader {
+    height: 91rpx;
+    line-height: 91rpx;
+    text-align: center;
+    margin-top: 0;
+    
+}
+.loader .ball-beat > view {
+    display: inline-block;
+    width: 14rpx;
+    height: 14rpx;
+    border-radius: 100%;
+    margin: 0 5rpx;
+    background-color: #999;
+    animation-fill-mode: both;
+    animation: ball-beat 0.7s 0s infinite linear; 
+}
+.loader .ball-beat > view:nth-child(2n-1) {
+    animation-delay: 0.35s !important; 
+}
+@keyframes ball-beat {
+    50% {
+        opacity: 0.2;
+        transform: scale(0.75);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1); 
+    } 
+}

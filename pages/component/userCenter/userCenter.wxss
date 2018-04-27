@@ -1,0 +1,110 @@
+/* pages/userCenter/userCenter.wxss */
+.coupon .main, .invite .main {
+    padding-top: 30rpx;
+}
+
+.coupon {
+    min-height: calc(100% - 20rpx);
+    padding: 0 25rpx 20rpx;
+    background: #f6f6f6;
+}
+.coupon .item {
+    display: flex;
+    position: relative;
+    z-index: 9;
+    padding: 45rpx 20rpx 45rpx 50rpx;
+    margin-bottom: 30rpx;
+}
+.coupon .item .img {
+    width: 110rpx;
+    height: 110rpx;
+    margin-right: 25rpx;
+    border-radius: 100%;
+    vertical-align: top;
+}
+.coupon .info {
+    flex: 3;
+    height: 110rpx;
+    border-right: 2rpx dashed #ffd1a7;
+    font-size: 0; 
+    vertical-align: top;
+}
+.coupon .info .type {
+    font-size: 36rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    color: #666; 
+}
+.coupon .info .desc {
+    width: 90%;
+    font-size: 28rpx;
+    height: 50rpx;
+    line-height: 50rpx;
+    color: #879194; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.coupon .discount {
+    width: 180rpx;
+    height: 110rpx;
+    line-height: 110rpx;
+    text-align: center;
+    font-size: 24rpx;
+    color: #e84c3d;
+}
+.coupon .discount text{
+    font-size: 72rpx;
+}
+.coupon .bg {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+}
+.coupon .bg image {
+    width: auto;
+    height: 200rpx;
+}
+.coupon .bg .l, .coupon .bg .r {
+    width: 50rpx;
+}
+.coupon .bg .c {
+    flex: 1;
+}
+.empty {
+    display: block;
+    height: 100%;
+    text-align: center;
+    font-size: 32rpx;
+    color: #879193;
+}
+.empty-bg {
+    display: block;
+    width: 100%;
+    height: 250rpx;
+    padding: 200rpx 0 50rpx; 
+}
+
+.invite {}
+.invite  .item{
+    padding-bottom: 25rpx;
+    border-bottom: 2rpx solid #dedede;
+    margin: 0 25rpx 40rpx;
+}
+.brief {
+    font-size: 32rpx;
+    line-height: 44rpx;
+    color: #202d32
+}
+.brief text {
+    color: #5193ad;
+}
+.date {
+    text-align: right;
+    font-size: 24rpx;
+    color: #879194;
+}

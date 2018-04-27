@@ -1,0 +1,46 @@
+{
+    "pages": [
+        "pages/tabBar/index/index",
+        "pages/tabBar/buy/buy",
+        "pages/tabBar/user/user"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fffefe",
+        "navigationBarTitleText": "摩尔投研社",
+        "navigationBarTextStyle": "black"
+    },
+    "tabBar": {
+        "color": "#869195",
+        "selectedColor": "#e64d43",
+        "list": [
+            {
+                "pagePath": "pages/tabBar/index/index",
+                "iconPath": "assets/img/home.png",
+                "selectedIconPath": "assets/img/home-active.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/tabBar/buy/buy",
+                "iconPath": "assets/img/buy.png",
+                "selectedIconPath": "assets/img/buy-active.png",
+                "text": "已购"
+            },
+            {
+                "pagePath": "pages/tabBar/user/user",
+                "iconPath": "assets/img/user.png",
+                "selectedIconPath": "assets/img/user-active.png",
+                "text": "我的"
+            }
+        ]
+    },
+    "subPackages": [{
+        "root": "pages/component",
+        "pages": [
+            "course/course",
+            "detail/detail",
+            "userCenter/userCenter",
+            "login/login"
+        ]
+    }]
+}

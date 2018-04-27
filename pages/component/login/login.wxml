@@ -1,0 +1,19 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+    <view class="login">
+        <view class="box">
+            <text class="moer">摩尔金融账户登录</text>
+            <input class="account" placeholder="请输入手机号/邮箱" focus type="text" bindinput="usernameInput" />
+            <input class="pwd" placeholder="请输入密码" type="text" password  bindinput="passwordInput" />
+            <view class="login-tips {{warn?'active':''}}">{{warnTxt}}</view>
+            <button class="login-btn" bindtap="loginHandler">登录</button>
+            
+        </view>
+        <view class="contact">
+            <button bindtap="phoneCall" class="btn">
+                <image src="/assets/img/contact.png"></image><text>联系客服</text>
+            </button>
+            <view class="time">工作日 9：30 - 18：30</view>
+        </view>
+    </view>
+</view>

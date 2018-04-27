@@ -1,0 +1,112 @@
+<!--index.wxml-->
+<view class="container" 
+    enable-back-to-top="true">
+    <!-- 头部详情 开始 -->
+    <view class="header">
+
+        <!-- 为了切换有淡入淡出的效果 改变背景图的透明度 -->
+        <image class="header-bg {{(sort==0&&type==0)?'active':''}}" src="img/header-00.jpg" mode="aspectFill" lazy-load="true"></image>
+        <image class="header-bg {{(sort==1&&type==0)?'active':''}}" src="img/header-01.jpg" mode="aspectFill" lazy-load="true"></image>
+        <image class="header-bg {{(sort==0&&type==1)?'active':''}}" src="img/header-10.jpg" mode="aspectFill" lazy-load="true"></image>
+        <image class="header-bg {{(sort==1&&type==1)?'active':''}}" src="img/header-11.jpg" mode="aspectFill" lazy-load="true"></image>
+        <!-- 淡入淡出的效果  结束-->
+        <view class="tab">
+            <view class="society {{ type == 0 ? 'active': ''}}" bindtap="changeType" data-type="0">摩研社</view>
+            <view class="college {{ type == 1 ? 'active': ''}}" bindtap="changeType" data-type="1">摩股学院</view>
+            <view class="avatar">
+                <image src="{{userInfo?userInfo.userImg:userImg}}" class="avatar-img"></image>
+            </view> 
+        </view>
+        <view class="introduction">
+            <text class="title">{{info[type].title}}</text>
+            <text class="desc">{{info[type].desc}}</text>
+        </view>
+    </view>
+    <!-- 头部详情 结束 -->
+    <!-- banner 开始 -->
+    <swiper class="slide" 
+        current="{{sort}}"
+        previous-margin="15px" 
+        duration="400"
+        next-margin="18px" 
+        bindchange="changeTab">
+        <block wx:for="{{info[type].services}}" wx:key="index">
+            <swiper-item id="{{item.id}}">
+                <view class="slide-item">
+                    <image src="{{item.serviceImg}}" class="slide-image"></image>
+                    <view class="brief {{status.showBriefFlag[index]?'active':''}}" bindtap="showBrief">
+                         {{item.introduction}} 
+                    </view>
+                </view>
+            </swiper-item>
+        </block>
+    </swiper>
+    <!-- banner 结束 -->
+    <!-- 摩研社 开始 -->
+    <view class="page society-page" hidden="{{ type != 0}}">
+        <text class="topic" wx:if="{{tryReadArticles.length > 0}}">试读文章</text>
+        <scroll-view scroll-x="true" class="trial" wx:if="{{tryReadArticles.length > 0}}">
+            <view class="item" wx:for="{{tryReadArticles}}" wx:key="index" id="{{item.id}}" bindtap="goToArticle">
+                <image src="{{item.img}}" class="item-img" lazy-load mode="aspectFill"></image>
+                <text class="tip">试读</text>
+                <view class="item-main" hover-class="active">
+                    <view class="title">{{item.title}}</view>
+                </view>
+            </view>
+        </scroll-view>
+        <text class="topic" wx:if="{{latestArticles[sort].length > 0}}">最新文章</text>
+        <view class="newest" wx:if="{{latestArticles[sort].length > 0}}">
+            <view class="item" wx:for="{{latestArticles[sort]}}" wx:key="index" id="{{item.id}}" hover-class="active"  bindtap="goToArticle">
+                <view class="item-box">
+                    <image src="{{item.headImg}}" class="item-img" mode="aspectFill"></image>
+                    <view class="item-main">
+                        <view class="title">{{item.title}}</view>
+                        <view class="info">
+                            <view class="date">{{item.pubTime}}</view>
+                            <view class="amount">阅读 {{item.browseCount}}</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="more-status more-status-0{{status.loading[sort]}}">
+                <view class="loading-more"><image src="/assets/img/loading.gif"></image> 加载中...</view>
+                <view class="no-more">没有更多了</view>
+            </view>
+        </view>
+    </view>
+    <!-- 摩研社 结束 -->
+    <!-- 摩股学院 开始 -->
+    <view class="page college-page" hidden="{{ type != 1}}">
+        <text class="topic">课程目录</text>
+        <view class="course">
+            <view class="item" 
+                wx:for="{{videoInfo[sort].videoList}}" 
+                wx:key="index" 
+                wx:if="{{index < videoNum.videoMax}}"
+                id="{{item.videoId}}" 
+                hover-class="active" 
+                bindtap="goToCourse">
+                <view class="item-main">
+                    <view class="title">{{item.videoTitle}}</view>
+                    <view class="info">
+                        <view class="time">
+                            <image class="icon-time" mode="scaleToFill" src="/assets/img/time.png"></image> {{item.videoPeriod}}
+                        </view>
+                        <view class="times">播放次数： {{item.playCount}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="showMore {{videoNum.videoMax >= videoInfo[sort].videoList.length?'active':''}}" bindtap="getVideo" wx:if="{{videoInfo[sort].videoList.length > 4}}">
+                <image class="icon-more" mode="aspectFit" src="/assets/img/more.jpg"></image>
+                <text class="showvideo">展开更多课程</text>
+                <text class="hidevideo">收起课程列表</text>
+            </view>
+        </view>
+        <text class="topic" wx:if="{{videoInfo[sort].videoList.length > 0}}">课程介绍</text>
+        <view class="summary">{{videoInfo[sort].baseInfo}}</view>
+    </view>
+    <!-- 摩股学院 结束 -->
+
+    <!-- 联系客服 -->
+    <button class="contact" open-type="contact" ><image src="img/contact.png"></image></button> 
+</view>

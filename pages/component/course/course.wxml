@@ -1,0 +1,63 @@
+<!--pages/course/course.wxml-->
+<view class="container">
+    <view class="course" wx:if="{{list.length > 0}}">
+        <!-- 课程视频播放 开始 -->
+        <view class="video {{isLogin}}">
+             <video id="myVideo" class="myVideo" src="{{list[index].videoUrl}}" 
+            controls
+            autoplay="{{isLogin}}"
+            direction="90"
+            objectFit="fill"
+            bindplay="beforePlay"
+            bindwaiting="waitHandler"
+            bindended="nextHandler"
+            ></video> 
+            <view class="heading">
+                <text class="topicTitle">{{list[index].videoTitle}}</text>
+                <button class="next" 
+                    bindtap="nextHandler"
+                    wx:if="{{index < list.length - 1}}">
+                    下一课 
+                    <image src="img/next.gif"></image>
+                </button>
+            </view>
+        </view>
+        <!-- 课程视频播放 结束 -->
+        
+
+        <scroll-view scroll-y class="main">
+            <!-- 视频课程目录 开始 -->
+            <text class="topic">课程目录</text>
+            <view class="course-main">
+                <view class="item" 
+                    wx:for="{{list}}" 
+                    wx:key="index" 
+                    wx:if="{{index<max}}"
+                    data-videoid="{{item.videoId}}" 
+                    data-index="{{index}}"
+                    bindtap="playHandler"
+                    hover-class="active">
+                    <view class="item-main">
+                        <view class="title">{{item.videoTitle}}</view>
+                        <view class="info">
+                            <view class="time">
+                                <image class="icon-time" mode="scaleToFill" src="/assets/img/time.png"></image> {{item.videoPeriod}}
+                            </view>
+                            <view class="times">播放次数： {{item.playCount}}</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="showMore {{max>=list.length?'active':''}}" bindtap="getVideo" wx:if="{{list.length > 4}}">
+                    <image class="icon-more" mode="aspectFit" src="/assets/img/more.jpg"></image>
+                    <text class="showvideo">展开更多课程</text>
+                    <text class="hidevideo">收起课程列表</text>
+                </view>
+            </view>
+            <!-- 视频课程目录 结束 -->
+            <!-- 视频课程介绍 开始 -->
+            <text class="topic">课程介绍</text>
+            <view class="summary">{{baseInfo}}</view>
+            <!-- 视频课程介绍 结束 -->
+        </scroll-view>
+    </view>
+</view>

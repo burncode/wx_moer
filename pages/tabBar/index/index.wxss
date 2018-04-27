@@ -1,0 +1,413 @@
+/**index.wxss**/
+.container {
+     position: relative;
+}
+
+/** 顶部通用样式   开始 **/
+.header {
+    position: relative;
+    z-index: 2;
+    padding: 0 0 400rpx;
+}
+.header-bg {
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+.header-bg.active {
+    opacity: 1;
+}
+.header-title {
+    height: 80rpx;
+    margin-bottom: 18rpx;
+    text-align: center;
+}
+.header-title text {
+    display: inline-block;
+    line-height: 80rpx;
+}
+/** 顶部通用样式   结束 **/
+/** 头部内容切换导航   开始 **/
+.tab {
+    position: relative;
+    z-index: 9;
+    padding: 0 30rpx;
+    border-bottom: 1rpx solid #dedede ;
+}
+.tab view {
+    display: inline-block;
+    height: 96rpx;
+    line-height: 96rpx;
+    margin-right: 65rpx;
+    font-size: 40rpx;
+    font-weight: bold;
+}
+.tab .active {
+    color: #e84c3d;
+    border-bottom: 4rpx solid #e84c3d;
+}
+.tab .avatar {
+    position: absolute;
+    right: 0;
+    top: 16rpx;
+    margin-right: 30rpx;
+}
+.tab .avatar .avatar-img {
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 100%;
+}
+/** 头部内容切换导航   结束 **/
+/** 头部内容描述   开始 **/
+.introduction {
+    margin: 60rpx 30rpx 40rpx; 
+}
+.introduction .title, .introduction .desc {
+    display: block;
+    /* margin: 0 30rpx;  */
+    font-size: 28rpx;
+    line-height: 44rpx;
+    color: #485359;
+}
+/** 头部内容描述   结束 **/
+/** banner栏目切换   开始 **/
+.slide {
+    position: absolute;
+    z-index: 9;
+    margin-top: -415rpx;   
+    width: 100%;
+    height: 665rpx;
+}
+.slide .slide-item {
+    position: relative;
+    width: 650rpx;
+    padding-bottom: 30rpx;
+    margin: 30rpx 0 30rpx 0;
+    box-shadow:  8rpx 0 16rpx 16rpx rgba(220, 220, 220, 0.2);
+    border-radius: 16rpx;
+    background: #fff;
+    font-size: 0;
+}
+.slide .slide-image {
+    width: 650rpx;
+    height: 350rpx;
+    border-radius: 10rpx 10rpx 0 0;
+}
+.slide .brief {
+    position: relative;
+    height: 124rpx;
+    padding: 30rpx 30rpx 0;
+    font-size: 28rpx;
+    line-height: 40rpx;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    -webkit-box-direction:normal;
+    overflow: hidden;
+}
+.slide .brief::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 150rpx;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,0.5) 40%,rgba(255,255,255,1) 100%); 
+    border-radius: 0 0 16rpx 16rpx;
+}
+.slide .brief.active {
+    -webkit-line-clamp: 6;
+    height: auto;
+    max-height: 248rpx;
+}
+.slide .brief.active::before {
+    display: none;
+}
+/** banner栏目切换   结束 **/
+
+.page {
+    font-size: 0;
+    margin-top: 220rpx;
+}
+
+.topic {
+    padding: 0 30rpx;
+    font-size: 38rpx;
+    line-height: 38rpx;
+    color: #202d33;
+}
+
+/** 摩研社试读文章   开始 **/
+.trial {
+    display: flex;
+    height: 234rpx;
+    padding-top: 10rpx;
+    margin: 30rpx 0 70rpx 0;
+    font-size: 0;
+    white-space: nowrap; 
+}
+.trial .item {
+    position: relative;
+    display: inline-block;
+    width: 470rpx;
+    height: 220rpx;
+    padding: 10rpx 0 0 30rpx;
+    font-size: 32rpx;
+    vertical-align: top;
+}
+.trial .item:last-child {
+    padding-right: 30rpx;
+}
+.trial .item-img {
+    position: absolute;
+    z-index: -1;
+    width: 470rpx;
+    height: 220rpx;
+    border-radius: 6rpx;
+}
+.trial .tip {
+    position: absolute;
+    top: 0;
+    left: 60rpx;
+    z-index: 9;
+    height: 24rpx;
+    line-height: 24rpx;
+    padding: 6rpx 16rpx;
+    font-size: 24rpx;
+    color: #fff;
+    background: #e84c3d;
+}
+.trial .tip::after {
+    position: absolute;
+    top: 0;
+    right: -10rpx;
+    z-index: 8;
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 10rpx solid #ba1000;
+    border-right: 10rpx solid transparent;
+     transform: rotate(-90deg); 
+}
+.trial .item-main {
+    position: relative;
+    padding: 50rpx 30rpx 40rpx;
+    height: 130rpx;
+    overflow: hidden;
+}
+.trial .item-main.active::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 8;
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 6rpx;
+}
+.trial .item-main .title {
+    position:relative;
+    height:135rpx;
+    font-size:32rpx;
+    line-height:45rpx;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3;
+    -webkit-box-direction:normal;
+    color: #fff;
+    white-space: pre-wrap;
+    overflow:hidden;
+}
+.trial .info {
+    padding-top: 14rpx;
+    font-size: 24rpx;
+    color: #e84c3d;
+}
+.trial .stock, .trial .gains {
+    display: inline-block;
+}
+.trial .stock {
+    padding: 0 10rpx;
+}
+.trial .rise {
+    width: 20rpx;
+    height: 20rpx;
+    padding-right: 15rpx;
+}
+/** 摩研社试读文章   结束 **/
+/** 摩研社最新文章   开始 **/
+.newest .item {
+    padding: 0 30rpx;
+}
+.newest .item.active {
+    transform: scale(1);
+    background-color: #f4f4f4;
+}
+.newest .item-box {
+    display: flex;
+    padding: 40rpx 0;
+    border-bottom: 1rpx solid #dedede;
+}
+.newest .item:last-child .item-box {
+    border-bottom: 0;
+}
+.newest .item-img {
+    display: block;
+    width: 234rpx;
+    height: 164rpx;
+    margin-right: 30rpx;
+}
+.newest .item-main {
+    flex: 1;
+    position: relative;
+}
+.newest .title {
+    font-size: 32rpx;
+    line-height: 44rpx;
+    color: #202d33;
+    word-break: break-all;
+    overflow:hidden;
+    height:132rpx;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3;
+    -webkit-box-direction:normal;
+    white-space: pre-wrap;
+}
+.newest .info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+}
+.newest .date, .newest .amount {
+    flex: 1;
+    font-size: 24rpx;
+    color: #879193;
+}
+.newest .amount {
+    text-align: right;
+}
+.more-status .loading-more,  .more-status .no-more {
+    display: none;  
+    padding: 40rpx 0;
+    font-size: 24rpx;
+    line-height: 24rpx;
+    color:#879194;
+    text-align: center;
+}
+.more-status image {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    vertical-align: top;
+}
+.more-status-01 .loading-more {
+    display: block;
+}
+.more-status-02 .no-more {
+    display: block;
+}
+/** 摩研社最新文章   结束 **/
+
+
+/** 摩股学院课程目录   开始 样式在顶部引用里 **/
+.course {
+    margin: 0 0 70rpx 0;
+}
+.course .item.active {
+    background: #f4f4f4;
+}
+.course .item-main {
+    padding-bottom: 40rpx;
+    margin: 0 30rpx;
+    border-bottom: 1rpx solid #dedede;
+}
+.course .title {
+    width: 100%;
+    height: 32rpx;
+    line-height: 32rpx;
+    padding: 40rpx 0 30rpx;
+    font-size: 32rpx;
+    color: #202d33;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.course .info {
+    width: 100%;
+    display: flex;
+    font-size: 0;
+}
+.course .time, .course .times {
+    flex: 1;
+    font-size: 24rpx;
+    height: 24rpx;
+    line-height: 24rpx;
+    color: #879193;
+}
+.course .times {
+    text-align: right;
+}
+.course .icon-time {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    vertical-align: top;
+}
+.course .showMore {
+    padding: 30rpx 30rpx 0;
+    font-size: 28rpx;
+    height: 28rpx;
+    line-height: 28rpx;
+    color: #879193;
+}
+.course .showMore .hidevideo, .course .showMore.active .showvideo {
+    display: none;
+}
+.course .showMore .showvideo, .course .showMore.active .hidevideo {
+    display: inline-block;
+}
+.course .showMore .icon-more {
+    display: inline-block;
+    width: 28rpx;
+    height: 16rpx;
+    margin-top: 6rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+    transform: rotate(0);
+    transition: transform 0.5s ease;
+}
+.course .showMore.active .icon-more {
+    transform: rotate(180deg);
+}
+
+.summary {
+    padding: 30rpx;
+    line-height: 44rpx;
+    font-size: 28rpx;
+    color: #485359;
+}
+/** 摩股学院课程目录   结束 样式在顶部引用里 **/
+
+/** 联系客服 开始 **/
+.contact {
+    position: fixed;
+    right: 30rpx;
+    bottom: 100rpx;
+    z-index: 9;
+    padding: 0;
+    background: none;
+}
+.contact image{
+    width: 118rpx;
+    height: 118rpx;
+}
+/** 联系客服 结束 **/

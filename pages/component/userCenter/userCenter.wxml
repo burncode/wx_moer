@@ -1,0 +1,36 @@
+<!--pages/userCenter/userCenter.wxml-->
+<view class="container">
+    <view class="coupon" wx:if="{{types == 0}}">
+        <view class="main">
+            <view class="empty coupon-empty" wx:if="{{list.length <= 0}}">
+                <image class="empty-bg" src="img/coupon-empty.jpg" mode="aspectFit" lazy-load="true"></image>
+                <text>暂无优惠券</text>
+            </view>
+            <view class="item" wx:for="{{list}}" wx:key="index"  wx:if="{{list.length > 0}}">
+                <image class="img" src="{{item.img}}"></image>
+                <view class="info">
+                    <view class="type">{{item.title}}</view>
+                    <view class="desc">{{item.description}}</view>       
+                </view>
+                <view class="discount"><text>{{item.discount}}</text>折</view>
+                <view class="bg">
+                    <image class="l" mode="aspectFit" src="img/coupon-bg-l.jpg"></image>
+                    <image class="c" src="img/coupon-bg-c.jpg"></image>
+                    <image class="r" src="img/coupon-bg-r.jpg"></image>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="invite" wx:if="{{types == 1}}">
+        <view class="main">
+            <view class="item" wx:for="{{list}}" wx:key="index">
+                <navigator url="/pages/tabBar/index/index?type={{item.channel}}&sort={{item.carousel}}" 
+                    class="brief"
+                    open-type="reLaunch">
+                    {{item.msgContent}}<text>快去选择文章吧</text>
+                </navigator>
+                <view class="date">{{item.creatTime}}</view>
+            </view>
+        </view>
+    </view>
+</view>

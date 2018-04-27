@@ -1,0 +1,38 @@
+<!--pages/user/user.wxml-->
+<view class="container">
+    <view class="login" wx:if="{{!isLogin}}">
+        <view class="box">
+            <button class="login-wx" open-type="getUserInfo" bindgetuserinfo="wxLogin">微信快捷登录</button>
+            <button class="login-moer" bindtap="goMoer">摩尔金融帐号登录</button>
+            <view class="login-tips">注：账户和获得的优惠券归属有关，为了方便你的使用，请谨慎选择</view>
+            
+        </view>
+    </view>
+    <view class="home" wx:if="{{isLogin}}">
+        <view class="top">
+            <image class="avatar" src="{{userInfo.userImg}}"></image>
+            <view class="info">
+                <view class="name">{{userInfo.userName}}</view>
+                <view class="phone">手机号： {{userInfo.userPhone?userInfo.userPhone:'未填写'}}</view>
+            </view>
+            <button class="switch" bindtap="switchAccount">切换帐号</button>
+        </view>
+        <view class="main">
+            <navigator 
+                url="/pages/component/userCenter/userCenter?type=0" 
+                open-type="navigate" 
+                hover-class="none" 
+                class="item">
+                <image mode="aspectFit" class="coupon" src="img/coupon.gif"></image>
+                <text class="type-text">我的优惠券</text>
+                <view class="notice" wx:if="{{coupon>0}}">{{coupon}} 张</view>
+            </navigator>
+        </view>
+    </view>
+    <view class="contact">
+        <button bindtap="phoneCall" class="btn">
+            <image src="/assets/img/contact.png"></image><text>联系客服</text>
+        </button>
+        <view class="time">工作日 9：30 - 18：30</view>
+    </view>
+</view>

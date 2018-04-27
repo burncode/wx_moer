@@ -1,0 +1,162 @@
+/* pages/user/user.wxss */
+.container {
+    position: relative;
+}
+/* 未登录，选择登录方式 开始 */
+.login {
+    height: 100%;
+}
+.login .box {
+    padding-top: 190rpx;
+}
+.login-wx, .login-moer {
+    width: 520rpx;
+    height: 85rpx;
+    line-height: 85rpx;
+    text-align: center;
+    margin: 0 auto 45rpx;
+    border-radius: calc(85rpx / 2); 
+    border: 2rpx solid #e84c3d;
+    font-size: 34rpx;
+}
+.login-wx {
+    color: #fff;
+    background: #e84c3d;
+}
+.login-wx.button-hover {
+    background: #ce3d2f;
+}
+.login-moer {
+    color: #e84c3d;
+    background: #fff;
+}
+.login-moer.button-hover {
+    background: #fdedeb;
+}
+.login-tips {
+    font-size: 22rpx;
+    color: #879193;
+    text-align: center;
+}
+/* 未登录，选择登录方式 结束 */
+
+/* 已登录状态 个人主页 开始 */
+.home  {
+    height: 100%;
+    background: #f2f2f2;
+}
+.home .top {
+    display: flex;
+    padding: 30rpx;
+    background: #fff;
+}
+.home .avatar {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 100%;
+}
+.home .info {
+    flex: 1;
+    padding-left: 30rpx;
+}
+.home .info .name {
+    line-height: 60rpx;
+    font-size: 36rpx;
+    color: #202d33;
+}
+.home .info .phone {
+    font-size: 26rpx;
+    color: #202d33;
+}
+.home .switch {
+    display: inline-block;
+    font-size: 28rpx;
+    height: 54rpx;
+    line-height: 54rpx;
+    padding: 0 15rpx;
+    border: 2rpx solid #202d33;
+    margin-top: 20rpx;
+    background: #fff;
+    border-radius: 54rpx;
+}
+.home .switch.button-hover {
+    background: #ffdbd8;
+}
+ 
+.home .main {
+    margin-top: 20rpx;
+    background: #fff;
+}
+.home .main .item {
+    position: relative;
+    display: flex;
+    height: 89rpx;
+    line-height: 89rpx;
+    border-bottom: 2rpx solid #dedede;
+    margin: 0 30rpx;
+    font-size: 32rpx;
+}
+.navigator-hover {
+    background: #fff;
+}
+.home .item:last-child {
+    border-bottom: 0;
+}
+.home .item image {
+    width: 50rpx;
+    height: 32rpx;
+    margin: 28rpx 25rpx 0 0;
+    vertical-align: top;
+}
+.home .item .type-text {
+    display: inline-block;
+    flex: 1;
+}
+.home .item .notice {
+    padding-right: 30rpx;
+    text-align: right;
+    color: #e84c3d;
+    font-size: 28rpx;
+}
+.home .item::before, .home .item::after {
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    content: '';
+    width: 20rpx;
+    height: 4rpx;
+    background: #879194;
+}
+.home .item::before {
+    top: 43%;
+    transform: rotate(45deg);
+}
+.home .item::after {
+    top: 57%;
+    transform: rotate(-45deg);
+}
+
+.contact {
+    position: absolute;
+    bottom: 80rpx;
+    width: 100%;
+    text-align: center;
+    font-size: 28rpx;
+}
+.contact .btn {
+    display: inline-block;
+    line-height: 36rpx;
+    font-size: 28rpx;
+    color: #3badda;
+    background: none;
+}
+.contact image {
+    width: 36rpx;
+    height: 36rpx;
+    margin: 0 20rpx 0 0;
+    vertical-align: top;
+}
+.contact .time {
+    font-size: 24rpx;
+    color: #879193;
+}
