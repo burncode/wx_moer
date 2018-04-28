@@ -263,6 +263,7 @@
     width: 234rpx;
     height: 164rpx;
     margin-right: 30rpx;
+    border-radius: 6rpx;
 }
 .newest .item-main {
     flex: 1;

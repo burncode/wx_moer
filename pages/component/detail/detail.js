@@ -27,7 +27,6 @@ Page({
         useCouponStatus: false,
         useButtonType: '',  // 未登录时，按钮授权登录；已登录且未填写手机号，则是授权手机号
         authorizePhone: 0, // 手机号是否弹窗授权
-        newsData: '' // 新闻详情页内容的解析
     },
     onShow: function () {
         const self = this;
@@ -70,23 +69,14 @@ Page({
         }, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
-                const emptyReg = /(width|height)=".+?"/g;
-                const addReg = /<img/g;
-                let articleStr = d.articleInfo.content;
-
-                // 针对rich-text 富文本对img标签不友好的优化
-                // articleStr = articleStr.replace(emptyReg, '');
-                // articleStr = articleStr.replace(addReg, '<img style="display: block; width:auto; max-width:100%; margin:40px auto;"');
+                let articleStr = d.articleInfo.content.replace(/&nbsp;/g, '');
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
 
                 self.setData({
                     articleInfo: d.articleInfo,
-                    buttonInfo: d.buttonInfo,
-                    newsData: articleStr
+                    buttonInfo: d.buttonInfo
                 });
-
-                
 
                 wx.setNavigationBarTitle({
                     title: d.articleInfo.title
@@ -611,20 +601,6 @@ Page({
         this.setData({
             showModalStatus: false
         })
-    },
-    // 给文章内容中的图片添加高度
-    imageLoad: function (e) {
-        const self = this;
-        const width = e.detail.width;
-        const height = e.detail.height;
-        const windowWidth = wx.getSystemInfoSync().windowWidth;
-        const picHeight = (height / width) * windowWidth;
-        const index = e.currentTarget.dataset.index;
-        
-        self.data.newsData.content[index].attr.height = picHeight;
-        self.setData({
-            newsData: self.data.newsData
-        });
     },
     // 转发分享
     onShareAppMessage(res) {

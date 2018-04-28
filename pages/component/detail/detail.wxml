@@ -1,15 +1,14 @@
 <!--pages/detail/detail.wxml-->
+<import src="../../../wxParse/wxParse.wxml"/>
 <view class="container">
     <view class="detail" hidden="{{!articleInfo}}">
         <text class="title">{{articleInfo.title}}</text>
         <view class="info">
             <text class="author">{{articleInfo.source}} </text><text class="date">{{articleInfo.pubTime}}</text><text class="view">阅读：{{browseCount}}</text>
         </view>
-        <view class="tips" wx:if="{{articleInfo.readAdvice != ''}}">{{articleInfo.readAdvice}}</view>
+        <view class="tips" wx:if="{{articleInfo.summary != ''}}">{{articleInfo.summary}}</view>
         <view class="main">
-            <import src="../../../wxParse/wxParse.wxml"/>
             <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
-            <!-- <rich-text nodes="{{newsData}}"></rich-text> -->
         </view>
         <view class="warn {{articleInfo.buyFlag == 0?'active':''}}"><image src="img/warn.jpg"></image> 尊敬的用户，您购买的内容不构成投资建议，投资需谨慎，请独立判断。</view>
         <view class="access" wx:if="{{articleInfo.buyFlag != 1}}">

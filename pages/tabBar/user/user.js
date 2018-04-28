@@ -53,10 +53,8 @@ Page({
             userInfo: null
         });
 
-        wx.setStorageSync('userInfo', null);
-        wx.setStorageSync('isLogin', false);
-        wx.setStorageSync('authorizePhone', 0);
-
+        // 切换帐号后，清除本地缓存
+        wx.clearStorage();
         wx.removeTabBarBadge({
             index: 1
         });
