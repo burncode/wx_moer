@@ -42,36 +42,44 @@ Page({
                 return;
             }
         } else {
-            params = {
-                email: user,
-                password: passwd
-            }
-            util.sendRequest(util.urls.login, params, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            wx.login({
+                success: function (res) {
+                    const code = res.code;
 
-                    app.globalData.userInfo = {
-                        pptId: d.pptId,
-                        sessionId: d.sessionId,
-                        userId: d.userId,
-                        userImg: d.userImg,
-                        userName: d.userName,
-                        userPhone: d.userPhone
-                    };
-                    app.globalData.isLogin = true
-                    wx.setStorageSync('userInfo', app.globalData.userInfo);
-                    wx.setStorageSync('isLogin', app.globalData.isLogin);
+                    params = {
+                        code: code,
+                        email: user,
+                        password: passwd
+                    }
+                    util.sendRequest(util.urls.login, params, function (res) {
+                        if (res.data.code == util.ERR_OK) {
+                            const d = res.data.result;
 
-                    wx.switchTab({
-                        url: '/pages/tabBar/user/user',
+                            app.globalData.userInfo = {
+                                pptId: d.pptId,
+                                sessionId: d.sessionId,
+                                userId: d.userId,
+                                userImg: d.userImg,
+                                userName: d.userName,
+                                userPhone: d.userPhone
+                            };
+                            app.globalData.isLogin = true
+                            wx.setStorageSync('userInfo', app.globalData.userInfo);
+                            wx.setStorageSync('isLogin', app.globalData.isLogin);
+
+                            wx.switchTab({
+                                url: '/pages/tabBar/user/user',
+                            });
+                        } else {
+                            self.setData({
+                                warnTxt: res.data.message
+                            });
+                            self.showWarn();
+                        }
                     });
-                } else {
-                    self.setData({
-                        warnTxt: res.data.message
-                    });
-                    self.showWarn();
                 }
             });
+            
         }
     },
     phoneCall() {

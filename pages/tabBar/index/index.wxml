@@ -45,7 +45,11 @@
     <!-- 摩研社 开始 -->
     <view class="page society-page" hidden="{{ type != 0}}">
         <text class="topic" wx:if="{{tryReadArticles.length > 0}}">试读文章</text>
-        <scroll-view scroll-x="true" class="trial" wx:if="{{tryReadArticles.length > 0}}">
+        <scroll-view 
+            scroll-x="true" 
+            scroll-left="{{scrollLeft}}" 
+            scroll-with-animation="true"
+            class="trial" wx:if="{{tryReadArticles.length > 0}}">
             <view class="item" wx:for="{{tryReadArticles}}" wx:key="index" id="{{item.id}}" bindtap="goToArticle">
                 <image src="{{item.img}}" class="item-img" lazy-load mode="aspectFill"></image>
                 <text class="tip">试读</text>

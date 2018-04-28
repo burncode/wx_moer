@@ -23,6 +23,7 @@ Page({
             videoMax: 4,  // 视频已加载的总量： 默认是4课
             videoType: ''    // 课程ID：选项卡
         },        
+        scrollLeft: 0,
         sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
         flag: true,   //  防止最新文章列表多次加载数据
         canIUse: wx.canIUse('button.open-type.getUserInfo')
@@ -122,7 +123,8 @@ Page({
             }
 
             this.setData({
-                [videoType]: sortNum
+                [videoType]: sortNum,
+                // scrollLeft: 0  切换TAB的时候 将试读文章位置重置到最左边
             });
         };
     },
