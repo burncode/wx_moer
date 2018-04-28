@@ -531,12 +531,9 @@ Page({
         const d = options.detail.errMsg;
 
         if (d == 'getPhoneNumber:ok') {
-            wx.login({
-                success: res => {
-                    const code = res.code;
-
+            wx.checkSession({
+                success: function () {
                     util.sendRequest(util.urls.savePhoneNumber, {
-                        code: code,
                         iv: options.detail.iv,
                         encryptedData: options.detail.encryptedData
                     }, function (r) {
@@ -545,6 +542,26 @@ Page({
 
                             app.globalData.userInfo.userPhone = r.data.result;
                             wx.setStorageSync('userInfo', app.globalData.userInfo);
+                        }
+                    });
+                },
+                fail: function () {
+                    wx.login({
+                        success: res => {
+                            const code = res.code;
+
+                            util.sendRequest(util.urls.savePhoneNumber, {
+                                code: code,
+                                iv: options.detail.iv,
+                                encryptedData: options.detail.encryptedData
+                            }, function (r) {
+                                const aaa = r;
+                                if (r.data.code == util.ERR_OK) {
+
+                                    app.globalData.userInfo.userPhone = r.data.result;
+                                    wx.setStorageSync('userInfo', app.globalData.userInfo);
+                                }
+                            });
                         }
                     });
                 }
