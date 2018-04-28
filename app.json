@@ -7,7 +7,7 @@
     "window": {
         "backgroundTextStyle": "light",
         "navigationBarBackgroundColor": "#fffefe",
-        "navigationBarTitleText": "摩尔投研社",
+        "navigationBarTitleText": "摩尔投研",
         "navigationBarTextStyle": "black"
     },
     "tabBar": {
