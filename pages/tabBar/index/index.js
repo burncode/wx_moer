@@ -26,6 +26,7 @@ Page({
         scrollLeft: 0,
         sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
         flag: true,   //  防止最新文章列表多次加载数据
+        isContact: true, //  是显示联系客服还是显示领取试读券 （调研通，且未领取试读券） 
         canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
     onShow: function () {
@@ -88,6 +89,7 @@ Page({
     },
     //Tab滑动的时候change事件
     changeTab: function (e) {
+        const self = this;
         const { current, currentItemId, source} = e.detail;
         const { type, sort } = this.data;
         const { tabFlag } = this.data.status;
@@ -126,12 +128,14 @@ Page({
                 [videoType]: sortNum,
                 // scrollLeft: 0  切换TAB的时候 将试读文章位置重置到最左边
             });
+
+            self.isConcatHandler(type);
         };
     },
     //0、摩研社； 1、摩股学院的数据请求
     switchHandler: function(num) {
         const self = this;
-        const { sort } = self.data;
+        let { sort, isContact } = self.data;
         const str = 'info['+ num +']';
         const videoStr = 'videoNum.videoType';
 
@@ -163,6 +167,8 @@ Page({
                 }
             });  
         }
+
+        self.isConcatHandler(num);
     },
     //试读文章数据请求
     tryReadArticleHandler: function () {
@@ -272,6 +278,24 @@ Page({
             url: `/pages/component/course/course?videoId=${id}&videoType=${videoType}`
         });
     },
+    isConcatHandler (num) {
+        const self = this;
+        let { sort, isContact } = self.data;
+
+        if (num == 0 && sort == 0) {
+            isContact = false;
+        } else {
+            isContact = true;
+        }
+
+        self.setData({
+            isContact: isContact
+        });
+    },
+    goCoupon () {
+        const self = this;
+        
+    },
     getUnReadMsg() {
         util.sendRequest(util.urls.unReadMsg, {}, function (res) {
             if (res.data.code == util.ERR_OK) {
@@ -314,7 +338,7 @@ Page({
         const { type, sort, info } = this.data;
         
         return {
-            title: '摩尔投研社',
+            title: '摩尔投研',
             path: `/pages/tabBar/index/index?type=${type}&sort=${sort}`
         }
     }

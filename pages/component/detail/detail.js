@@ -207,36 +207,6 @@ Page({
                     ['btnStatus.receive']: false
                 });
             }
-
-            // 解锁 开始  默认非分享链接进入
-            // if (buttonInfo.pageType != 1) { //分享链接进入
-
-            //     if (buttonInfo.userUnlockRecord >= 3) { //优惠券到达上限
-            //         self.setData({
-            //             ['btnStatus.limit']: true,
-            //             tips: '你已得到3张免费券'
-            //         });
-            //     } else {
-            //         self.setData({
-            //             ['btnStatus.help']: true,
-            //             tips: '解锁后，你将免费获得本文'
-            //         });
-            //     }
-                
-            // } else { //非分享链接进入
-            //     if (buttonInfo.userUnlockRecord >= 3) { //优惠券到达上限
-            //         self.setData({
-            //             ['btnStatus.limit']: true,
-            //             tips: '你已得到3张免费券'
-            //         });
-            //     } else {
-            //         self.setData({
-            //             ['btnStatus.unlock']: true,
-            //             tips: '最多可得3张免费试读券'
-            //         });
-            //     }
-            // }
-            // 解锁 结束
         } else { //未登录
 
             self.setData({
@@ -442,59 +412,19 @@ Page({
                         wx.showToast({
                             title: r.data.result,
                             icon: 'success',
-                            duration: 2000
+                            duration: 2000,
+                            complete: function () {
+                                // 设置定时器，是因为API的BUG hideLoading 会把showToast 给关闭
+                                setTimeout(function () {
+                                    self.getInfo();
+                                }, 1000)
+                            }
                         });
-
-                        self.getInfo();
                     }
                 });
             }
         }
     },
-    // 帮好友解锁
-    // helpHandler() {
-    //     const self = this;
-    //     const { articleId, inviteUid, articleInfo } = self.data;
-
-    //     if (!app.globalData.isLogin) {
-    //         util.wxLoginHandler(function () {
-    //             self.setData({
-    //                 isLogin: true
-    //             });
-    //             self.getInfo();
-    //         });
-    //     } else {
-    //         util.sendRequest(util.urls.unlock, {
-    //             authorId: articleInfo.authorId,    //作者ID
-    //             articleId: articleId, // 文章ID
-    //             inviteUid: inviteUid         // 邀请者UID
-    //         }, function (res) {
-    //             if (res.data.code == util.ERR_OK) {
-    //                 wx.showToast({
-    //                     title: '解锁成功',
-    //                     icon: 'success',
-    //                     duration: 2000,
-    //                     success: function (res) {
-    //                         self.getInfo();
-    //                     }
-    //                 });
-    //             } else {
-    //                 wx.showToast({
-    //                     title: res.data.message,
-    //                     icon: 'none',
-    //                     duration: 2000,
-    //                     success: function (res) {
-    //                         self.getInfo();
-    //                     }
-    //                 });
-    //             }
-    //         });
-    //     }
-        
-    // },
-    // getPhoneNumber(res) {
-    //     console.log(res, 0)
-    // },
     //  未登录，获取用户信息
     userBtnHandler(res) { 
         const self = this;

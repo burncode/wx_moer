@@ -32,7 +32,7 @@
         <block wx:for="{{info[type].services}}" wx:key="index">
             <swiper-item id="{{item.id}}">
                 <view class="slide-item">
-                    <image src="{{item.serviceImg}}" class="slide-image"></image>
+                    <image src="{{item.serviceImg+'?v=2018050201'}}" class="slide-image"></image>
                     <view class="brief {{status.showBriefFlag[index]?'active':''}}" bindtap="showBrief">
                          {{item.introduction}} 
                     </view>
@@ -111,5 +111,14 @@
     <!-- 摩股学院 结束 -->
 
     <!-- 联系客服 -->
-    <button class="contact" open-type="contact" ><image src="img/contact.png"></image></button> 
+    <view wx:if="{{isContact}}" class="{{isContact}}">
+        <button class="contact" open-type="contact" >
+            <image src="img/contact.png"></image>
+        </button> 
+    </view>
+    <view wx:else>
+        <view class="free-coupon" bindtap="goCoupon">
+            <image src="img/coupon.png"></image>
+        </view>
+    </view>
 </view>

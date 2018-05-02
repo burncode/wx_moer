@@ -398,11 +398,11 @@
 }
 /** 摩股学院课程目录   结束 样式在顶部引用里 **/
 
-/** 联系客服 开始 **/
+/** 联系客服 || 领取试读券 开始 **/
 .contact {
     position: fixed;
     right: 30rpx;
-    bottom: 100rpx;
+    bottom: 200rpx;
     z-index: 9;
     padding: 0;
     background: none;
@@ -411,4 +411,15 @@
     width: 118rpx;
     height: 118rpx;
 }
-/** 联系客服 结束 **/
+.free-coupon {
+    position: fixed;
+    right: 30rpx;
+    bottom: 200rpx;
+    z-index: 9;
+    padding: 0;
+}
+.free-coupon image{
+    width: 140rpx;
+    height: 140rpx;
+}
+/** 联系客服 || 领取试读券 结束 **/

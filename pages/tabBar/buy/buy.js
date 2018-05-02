@@ -26,19 +26,10 @@ Page({
         pagesize: 10
     },
     onLoad: function (options) {
-
-    },
-    onShow () {
         const self = this;
-        const userInfo = wx.getStorageSync('userInfo') || null;
-        const isLogin = wx.getStorageSync('isLogin') || false;
         const scrollHeight = 'info[0].scrollHeight';
 
-        app.globalData.userInfo = userInfo;
-        app.globalData.isLogin = isLogin;
-
         self.setData({
-            isLogin: isLogin,
             type: 0,
             info: [{
                 text: "msg",
@@ -52,23 +43,33 @@ Page({
                 loading: 0     // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
             }]
         });
+    },
+    onShow () {
+        const self = this;
+        const userInfo = wx.getStorageSync('userInfo') || null;
+        const isLogin = wx.getStorageSync('isLogin') || false;
+        const scrollHeight = 'info[0].scrollHeight';
+
+        app.globalData.userInfo = userInfo;
+        app.globalData.isLogin = isLogin;
 
         wx.getSystemInfo({
             success: function (res) {
                 self.setData({
+                    isLogin: isLogin,
                     [scrollHeight]: res.windowHeight
                 });
+
+                if (isLogin) {
+                    self.init();
+                } else {
+                    self.setData({
+                        msg: [],
+                        order: []
+                    });
+                }
             }
         });
-
-        if (isLogin) {
-            self.init();
-        } else {
-            self.setData({
-                msg: [],
-                order: []
-            });
-        }
     },
     init () {
         const self = this;
