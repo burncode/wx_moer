@@ -22,7 +22,8 @@ const urls = {
     'authorizedLogin': '/miniProgram/v1/authorizedLogin.json', // 微信授权登录
     'savePhoneNumber': '/miniProgram/v1/savePhoneNumber.json',  // 保存获取的手机号
     'freeCoupon': '/miniProgram/v1/freeCoupon.json', // 领取试读券
-    'playCount': '/miniProgram/v1/playCount.json' // 播放次数
+    'playCount': '/miniProgram/v1/playCount.json', // 播放次数
+    'isGetCoupon': '/miniProgram/v1/isGetCoupon.json' // 调研通领取试读券
 };
 const ERR_OK = 0; //请求结果的状态 0：成功
 

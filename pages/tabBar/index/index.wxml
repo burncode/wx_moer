@@ -111,7 +111,7 @@
     <!-- 摩股学院 结束 -->
 
     <!-- 联系客服 -->
-    <view wx:if="{{isContact}}" class="{{isContact}}">
+    <view wx:if="{{isContact}}">
         <button class="contact" open-type="contact" >
             <image src="img/contact.png"></image>
         </button> 
