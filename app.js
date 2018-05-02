@@ -82,10 +82,10 @@ App({
                 const d = res.data.result;
 
                 if (d.msgCount > 0) {
-                wx.setTabBarBadge({
-                    index: 1,
-                    text: d.msgCount + ''
-                });
+                    wx.setTabBarBadge({
+                        index: 1,
+                        text: d.msgCount
+                    });
                 }
 
             }

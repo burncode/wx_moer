@@ -1,4 +1,5 @@
 const domain = 'https://www.moer.cn';
+const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram/';
 const urls = {
     'stockCollegeHome': '/miniProgram/v1/stockCollegeHome.json', // 摩股学院
     'mResearchIndex': '/miniProgram/v1/mResearchIndex.json',  //摩研社首页
@@ -130,5 +131,6 @@ module.exports = {
     urls: urls,
     ERR_OK: ERR_OK,
     sendRequest: sendRequest,
-    wxLoginHandler: wxLoginHandler
+    wxLoginHandler: wxLoginHandler,
+    staticFile: staticFile
 }

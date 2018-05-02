@@ -6,7 +6,8 @@ const app = getApp();
 Page({
     data: {
         userInfo: null,
-        userImg: 'img/moer.jpg',
+        userImg: util.staticFile + '/index/moer.jpg',
+        staticFile: util.staticFile,
         type: 0, // 展示的类型： 0、摩研社； 1、摩股学院；
         info: {}, // 切换的TAB数据
         sort: 0, // 栏目的切换，默认显示第一项
@@ -77,6 +78,7 @@ Page({
         }
         
         self.switchHandler(type);
+        self.getUnReadMsg();
     },
     //展示类型的切换： 0、摩研社； 1、摩股学院；
     changeType: function (e) {
@@ -370,13 +372,12 @@ Page({
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
 
-                // if (d.msgCount > 0) {
+                if (d.msgCount > 0) {
                     wx.setTabBarBadge({
                         index: 1,
                         text: d.msgCount
                     });
-                // }
-
+                }
             }
         });
     },
