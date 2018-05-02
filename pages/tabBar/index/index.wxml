@@ -13,13 +13,12 @@
         <view class="tab">
             <view class="society {{ type == 0 ? 'active': ''}}" bindtap="changeType" data-type="0">摩研社</view>
             <view class="college {{ type == 1 ? 'active': ''}}" bindtap="changeType" data-type="1">摩股学院</view>
-            <view class="avatar">
+            <navigator url="/pages/tabBar/user/user" open-type="switchTab" class="avatar" hover-class="none">
                 <image src="{{userInfo?userInfo.userImg:userImg}}" class="avatar-img"></image>
-            </view> 
+            </navigator>
         </view>
         <view class="introduction">
-            <text class="title">{{info[type].title}}</text>
-            <text class="desc">{{info[type].desc}}</text>
+            <text class="desc" wx:for="{{info[type].desc}}" wx:key="index">{{item}}</text>
         </view>
     </view>
     <!-- 头部详情 结束 -->

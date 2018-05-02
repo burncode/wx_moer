@@ -53,7 +53,7 @@
                         </view>
                         <text wx:if="{{buttonInfo.userCouponCount > 0}}">使用试读券</text>
                     </view>
-                    <button class="goPay {{useCouponStatus?'del':''}}" bindtap="goPay">￥ {{serviceBuyInfo.price}}</button>
+                    <button class="goPay" bindtap="goPay">{{useCouponStatus?'免费读':'￥'+serviceBuyInfo.price}}</button>
                 </view>
                 <view class="sub-service">
                     <text class="txt">订阅{{serviceBuyInfo.serviceName}}</text>
