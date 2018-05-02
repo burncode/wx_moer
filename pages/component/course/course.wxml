@@ -7,7 +7,6 @@
             controls
             autoplay="{{isLogin}}"
             direction="90"
-            objectFit="fill"
             bindplay="beforePlay"
             bindwaiting="waitHandler"
             bindended="nextHandler"
