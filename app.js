@@ -84,7 +84,7 @@ App({
                 if (d.msgCount > 0) {
                     wx.setTabBarBadge({
                         index: 1,
-                        text: d.msgCount
+                        text: d.msgCount + ''  // 必须为字符串
                     });
                 }
 
