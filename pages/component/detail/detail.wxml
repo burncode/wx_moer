@@ -1,5 +1,5 @@
 <!--pages/detail/detail.wxml-->
-<import src="../../plugin/wxParse/wxParse.wxml"/>
+<import src="../../../plugin/wxParse/wxParse.wxml"/>
 <view class="container">
     <view class="detail" hidden="{{!articleInfo}}">
         <text class="title">{{articleInfo.title}}</text>
