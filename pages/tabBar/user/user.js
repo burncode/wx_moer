@@ -89,7 +89,7 @@ Page({
     },
     phoneCall () {
         wx.makePhoneCall({
-            phoneNumber: '010- 59082422'
+            phoneNumber: '400-803-6208'
         })
     }
 })
