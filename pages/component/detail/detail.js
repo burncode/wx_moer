@@ -1,6 +1,6 @@
 // pages/detail/detail.js
 const util = require('../../../utils/util.js');
-const WxParse = require('../../../wxParse/wxParse.js');
+const WxParse = require('../../plugin/wxParse/wxParse.js');
 const app = getApp();
 
 Page({

@@ -1,5 +1,5 @@
 /* pages/detail/detail.wxss */
-@import "/wxParse/wxParse.wxss";
+@import "/pages/plugin/wxParse/wxParse.wxss";
 
 .detail {
     padding: 0 25rpx;

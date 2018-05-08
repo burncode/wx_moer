@@ -2,6 +2,7 @@ var __placeImgeUrlHttps = "https";
 var __emojisReg = '';
 var __emojisBaseSrc = '';
 var __emojis = {};
+var wxDiscode = require('./wxDiscode.js');
 var HTMLParser = require('./htmlparser.js');
 // Empty Elements - HTML 5
 var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,link,meta,param,embed,command,keygen,source,track,wbr");
@@ -51,6 +52,7 @@ function html2json(html, bindName) {
     //处理字符串
     html = removeDOCTYPE(html);
     html = trimHtml(html);
+    html = wxDiscode.strDiscode(html);
     //生成node节点
     var bufArray = [];
     var results = {
@@ -133,6 +135,7 @@ function html2json(html, bindName) {
                 if (imgUrl[0] == '') {
                     imgUrl.splice(0, 1);
                 }
+                imgUrl = wxDiscode.urlToHttpUrl(imgUrl, __placeImgeUrlHttps);
                 node.attr.src = imgUrl;
                 node.from = bindName;
                 results.images.push(node);
