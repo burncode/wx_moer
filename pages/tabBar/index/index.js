@@ -21,15 +21,13 @@ Page({
         videoInfo: {},
         videoNum: {
             videoLen: 4,  // 每次加载视频课程的数量
-            videoMax: 4,  // 视频已加载的总量： 默认是4课
-            videoType: ''    // 课程ID：选项卡
+            videoMax: 4  // 视频已加载的总量： 默认是4课
         },        
-        scrollLeft: 0,
         sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
         flag: true,   //  防止最新文章列表多次加载数据
         isContact: true, //  是显示联系客服还是显示领取试读券 （调研通，且未领取试读券） 
-        couponInfo: null,
-        showBrief: false,
+        couponInfo: null,  //调研通下是显示领取试读券还是联系客服
+        showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
@@ -50,9 +48,8 @@ Page({
     },
     onHide () {
         const self = this;
-        self.setData({
-            showBrief: false
-        });
+
+        self.hiddenBrief();
     },
     onLoad: function (options) {
         const self = this;
@@ -85,6 +82,7 @@ Page({
 
         }
         
+        // 初始化
         self.switchHandler(type);
         self.getUnReadMsg();
     },
@@ -107,42 +105,34 @@ Page({
     changeTab: function (e) {
         const self = this;
         const { current, currentItemId, source} = e.detail;
-        const { type, sort } = this.data;
-        const { tabFlag } = this.data.status;
-        const { videoLen } = this.data.videoNum;
+        const { type, sort, info } = self.data;
+        const { tabFlag } = self.data.status;
+        const { videoLen } = self.data.videoNum;
         const tabStr = 'status.tabFlag[' + sort +']';
-        const videoType = 'videoNum.videoType';
         const videoMax = 'videoNum.videoMax';
         let sortNum = '';
 
         if(source === 'touch') {
             
-            this.setData({
+            self.setData({
                 sort: current,
                 [tabStr]: false,
                 [videoMax]: videoLen
             });
 
             if (type == 0) {
-                sortNum = this.data.info[type].services[current].authorId;
 
                 // if (tabFlag[current]) {
-                    this.tryReadArticleHandler(sortNum);
-                    this.latestArticlesHandler(sortNum);
+                    self.tryReadArticleHandler();
+                    self.latestArticlesHandler();
                 // }
 
             } else if (type == 1) {
-                sortNum = this.data.info[type].services[current].id;
 
-                if (tabFlag[current]) {
-                    this.collegeHandler(sortNum);
+                if (tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
+                    self.collegeHandler();
                 }
             }
-
-            this.setData({
-                [videoType]: sortNum,
-                // scrollLeft: 0  切换TAB的时候 将试读文章位置重置到最左边
-            });
 
             self.isConcatHandler(type);
         };
@@ -152,7 +142,6 @@ Page({
         const self = this;
         let { sort, isContact } = self.data;
         const str = 'info['+ num +']';
-        const videoStr = 'videoNum.videoType';
 
         // //摩研社数据请求
         if (num == 0) {
@@ -174,8 +163,7 @@ Page({
                     const d = res.data.result;
 
                     self.setData({
-                        [str]: d,
-                        [videoStr]: d.services[sort].id
+                        [str]: d
                     });
 
                     self.collegeHandler();
@@ -241,6 +229,11 @@ Page({
         const self = this;
         const { info, sort, type, videoInfo } = self.data;
 
+        wx.showLoading({
+            title: '加载中',
+            mask: true
+        });
+
         util.sendRequest(util.urls.stockCollegeVedioList, { courseId: info[type].services[sort].id }, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
@@ -249,6 +242,8 @@ Page({
                 self.setData({
                     [str]: d
                 });
+
+                wx.hideLoading();
             }
         });
     },
@@ -294,13 +289,14 @@ Page({
     },
     goToCourse: function(e) {
         const { id } = e.currentTarget;
-        const { sort } = this.data;
-        const { videoType } = this.data.videoNum;
+        const { type, sort, info } = this.data;
+        const videoType = info[type].services[sort].id;
 
         wx.navigateTo({
             url: `/pages/component/course/course?videoId=${id}&videoType=${videoType}&sort=${sort}`
         });
     },
+    // 在调研通 默认是领取试读券，否则是联系客服
     isConcatHandler (num) {
         const self = this;
         let { sort, isContact, userInfo } = self.data;
@@ -383,6 +379,7 @@ Page({
             }
         });
     },
+    // 未读消息数
     getUnReadMsg() {
         util.sendRequest(util.urls.unReadMsg, {}, function (res) {
             if (res.data.code == util.ERR_OK) {

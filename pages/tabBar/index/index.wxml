@@ -3,7 +3,6 @@
     enable-back-to-top="true">
     <!-- 头部详情 开始 -->
     <view class="header">
-
         <!-- 为了切换有淡入淡出的效果 改变背景图的透明度 -->
         <image class="header-bg {{(sort==0&&type==0)?'active':''}}" 
         src="{{staticFile}}/index/header-00.jpg" mode="aspectFill" lazy-load="true"></image>
@@ -48,7 +47,7 @@
         <view class="topic topic-{{type}}{{sort}}" wx:if="{{tryReadArticles.length > 0}}"><text>试读文章</text></view>
         <scroll-view 
             scroll-x="true" 
-            scroll-left="{{scrollLeft}}" 
+            scroll-left="0" 
             scroll-with-animation="true"
             class="trial" wx:if="{{tryReadArticles.length > 0}}">
             <view class="item" wx:for="{{tryReadArticles}}" wx:key="index" id="{{item.id}}" bindtap="goToArticle">

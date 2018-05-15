@@ -3,7 +3,6 @@ const util = require('utils/util.js');
 
 App({
     data: {
-        timer: null
     },
     onLaunch: function () {
         const self = this;

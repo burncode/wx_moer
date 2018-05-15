@@ -29,14 +29,13 @@ Page({
         useCouponStatus: false,
         useButtonType: '',  // 未登录时，按钮授权登录；已登录且未填写手机号，则是授权手机号
         authorizePhone: 0, // 手机号是否弹窗授权
-        isPop: 0
+        isPop: 0 // 是否显示购买文章后的弹窗
     },
     onShow: function () {
         const self = this;
-        const { refresh } = self.data;
         const userInfo = wx.getStorageSync('userInfo') || null;
         const isLogin = wx.getStorageSync('isLogin') || false;
-        let isPop = wx.getStorageSync('isPop') || 0;
+        const isPop = wx.getStorageSync('isPop') || 0;
 
         app.globalData.userInfo = userInfo;
         app.globalData.isLogin = isLogin;
@@ -416,7 +415,7 @@ Page({
             }
         }
     },
-    //  未登录，获取用户信息
+    // 未登录，获取用户信息
     userBtnHandler(res) { 
         const self = this;
         const d = res.detail.errMsg;
@@ -540,6 +539,7 @@ Page({
             showModalStatus: false
         });
     },
+    // 点赞
     doZan () {
         const self = this;
         const { articleId, isLogin } = self.data;
@@ -571,6 +571,7 @@ Page({
             }
         });
     },
+    // 未登录点赞 先授权，后点赞
     bindgetuserinfo () {
         const self = this;
 

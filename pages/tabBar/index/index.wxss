@@ -188,8 +188,6 @@
     background: #85594b;
 }
 
-
-
 /** 摩研社试读文章   开始 **/
 .trial {
     display: flex;
@@ -482,7 +480,6 @@
     height: 100%;
     overflow: hidden;
 }
-
 .brief .main {
     width: calc(100% - 60rpx);
     height: 88%;
