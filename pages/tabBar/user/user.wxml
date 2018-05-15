@@ -13,26 +13,55 @@
             <image class="avatar" src="{{userInfo.userImg}}"></image>
             <view class="info">
                 <view class="name">{{userInfo.userName}}</view>
-                <view class="phone">手机号： {{userInfo.userPhone?userInfo.userPhone:'未填写'}}</view>
+                <view class="phone"><text>手机号：</text> 
+                    <text wx:if="{{userInfo.userPhone}}">{{userInfo.userPhone}}</text>
+                    <button wx:else open-type="getPhoneNumber" class="bindPhone">绑定手机号</button>
+                </view>
             </view>
             <button class="switch" bindtap="switchAccount">切换帐号</button>
         </view>
         <view class="main">
             <navigator 
                 url="/pages/component/userCenter/userCenter?type=0" 
+                class="item"
                 open-type="navigate" 
-                hover-class="none" 
-                class="item">
-                <image mode="aspectFit" class="coupon" src="img/coupon.gif"></image>
+                hover-class="none">
+                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/coupon.gif"></image>
                 <text class="type-text">我的优惠券</text>
                 <view class="notice" wx:if="{{coupon>0}}">{{coupon}} 张</view>
+                <text class="arrow"></text>
+            </navigator>
+            <button 
+                class="item"
+                open-type="share"
+                hover-class="none">
+                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/share.gif"></image>
+                <text class="type-text">分享小程序</text>
+                <text class="arrow"></text>
+            </button>
+            <button 
+                class="item"
+                open-type="contact"
+                hover-class="none">
+                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/join.gif"></image>
+                <text class="type-text">加入VIP群</text>
+                <text class="arrow"></text>
+            </button>
+            <navigator 
+                url="/pages/component/about/about?type=0" 
+                class="item"
+                open-type="navigate" 
+                hover-class="none">
+                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/qa.gif"></image>
+                <text class="type-text">常见问题</text>
+                <text class="arrow"></text>
             </navigator>
         </view>
     </view>
     <view class="contact">
         <button bindtap="phoneCall" class="btn">
-            <image src="/assets/img/contact.png"></image><text>联系客服</text>
+            <image src="{{staticFile}}/contact.png"></image><text>联系客服</text>
         </button>
-        <view class="time">工作日 9：30 - 18：30</view>
+        <view class="time">工作日 8：00 - 17：00</view>
     </view>
 </view>

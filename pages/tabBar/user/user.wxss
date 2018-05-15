@@ -68,6 +68,20 @@
     font-size: 26rpx;
     color: #202d33;
 }
+.home .info .phone text {
+    display: inline-block;
+    line-height: 34rpx;
+    vertical-align: top;
+}
+.home .info .bindPhone {
+    display: inline-block;
+    height: 34rpx;
+    line-height: 34rpx;
+    padding: 0;
+    vertical-align: top;
+    font-size: 26rpx;
+    background: #fff;
+}
 .home .switch {
     display: inline-block;
     font-size: 28rpx;
@@ -88,38 +102,50 @@
     background: #fff;
 }
 .home .main .item {
-    position: relative;
-    display: flex;
+    width: auto;
     height: 89rpx;
-    line-height: 89rpx;
+    display: flex;
+    padding: 0;
     border-bottom: 2rpx solid #dedede;
     margin: 0 30rpx;
+    text-align: left;
+    background: #fff;
+    line-height: 89rpx;
+    border-radius: 0;
     font-size: 32rpx;
+    overflow: hidden;
 }
 .navigator-hover {
     background: #fff;
 }
 .home .item:last-child {
-    border-bottom: 0;
+    border-bottom-color: #fff;
 }
 .home .item image {
     width: 50rpx;
-    height: 32rpx;
+    height: 30rpx;
     margin: 28rpx 25rpx 0 0;
     vertical-align: top;
 }
 .home .item .type-text {
     display: inline-block;
+    height: 88rpx;
     flex: 1;
 }
 .home .item .notice {
-    padding-right: 30rpx;
     text-align: right;
     color: #e84c3d;
     font-size: 28rpx;
 }
-.home .item::before, .home .item::after {
+.home .item .arrow {
+    position: relative;
+    display: inline-block;
+    width: 40rpx;
+    height: 88rpx;
+}
+.home .arrow::before, .home .arrow::after {
     position: absolute;
+    top: auto;
     right: 0;
     display: inline-block;
     content: '';
@@ -127,12 +153,12 @@
     height: 4rpx;
     background: #879194;
 }
-.home .item::before {
-    top: 43%;
+.home .arrow::before {
+    top: 44%;
     transform: rotate(45deg);
 }
-.home .item::after {
-    top: 57%;
+.home .arrow::after {
+    top: 58%;
     transform: rotate(-45deg);
 }
 

@@ -5,6 +5,7 @@ const app = getApp();
 Page({
     data: {
         isLogin: false,
+        staticFile: util.staticFile,
         type: 0, // 头部内容切换： 0、更新信息； 1、我的订单；
         info: [{
             text: "msg",

@@ -5,6 +5,7 @@ const app = getApp();
 Page({
     data: {
         isLogin: false,
+        staticFile: util.staticFile,
         userInfo: {},
         coupon: 0,
         invite: 0,
@@ -91,5 +92,15 @@ Page({
         wx.makePhoneCall({
             phoneNumber: '400-803-6208'
         })
+    },
+    // 转发分享
+    onShareAppMessage: function () {
+        const { staticFile } = this.data;
+
+        return {
+            title: '调研通抢先试读券，免费领取中',
+            imageUrl: `${staticFile}/share-00.jpg`,
+            path: `/pages/tabBar/index/index?type=0&sort=0`
+        }
     }
 })

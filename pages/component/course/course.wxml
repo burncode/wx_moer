@@ -40,14 +40,14 @@
                         <view class="title">{{item.videoTitle}}</view>
                         <view class="info">
                             <view class="time">
-                                <image class="icon-time" mode="scaleToFill" src="/assets/img/time.png"></image> {{item.videoPeriod}}
+                                <image class="icon-time" mode="scaleToFill" src="{{staticFile}}/time.png"></image> {{item.videoPeriod}}
                             </view>
                             <view class="times">播放次数： {{item.playCount}}</view>
                         </view>
                     </view>
                 </view>
                 <view class="showMore {{max>=list.length?'active':''}}" bindtap="getVideo" wx:if="{{list.length > 4}}">
-                    <image class="icon-more" mode="aspectFit" src="/assets/img/more.jpg"></image>
+                    <image class="icon-more" mode="aspectFit" src="{{staticFile}}/more.jpg"></image>
                     <text class="showvideo">展开更多课程</text>
                     <text class="hidevideo">收起课程列表</text>
                 </view>

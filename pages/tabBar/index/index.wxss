@@ -2,6 +2,15 @@
 .container {
      position: relative;
 }
+.no-scroll {
+    position: fixed;
+    z-index: 0;
+    top:0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 
 /** 顶部通用样式   开始 **/
 .header {
@@ -78,24 +87,22 @@
 .slide {
     position: absolute;
     z-index: 9;
-    margin-top: -415rpx;   
+    margin-top: -400rpx;   
     width: 100%;
-    height: 665rpx;
+    height: 460rpx;
 }
 .slide .slide-item {
     position: relative;
-    width: 650rpx;
-    padding-bottom: 30rpx;
+    width: 660rpx;
+    height: 400rpx;
     margin: 30rpx 0 30rpx 0;
-    box-shadow:  8rpx 0 16rpx 16rpx rgba(220, 220, 220, 0.2);
     border-radius: 16rpx;
-    background: #fff;
     font-size: 0;
 }
 .slide .slide-image {
-    width: 650rpx;
-    height: 350rpx;
-    border-radius: 10rpx 10rpx 0 0;
+    width: 660rpx;
+    height: 400rpx;
+    border-radius: 10rpx;
 }
 .slide .brief {
     position: relative;
@@ -131,15 +138,57 @@
 
 .page {
     font-size: 0;
-    margin-top: 220rpx;
+    padding-top: 40rpx;
 }
 
 .topic {
     padding: 0 30rpx;
     font-size: 38rpx;
     line-height: 38rpx;
+    text-align: center;
     color: #202d33;
 }
+.topic text {
+    display: inline-block;
+    position: relative;
+    font-weight: bold;
+    vertical-align: top;
+}
+.topic text::before, .topic text::after {
+    display: inline-block;
+    content: '';
+    width: 20rpx;
+    height: 4rpx;
+    margin: 0 20rpx;
+    background: #ba1000;
+    vertical-align: middle;
+}
+.topic-00 {
+    color: #3a5369;
+}
+.topic-00 text::before, .topic-00 text::after {
+    background: #3a5369;
+}
+.topic-01 {
+    color: #653312;
+}
+.topic-01 text::before, .topic-01 text::after {
+    background: #653312;
+}
+.topic-10 {
+    color: #304291;
+}
+.topic-10 text::before, .topic-10 text::after {
+    background: #304291;
+}
+.topic-11 {
+    color: #85594b;
+}
+.topic-11 text::before, .topic-11 text::after {
+    background: #85594b;
+}
+
+
 
 /** 摩研社试读文章   开始 **/
 .trial {
@@ -423,3 +472,94 @@
     height: 140rpx;
 }
 /** 联系客服 || 领取试读券 结束 **/
+
+.brief {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.brief .main {
+    width: calc(100% - 60rpx);
+    height: 88%;
+    padding: 1% 0;
+    margin: 20rpx auto;
+    border-radius: 15rpx;
+    overflow-y: scroll;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 40rpx rgba(0, 0, 0, 0.2);
+}
+.brief .item {
+    padding-bottom: 30rpx;
+    margin: 40rpx 20rpx 0;
+    font-size: 28rpx;
+    line-height: 48rpx;
+    color: #fff;
+    border-bottom: 2rpx solid #5c5c5c;
+}
+.brief .item:last-child {
+    border-bottom: 0;
+}
+.brief .title {
+    font-size: 32rpx;
+    line-height: 32rpx;
+    font-weight: bold;
+}
+.brief .title image{
+    display: inline-block;
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 15rpx;
+    vertical-align: top;
+}
+.brief .info-title {
+    font-size: 32rpx;
+    line-height: 32rpx;
+    margin: 40rpx 0 30rpx;
+}
+.brief .info-title text {
+    display: inline-block;
+    font-size: 60rpx;
+    vertical-align: top;
+}
+.brief .info-text {
+    margin: 20rpx 0 0;
+}
+.brief .info-text text {
+    display: inline-block;
+    font-size: 60rpx;
+    vertical-align: top;
+}
+.brief .close {
+    position: relative;
+    width: 60rpx;
+    height: 60rpx;
+    margin: 2% auto 0;
+    border-radius: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 40rpx rgba(0, 0, 0, 0.2);
+}
+.brief .close.active {
+    background: rgba(0, 0, 0, 0.9);
+}
+.brief .close::before, .brief .close::after {
+    position: absolute;
+    top: 48%;
+    content: '';
+    width: 36rpx;
+    height: 4rpx;
+    background: #fff;
+    border-radius: 4rpx;
+}
+.brief .close::before {
+    left: 20%;
+    transform: rotate(45deg);
+}
+.brief .close::after {
+    left: 21%;
+    transform: rotate(-45deg);
+}

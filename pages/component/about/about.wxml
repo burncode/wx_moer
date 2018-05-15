@@ -1,0 +1,19 @@
+<!--pages/component/desc/desc.wxml-->
+<!-- 常见问题页面-->
+
+<view class="container" >
+    <block wx:if="{{type == 0}}">
+        <view class="qa">
+            <view class="item" wx:for="{{qa}}" wx:key="index">
+                <view class="item-q">
+                    <image class="img" src="img/q.gif"></image>
+                    <text>{{item.q}}</text>
+                </view>
+                <view class="item-a">
+                    <image class="img" src="img/a.gif"></image>
+                    <text>{{item.a}}</text>
+                </view>
+            </view>
+        </view>
+    </block>
+</view>

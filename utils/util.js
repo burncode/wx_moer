@@ -1,5 +1,5 @@
 const domain = 'https://www.moer.cn';
-const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram/';
+const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram';
 const urls = {
     'stockCollegeHome': '/miniProgram/v1/stockCollegeHome.json', // 摩股学院
     'mResearchIndex': '/miniProgram/v1/mResearchIndex.json',  //摩研社首页
@@ -24,7 +24,8 @@ const urls = {
     'savePhoneNumber': '/miniProgram/v1/savePhoneNumber.json',  // 保存获取的手机号
     'freeCoupon': '/miniProgram/v1/freeCoupon.json', // 领取试读券
     'playCount': '/miniProgram/v1/playCount.json', // 播放次数
-    'isGetCoupon': '/miniProgram/v1/isGetCoupon.json' // 调研通领取试读券
+    'isGetCoupon': '/miniProgram/v1/isGetCoupon.json', // 调研通领取试读券
+    'doZan': '/wapcommon_doZan.json'                   //文章详情页点赞
 };
 const ERR_OK = 0; //请求结果的状态 0：成功
 

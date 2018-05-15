@@ -30,7 +30,7 @@
         <!-- 更新消息 开始 -->
         <view class="page msg-page" hidden="{{ type != 0}}">
             <view class="empty msg-empty" wx:if="{{msg.length <= 0}}">
-                <image class="empty-bg" src="img/{{info[type].text}}-empty.jpg" mode="aspectFit" lazy-load="true"></image>
+                <image class="empty-bg" src="{{staticFile}}/buy/{{info[type].text}}-empty.jpg" mode="aspectFit" lazy-load="true"></image>
                 <text>订阅后及时获取更新消息</text>
             </view>
             <view class="msg-main" wx:if="{{msg.length > 0}}">
@@ -47,7 +47,7 @@
                 </view>
             </view>
             <view class="more-status more-status-0{{info[type].loading}}">
-                <view class="loading-more"><image src="/assets/img/loading.gif"></image> 加载中...</view>
+                <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
                 <view class="no-more">没有更多了</view>
             </view>
         </view>
@@ -55,7 +55,7 @@
         <!-- 我的订单 开始 -->
         <view class="page order-page" hidden="{{ type != 1}}">
             <view class="empty msg-empty" wx:if="{{order.length <= 0}}">
-                <image class="empty-bg" src="img/{{info[type].text}}-empty.jpg" mode="aspectFit" lazy-load="true"></image>
+                <image class="empty-bg" src="{{staticFile}}/buy/{{info[type].text}}-empty.jpg" mode="aspectFit" lazy-load="true"></image>
                 <text>暂无订单</text>
             </view>
             <view class="order-main" wx:if="{{order.length > 0}}">
@@ -78,7 +78,7 @@
                 </view>
             </view>
             <view class="more-status more-status-0{{info[type].loading}}">
-                <view class="loading-more"><image src="/assets/img/loading.gif"></image> 加载中...</view>
+                <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
                 <view class="no-more">没有更多了</view>
             </view>
         </view>

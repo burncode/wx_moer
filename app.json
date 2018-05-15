@@ -34,13 +34,16 @@
             }
         ]
     },
-    "subPackages": [{
-        "root": "pages/component",
-        "pages": [
-            "course/course",
-            "detail/detail",
-            "userCenter/userCenter",
-            "login/login"
-        ]
-    }]
+    "subPackages": [
+        {
+            "root": "pages/component",
+            "pages": [
+                "course/course",
+                "detail/detail",
+                "userCenter/userCenter",
+                "about/about",
+                "login/login"
+            ]
+        }
+    ]
 }

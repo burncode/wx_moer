@@ -5,7 +5,9 @@ const app = getApp();
 Page({
     data: {
         isLogin: false,
+        staticFile: util.staticFile,
         videoContext: '',
+        sort: 0,
         videoId: '', //当前课程的ID
         courseId: '', // 当前课程类别的ID
         list: [],
@@ -15,7 +17,7 @@ Page({
         max: 4,  // 视频已加载的总量： 默认是4课
         nextBtn: true,
     },
-    onShow: function () {
+    onShow: function (options) {
         const self = this;
         const userInfo = wx.getStorageSync('userInfo') || null;
         const isLogin = wx.getStorageSync('isLogin') || false;
@@ -31,10 +33,11 @@ Page({
         this.videoContext = wx.createVideoContext('myVideo');
     },
     onLoad: function (options) {
-        const { videoId, videoType } = options;
+        const { videoId, videoType, sort } = options;
 
         this.setData({
             videoId: videoId,
+            sort: sort,
             courseId: videoType
         });
         this.collegeHandler(videoType);
@@ -151,5 +154,14 @@ Page({
         this.setData({
             index: index
         });
+    },
+    onShareAppMessage: function () {
+        const { sort } = this.data;
+        const titles = ['一个向国内顶级私募学习的机会', '一套完整从低到高的缠论学习课程'];
+
+        return {
+            title: titles[sort],
+            path: `/pages/component/course/course`
+        }
     }
 })

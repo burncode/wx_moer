@@ -1,0 +1,39 @@
+/* pages/component/desc/desc.wxss */
+.qa {
+    padding: 0 24rpx 60rpx;
+}
+.qa .item {
+    font-size: 0;
+}
+.qa .item .item-q,
+.qa .item .item-a {
+    display: flex;
+}
+.qa .item .img {
+    width: 42rpx;
+    height: 40rpx;
+    padding-right: 18rpx;
+    vertical-align: top;
+}
+.qa .item text {
+    flex: 1;
+}
+.qa .item-q {
+    padding-top: 50rpx;
+}
+.qa .item-q text {
+    font-size: 32rpx;
+    line-height: 40rpx;
+    color: #202d33;
+    font-family: PingFangSC-Medium, sans-serif;
+}
+.qa .item-a {
+    padding-top: 20rpx;
+    margin-bottom: -8rpx;
+}
+.qa .item-a text {
+    font-size: 32rpx;
+    line-height: 48rpx;
+    color: #313e44;
+    font-family: PingFang SC;
+}

@@ -1,18 +1,18 @@
 //index.js
 //获取应用实例
 const util = require('../../../utils/util.js');
+const dataList = require('data.js');  
 const app = getApp();
 
 Page({
     data: {
         userInfo: null,
-        userImg: util.staticFile + '/index/moer.jpg',
+        userImg: util.staticFile + '/moer.jpg',
         staticFile: util.staticFile,
         type: 0, // 展示的类型： 0、摩研社； 1、摩股学院；
         info: {}, // 切换的TAB数据
         sort: 0, // 栏目的切换，默认显示第一项
         status: {
-            showBriefFlag: [false, false],  //  TAB下的简介
             tabFlag: [true, true], // TAB 是否滑动的状态
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
         },
@@ -29,6 +29,8 @@ Page({
         flag: true,   //  防止最新文章列表多次加载数据
         isContact: true, //  是显示联系客服还是显示领取试读券 （调研通，且未领取试读券） 
         couponInfo: null,
+        showBrief: false,
+        briefInfo: {},
         canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
     onShow: function () {
@@ -45,6 +47,12 @@ Page({
         });
 
         self.isConcatHandler(type);
+    },
+    onHide () {
+        const self = this;
+        self.setData({
+            showBrief: false
+        });
     },
     onLoad: function (options) {
         const self = this;
@@ -86,7 +94,6 @@ Page({
         const num = e.currentTarget.dataset.type;
         const tabStr = 'status.tabFlag';
         
-        this.showBrief(e, true);
         this.setData({
             type: num,
             sort: 0,
@@ -108,7 +115,6 @@ Page({
         const videoMax = 'videoNum.videoMax';
         let sortNum = '';
 
-        this.showBrief(e, true);
         if(source === 'touch') {
             
             this.setData({
@@ -262,27 +268,37 @@ Page({
         }
     },
     //展示Tab下的简介
-    showBrief: function (e, flag) {
-        const { showBriefFlag } = this.data.status;
-        const str = "status.showBriefFlag[" + this.data.sort +"]"; 
+    showDesc (e) {
+        const self = this;
+        const { type, sort, showBrief } = self.data;
 
-        this.setData({
-            [str]: flag ? false : !showBriefFlag[this.data.sort]
+        self.setData({
+            showBrief: !showBrief,
+            briefInfo: dataList.list[type][sort]
+        });
+    },
+    hiddenBrief () {
+        const self = this;
+
+        self.setData({
+            showBrief: false
         });
     },
     goToArticle: function(e) {
         const { id } = e.currentTarget;
+        const { sort } = this.data;
 
         wx.navigateTo({
-            url: `/pages/component/detail/detail?articleId=${id}`
+            url: `/pages/component/detail/detail?articleId=${id}&sort=${sort}`
         });
     },
     goToCourse: function(e) {
         const { id } = e.currentTarget;
+        const { sort } = this.data;
         const { videoType } = this.data.videoNum;
 
         wx.navigateTo({
-            url: `/pages/component/course/course?videoId=${id}&videoType=${videoType}`
+            url: `/pages/component/course/course?videoId=${id}&videoType=${videoType}&sort=${sort}`
         });
     },
     isConcatHandler (num) {
@@ -405,10 +421,15 @@ Page({
         }
     },
     onShareAppMessage: function () {
-        const { type, sort, info } = this.data;
+        const { type, sort, info, staticFile } = this.data;
+        const  titles = {
+            0: ['调研通抢先试读券，免费领取中', '第一时间获取券商晨会秘钥'],
+            1: ['一个向国内顶级私募学习的机会', '一套完整从低到高的缠论学习课程']
+        };
         
         return {
-            title: '摩尔投研',
+            title: titles[type][sort],
+            imageUrl: type == 0 ? `${staticFile}/share-${type}${sort}.jpg`: '',
             path: `/pages/tabBar/index/index?type=${type}&sort=${sort}`
         }
     }

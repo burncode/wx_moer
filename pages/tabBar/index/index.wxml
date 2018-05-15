@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="container" 
+<view class="container {{showBrief?'no-scroll':''}}" 
     enable-back-to-top="true">
     <!-- 头部详情 开始 -->
     <view class="header">
@@ -29,17 +29,15 @@
     <!-- banner 开始 -->
     <swiper class="slide" 
         current="{{sort}}"
-        previous-margin="15px" 
+        previous-margin="16px" 
         duration="400"
-        next-margin="18px" 
+        next-margin="12px"
+        bindtap="showDesc" 
         bindchange="changeTab">
         <block wx:for="{{info[type].services}}" wx:key="index">
             <swiper-item id="{{item.id}}">
                 <view class="slide-item">
-                    <image src="{{item.serviceImg+'?v=2018050201'}}" class="slide-image"></image>
-                    <view class="brief {{status.showBriefFlag[index]?'active':''}}" bindtap="showBrief">
-                         {{item.introduction}} 
-                    </view>
+                    <image src="{{staticFile}}/index/banner-{{type}}{{index}}.jpg" class="slide-image"></image>
                 </view>
             </swiper-item>
         </block>
@@ -47,7 +45,7 @@
     <!-- banner 结束 -->
     <!-- 摩研社 开始 -->
     <view class="page society-page" hidden="{{ type != 0}}">
-        <text class="topic" wx:if="{{tryReadArticles.length > 0}}">试读文章</text>
+        <view class="topic topic-{{type}}{{sort}}" wx:if="{{tryReadArticles.length > 0}}"><text>试读文章</text></view>
         <scroll-view 
             scroll-x="true" 
             scroll-left="{{scrollLeft}}" 
@@ -61,7 +59,7 @@
                 </view>
             </view>
         </scroll-view>
-        <text class="topic" wx:if="{{latestArticles[sort].length > 0}}">最新文章</text>
+        <view class="topic topic-{{type}}{{sort}}" wx:if="{{latestArticles[sort].length > 0}}"><text>最新文章</text></view>
         <view class="newest" wx:if="{{latestArticles[sort].length > 0}}">
             <view class="item" wx:for="{{latestArticles[sort]}}" wx:key="index" id="{{item.id}}" hover-class="active"  bindtap="goToArticle">
                 <view class="item-box">
@@ -76,7 +74,7 @@
                 </view>
             </view>
             <view class="more-status more-status-0{{status.loading[sort]}}">
-                <view class="loading-more"><image src="/assets/img/loading.gif"></image> 加载中...</view>
+                <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
                 <view class="no-more">没有更多了</view>
             </view>
         </view>
@@ -84,7 +82,7 @@
     <!-- 摩研社 结束 -->
     <!-- 摩股学院 开始 -->
     <view class="page college-page" hidden="{{ type != 1}}">
-        <text class="topic">课程目录</text>
+        <view class="topic topic-{{type}}{{sort}}"><text>课程目录</text></view>
         <view class="course">
             <view class="item" 
                 wx:for="{{videoInfo[sort].videoList}}" 
@@ -97,19 +95,19 @@
                     <view class="title">{{item.videoTitle}}</view>
                     <view class="info">
                         <view class="time">
-                            <image class="icon-time" mode="scaleToFill" src="/assets/img/time.png"></image> {{item.videoPeriod}}
+                            <image class="icon-time" mode="scaleToFill" src="{{staticFile}}/time.png"></image> {{item.videoPeriod}}
                         </view>
                         <view class="times">播放次数： {{item.playCount}}</view>
                     </view>
                 </view>
             </view>
             <view class="showMore {{videoNum.videoMax >= videoInfo[sort].videoList.length?'active':''}}" bindtap="getVideo" wx:if="{{videoInfo[sort].videoList.length > 4}}">
-                <image class="icon-more" mode="aspectFit" src="/assets/img/more.jpg"></image>
+                <image class="icon-more" mode="aspectFit" src="{{staticFile}}/more.jpg"></image>
                 <text class="showvideo">展开更多课程</text>
                 <text class="hidevideo">收起课程列表</text>
             </view>
         </view>
-        <text class="topic" wx:if="{{videoInfo[sort].videoList.length > 0}}">课程介绍</text>
+        <view class="topic topic-{{type}}{{sort}}" wx:if="{{videoInfo[sort].videoList.length > 0}}"><text>课程介绍</text></view>
         <view class="summary">{{videoInfo[sort].baseInfo}}</view>
     </view>
     <!-- 摩股学院 结束 -->
@@ -124,5 +122,64 @@
         <view class="free-coupon" bindtap="goCoupon">
             <image src="{{staticFile}}/index/coupon.png"></image>
         </view>
+    </view>
+
+    <!-- TAB产品的相关介绍 -->
+    <view class="brief" wx:if="{{showBrief}}">
+         <scroll-view class="main" scroll-with-animation="true" scroll-y>
+            <block wx:if="{{type == 0}}">
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-1.png"></image>产品介绍</view>
+                    <view class="info" wx:for="{{briefInfo.about}}" wx:key="index">
+                        <view class="info-title">{{index+1}}. {{item.title}}</view>
+                        <view class="info-desc">{{item.desc}}</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-2.png"></image>产品特性</view>
+                    <view class="info" wx:for="{{briefInfo.feature}}" wx:key="index">
+                        <view class="info-title"><text>·</text> {{item.title}}</view>
+                        <view class="info-desc">{{item.desc}}</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-3.png"></image>适宜人群</view>
+                    <view class="info">
+                        <view class="info-text">{{briefInfo.suitable}}</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-4.png"></image>更新时间</view>
+                    <view class="info-text">{{briefInfo.update}}</view>
+                </view>
+            </block>   
+            <block wx:elif="{{type == 1}}">
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-5.png"></image>作者介绍</view>
+                    <view class="info">
+                        <view class="info-text">{{briefInfo.about}}</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-1.png"></image>课程介绍</view>
+                    <view class="info">
+                        <view class="info-text">{{briefInfo.desc}}</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-6.png"></image>课程优势</view>
+                    <view class="info" wx:for="{{briefInfo.advantage}}" wx:key="index">
+                        <view class="info-text"><text>·</text> {{item}}</view>
+                    </view>
+                </view>
+                <view class="item">
+                    <view class="title"><image src="{{staticFile}}/index/icon-7.png"></image>适用人群</view>
+                    <view class="info" wx:for="{{briefInfo.suitable}}" wx:key="index">
+                        <view class="info-text"><text>·</text> {{item}}</view>
+                    </view>
+                </view>
+            </block>   
+         </scroll-view>
+         <view class="close" bindtap="hiddenBrief" hover-class="active" ></view>
     </view>
 </view>

@@ -5,6 +5,7 @@ const app = getApp();
 Page({
     data: {
         warn: false,
+        staticFile: util.staticFile,
         user: '',
         passwd: '',
         warnTxt: ''
