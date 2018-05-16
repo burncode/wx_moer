@@ -44,7 +44,7 @@
                 open-type="contact"
                 hover-class="none">
                 <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/join.gif"></image>
-                <text class="type-text">加入VIP群</text>
+                <text class="type-text">加入私密直播</text>
                 <text class="arrow"></text>
             </button>
             <navigator 

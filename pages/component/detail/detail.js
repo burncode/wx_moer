@@ -75,7 +75,7 @@ Page({
         }, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
-                let articleStr = d.articleInfo.content.replace(/&nbsp;/g, '');
+                let articleStr = self.showColor(d.articleInfo.content);;
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
 
@@ -520,10 +520,39 @@ Page({
         }
     },
     GetQueryString: function (url, name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        var index = url.indexOf('?') + 1;
-        var r = url.substr(index).match(reg);
+        const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        const index = url.indexOf('?') + 1;
+        const r = url.substr(index).match(reg);
         if (r != null) return unescape(r[2]); return null;
+    },
+    // 为了显示可点击的链接
+    showColor (data) {
+        var temp = '';
+
+        data = data.split(/(\<a.+?\a>)/)
+        data.forEach(function (item) {
+            var href = item.match(/href=\"([^(\}>)]+)\"/);
+
+            if (href) {
+                if (GetQueryString(href[1], 'articleId')) {
+                    temp += item;
+                } else {
+                    temp += '<span>' + item.replace(/<a.+?">|<\/a>/g, "") + '</span>';
+                }
+            } else {
+                temp += item;
+            }
+
+        });
+
+        function GetQueryString(url, name) {
+            const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            const index = url.indexOf('?') + 1;
+            const r = url.substr(index).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+
+        return temp;
     },
     // 显示对话框 
     showModal: function () {

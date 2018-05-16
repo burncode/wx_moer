@@ -481,13 +481,13 @@
     overflow: hidden;
 }
 .brief .main {
-    width: calc(100% - 60rpx);
-    height: 88%;
+    width: calc(100% - 80rpx);
+    height: 80%;
     padding: 1% 0;
-    margin: 20rpx auto;
+    margin: 9% auto 3%;
     border-radius: 15rpx;
     overflow-y: scroll;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     box-shadow: 0 0 40rpx rgba(0, 0, 0, 0.2);
 }
 .brief .item {
@@ -496,7 +496,7 @@
     font-size: 28rpx;
     line-height: 48rpx;
     color: #fff;
-    border-bottom: 2rpx solid #5c5c5c;
+    border-bottom: 2rpx solid #333;
 }
 .brief .item:last-child {
     border-bottom: 0;
@@ -533,8 +533,8 @@
 }
 .brief .close {
     position: relative;
-    width: 60rpx;
-    height: 60rpx;
+    width: 70rpx;
+    height: 70rpx;
     margin: 2% auto 0;
     border-radius: 100%;
     background: rgba(0, 0, 0, 0.7);
@@ -547,16 +547,16 @@
     position: absolute;
     top: 48%;
     content: '';
-    width: 36rpx;
+    width: 38rpx;
     height: 4rpx;
     background: #fff;
     border-radius: 4rpx;
 }
 .brief .close::before {
-    left: 20%;
+    left: 22.5%;
     transform: rotate(45deg);
 }
 .brief .close::after {
-    left: 21%;
+    left: 22.5%;
     transform: rotate(-45deg);
 }
