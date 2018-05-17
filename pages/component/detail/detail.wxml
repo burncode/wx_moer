@@ -17,14 +17,14 @@
                     <image 
                         class="img" 
                         mode="aspectFill" 
-                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.gif"></image>
+                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png"></image>
                 </button>
                 
                 <text>{{count.zanCount}}人点赞</text>
             </view>
             <view class="item operate-share">
                 <button open-type="share">
-                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.gif"></image>
+                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png"></image>
                 </button>
                 <text>好友免费读</text>
             </view>

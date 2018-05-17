@@ -17,7 +17,7 @@
             <view class="society {{ type == 0 ? 'active': ''}}" bindtap="changeType" data-type="0">摩研社</view>
             <view class="college {{ type == 1 ? 'active': ''}}" bindtap="changeType" data-type="1">摩股学院</view>
             <navigator url="/pages/tabBar/user/user" open-type="switchTab" class="avatar" hover-class="none">
-                <image src="{{userInfo?userInfo.userImg:userImg}}?ver=201805171441" class="avatar-img"></image>
+                <image src="{{userInfo?userInfo.userImg:userImg}}" class="avatar-img"></image>
             </navigator>
         </view>
         <view class="introduction">
@@ -36,7 +36,7 @@
         <block wx:for="{{info[type].services}}" wx:key="index">
             <swiper-item id="{{item.id}}">
                 <view class="slide-item">
-                    <image src="{{staticFile}}/index/banner-{{type}}{{index}}.jpg" class="slide-image"></image>
+                    <image src="{{staticFile}}/index/banner-{{type}}{{index}}.jpg?ver=201805171441" class="slide-image"></image>
                 </view>
             </swiper-item>
         </block>
