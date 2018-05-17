@@ -426,7 +426,7 @@ Page({
         
         return {
             title: titles[type][sort],
-            imageUrl: type == 0 ? `${staticFile}/share-${type}${sort}.jpg`: '',
+            imageUrl: type == 0 ? `${staticFile}/share-${type}${sort}.jpg?ver=20180517`: '',
             path: `/pages/tabBar/index/index?type=${type}&sort=${sort}`
         }
     }
