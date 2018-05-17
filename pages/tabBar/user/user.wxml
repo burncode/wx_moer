@@ -13,49 +13,50 @@
             <image class="avatar" src="{{userInfo.userImg}}"></image>
             <view class="info">
                 <view class="name">{{userInfo.userName}}</view>
-                <view class="phone"><text>手机号：</text> 
-                    <text wx:if="{{userInfo.userPhone}}">{{userInfo.userPhone}}</text>
-                    <button wx:else open-type="getPhoneNumber" class="bindPhone">绑定手机号</button>
-                </view>
+                <!-- <view class="phone" wx:if="{{!userInfo.userPhone}}"><text>手机号：</text><button open-type="getPhoneNumber" class="bindPhone">绑定手机号</button></view> -->
             </view>
             <button class="switch" bindtap="switchAccount">切换帐号</button>
         </view>
         <view class="main">
-            <navigator 
-                url="/pages/component/userCenter/userCenter?type=0" 
-                class="item"
-                open-type="navigate" 
-                hover-class="none">
-                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/coupon.gif"></image>
-                <text class="type-text">我的优惠券</text>
-                <view class="notice" wx:if="{{coupon>0}}">{{coupon}} 张</view>
-                <text class="arrow"></text>
-            </navigator>
-            <button 
-                class="item"
-                open-type="share"
-                hover-class="none">
-                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/share.gif"></image>
-                <text class="type-text">分享小程序</text>
-                <text class="arrow"></text>
-            </button>
-            <button 
-                class="item"
-                open-type="contact"
-                hover-class="none">
-                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/join.gif"></image>
-                <text class="type-text">加入私密直播</text>
-                <text class="arrow"></text>
-            </button>
-            <navigator 
-                url="/pages/component/about/about?type=0" 
-                class="item"
-                open-type="navigate" 
-                hover-class="none">
-                <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/qa.gif"></image>
-                <text class="type-text">常见问题</text>
-                <text class="arrow"></text>
-            </navigator>
+            <view class="item" hover-class="active">
+                <navigator 
+                    class="item-list"
+                    url="/pages/component/userCenter/userCenter?type=0" 
+                    open-type="navigate">
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/coupon.png"></image>
+                    <text class="type-text">我的优惠券</text>
+                    <view class="notice" wx:if="{{coupon>0}}">{{coupon}} 张</view>
+                    <text class="arrow"></text>
+                </navigator>
+            </view>
+            <view class="item" hover-class="active">
+                <button 
+                    class="item-list"
+                    open-type="share">
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/share.png"></image>
+                    <text class="type-text">分享小程序</text>
+                    <text class="arrow"></text>
+                </button>
+            </view>
+            <view class="item" hover-class="active">
+                <button 
+                    class="item-list"
+                    open-type="contact">
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/join.png"></image>
+                    <text class="type-text">加入私密直播</text>
+                    <text class="arrow"></text>
+                </button>
+            </view>
+            <view class="item" hover-class="active">
+                <navigator 
+                    class="item-list"
+                    url="/pages/component/about/about?type=0" 
+                    open-type="navigate">
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/qa.png"></image>
+                    <text class="type-text">常见问题</text>
+                    <text class="arrow"></text>
+                </navigator>
+            </view>
         </view>
     </view>
     <view class="contact">

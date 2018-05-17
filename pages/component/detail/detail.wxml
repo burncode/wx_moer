@@ -57,7 +57,7 @@
                     bindgetuserinfo="userBtnHandler"
                     bindgetphonenumber="phoneBtnHandler"
                     bindtap="receiveHandler" 
-                    wx:if="{{btnStatus.receive}}">领取试读券</button>
+                    wx:if="{{btnStatus.receive}}">领券免费读</button>
                 <view 
                     class="remind" 
                     wx:if="{{btnStatus.receive}}"
