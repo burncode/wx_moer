@@ -61,6 +61,12 @@ Page({
             mask: true
         });
 
+        if (sort == 0) {
+            wx.setNavigationBarTitle({ title: '调研通' });
+        } else {
+            wx.setNavigationBarTitle({ title: '券商晨会' });
+        }
+
         this.getInfo();
         this.authorizeHandler();
     },
@@ -76,25 +82,22 @@ Page({
         }, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
-                let articleStr = self.showColor(d.articleInfo.content);
+                const articleStr = self.showColor(d.articleInfo.content);
                 const updateLog = d.articleInfo.updateLog;
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
 
-                updateLog.forEach(function (item, index) {
-                    let updateArticle = self.showColor(item.content);
+                if (updateLog && updateLog.length > 0) {
+                    updateLog.forEach(function (item, index) {
+                        const updateArticle = self.showColor(item.content);
 
-                    console.log('upArticle' + index)
-                    WxParse.wxParse('upArticle[' + index +']', 'html', updateArticle, self, 20);
-                });
+                        WxParse.wxParse('upArticle[' + index + ']', 'html', updateArticle, self, 20);
+                    });
+                }
 
                 self.setData({
                     articleInfo: d.articleInfo,
                     buttonInfo: d.buttonInfo
-                });
-
-                wx.setNavigationBarTitle({
-                    title: d.articleInfo.title
                 });
 
                 self.btnStatusHandler();

@@ -112,8 +112,10 @@
     line-height: 50rpx;
     padding: 0;
     margin: 24rpx 0 0;
+    font-size: 0;
     border-radius: 0;
     background: #fff;
+    vertical-align: top;
 }
 .detail .operate .item {
     flex: 1;
@@ -124,6 +126,7 @@
     display: inline-block;
     line-height: 50rpx;
     font-size: 28rpx;
+    color: #879193;
     vertical-align: top;
 }
 .detail .operate .operate-zan button {
@@ -131,9 +134,9 @@
 }
 .detail .operate .img {
     display: inline-block;
-    width: 44rpx;
-    height: 40rpx;
-    margin: 4rpx 20rpx 0 0;
+    width: 50rpx;
+    height: 50rpx;
+    margin: 0 10rpx 0 0;
     vertical-align: top;
 }
 
@@ -528,6 +531,6 @@
 
 /* 底部点赞转发按钮 适配iPhone X */
 .detail .isIphoneX {
-    height: 120rpx;
-    line-height: 120rpx;
+    height: 130rpx;
+    line-height: 130rpx;
 }
