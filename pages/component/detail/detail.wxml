@@ -8,25 +8,28 @@
         </view>
         <view class="tips" wx:if="{{articleInfo.summary != ''}}">{{articleInfo.summary}}</view>
         <view class="main">
+            <view class="updateMain" wx:for="{{articleInfo.updateLog}}" wx:key="index">
+                <view class="updateTime">{{item.pubTime}}</view>
+                <template is="wxParse" data="{{wxParseData:upArticle[index].nodes}}"/> 
+            </view>
             <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
         </view>
         <view class="warn" wx:if="{{articleInfo.buyFlag == 1}}"><image src="{{staticFile}}/detail/warn.jpg"></image> 尊敬的用户，您购买的内容不构成投资建议，投资需谨慎，请独立判断。</view>
-        <view class="operate" wx:if="{{articleInfo.buyFlag == 1}}">
+        <view class="operate {{isIphoneX?'isIphoneX':''}}" wx:if="{{articleInfo.buyFlag == 1}}">
             <view class="item operate-zan {{count.isZan?'active':''}}">
                 <button open-type="{{!isLogin?'getUserInfo':''}}" bindtap="doZan" bindgetuserinfo="bindgetuserinfo">
                     <image 
                         class="img" 
                         mode="aspectFill" 
-                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png"></image>
+                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png?ver=20180518"></image>
+                    <text>{{count.zanCount>0?count.zanCount+'人':''}}点赞</text>
                 </button>
-                
-                <text>{{count.zanCount}}人点赞</text>
             </view>
             <view class="item operate-share">
                 <button open-type="share">
-                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png"></image>
+                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png?ver=20180518"></image>
+                    <text>分享</text>
                 </button>
-                <text>好友免费读</text>
             </view>
         </view>
         <view class="access" wx:if="{{articleInfo.buyFlag != 1}}">

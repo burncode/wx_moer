@@ -17,6 +17,18 @@ App({
     onShow (options) {
         const self = this;
 
+        wx.getSystemInfo({
+            success: res => {
+                const modelmes = res.model;
+                let flag = false;
+
+                if (modelmes.search('iPhone X') != -1) {
+                    flag = true
+                } 
+
+                self.globalData.isIphoneX = flag;
+            }
+        });
         this.getUserInfo();
     },
     /**  
@@ -92,6 +104,7 @@ App({
     },
     globalData: {
         userInfo: null,
+        isIphoneX: false,
         isLogin: false
     }
 })

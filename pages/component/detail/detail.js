@@ -20,6 +20,7 @@ Page({
             coupon: false, // 使用优惠券
             receive: false // 免费领取优惠券
         },
+        isIphoneX: app.globalData.isIphoneX,
         tips: '最多可得3张免费试读券', // 按钮下优惠券的提示
         count: {}, // 文章阅读数、购买数、点赞数......
         serviceBuyInfo: {},  // 购买摩研社服务 展示价格等信息
@@ -75,9 +76,17 @@ Page({
         }, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
-                let articleStr = self.showColor(d.articleInfo.content);;
+                let articleStr = self.showColor(d.articleInfo.content);
+                const updateLog = d.articleInfo.updateLog;
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
+
+                updateLog.forEach(function (item, index) {
+                    let updateArticle = self.showColor(item.content);
+
+                    console.log('upArticle' + index)
+                    WxParse.wxParse('upArticle[' + index +']', 'html', updateArticle, self, 20);
+                });
 
                 self.setData({
                     articleInfo: d.articleInfo,
