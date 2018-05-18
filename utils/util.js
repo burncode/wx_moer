@@ -117,7 +117,7 @@ const wxLoginHandler = function (success, fail) {
                         // })
                         fail && fail(d);
                     } else {
-                        
+                        fail && fail(d);
                     }
                     
                     wx.hideLoading();

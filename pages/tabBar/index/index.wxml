@@ -30,6 +30,7 @@
         current="{{sort}}"
         previous-margin="16px" 
         duration="400"
+        previous-margin="22px"
         next-margin="12px"
         bindtap="showDesc" 
         bindchange="changeTab">
@@ -74,7 +75,7 @@
             </view>
             <view class="more-status more-status-0{{status.loading[sort]}}">
                 <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
-                <view class="no-more">没有更多了</view>
+                <view class="no-more">{{noMoreText[sort]}}</view>
             </view>
         </view>
     </view>
@@ -118,9 +119,9 @@
         </button> 
     </view>
     <view wx:else>
-        <view class="free-coupon" bindtap="goCoupon">
+        <button class="free-coupon" open-type="{{!isLogin?'getUserInfo':''}}" bindtap="goCoupon" bindgetuserinfo="bindgetuserinfo">
             <image src="{{staticFile}}/index/coupon.png"></image>
-        </view>
+        </button> 
     </view>
 
     <!-- TAB产品的相关介绍 -->

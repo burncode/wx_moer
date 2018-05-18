@@ -1,5 +1,5 @@
 {
     "backgroundTextStyle": "light",
     "enablePullDownRefresh": true,
-    "onReachBottomDistance": 80    
+    "onReachBottomDistance": 10    
 }

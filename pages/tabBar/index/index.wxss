@@ -464,6 +464,7 @@
     bottom: 200rpx;
     z-index: 9;
     padding: 0;
+    background: none;
 }
 .free-coupon image{
     width: 140rpx;

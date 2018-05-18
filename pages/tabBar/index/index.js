@@ -29,6 +29,7 @@ Page({
         couponInfo: null,  //调研通下是显示领取试读券还是联系客服
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
+        noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
         canIUse: wx.canIUse('button.open-type.getUserInfo')
     },
     onShow: function () {
@@ -41,7 +42,8 @@ Page({
         app.globalData.isLogin = isLogin;
 
         self.setData({
-            userInfo: userInfo
+            userInfo: userInfo,
+            isLogin: isLogin
         });
 
         self.isConcatHandler(type);
@@ -319,24 +321,38 @@ Page({
     // 点击领取试读券
     goCoupon () {
         const self = this;
-        let { couponInfo, type } = self.data;
-        const isLogin = app.globalData.isLogin;
+        let { couponInfo, type, isLogin } = self.data;
 
         if (isLogin) {
             self.freeCoupon(couponInfo);
-        } else {
-            util.wxLoginHandler(function () {
-                self.freeCoupon(couponInfo);
-            }, function () {
-                wx.openSetting({
-                    success: (res) => {
-                        res.authSetting = {
-                            "scope.userInfo": true
-                        }
-                    }
-                })
-            }); 
         }
+        // } else {
+        //     util.wxLoginHandler(function () {
+        //         self.freeCoupon(couponInfo);
+        //     }, function () {
+        //         wx.openSetting({
+        //             success: (res) => {
+        //                 res.authSetting = {
+        //                     "scope.userInfo": true
+        //                 }
+        //             }
+        //         })
+        //     }); 
+        // }
+    },
+    bindgetuserinfo () {
+        const self = this;
+
+        util.wxLoginHandler(function () {
+            self.setData({
+                userInfo: app.globalData.userInfo,
+                isLogin: app.globalData.isLogin
+            });
+
+            self.getCouponInfo();
+        }, function () {
+            fn && fn();
+        });
     },
     getCouponInfo () {
         const self = this;
@@ -400,7 +416,9 @@ Page({
         const str = 'status.loading[' + sort + ']';
 
         self.setData({
-            [str]: 0
+            [str]: 0,
+            sortTime: [],
+            latestArticles: {}
         });
 
         self.switchHandler(type);
