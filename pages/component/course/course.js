@@ -87,34 +87,18 @@ Page({
             })
         }
     },
-    beforePlay () {
+    bindgetuserinfo() {
         const self = this;
 
-        if (!app.globalData.isLogin) { //未登录
-            self.videoContext.pause(0);
-            util.wxLoginHandler(function () {
-                self.setData({
-                    isLogin: true
-                });
-                self.videoContext.play();
-                self.playCount();
-            }, function () {
-                wx.openSetting({
-                    success: (res) => {
-                        res.authSetting = {
-                        "scope.userInfo": true
-                        }
-                    }
-                })
-                // self.videoContext.pause();
-            }); 
-        } else {
+        util.wxLoginHandler(function () {
             self.setData({
+                userInfo: app.globalData.userInfo,
                 isLogin: app.globalData.isLogin
             });
 
+            self.videoContext.play();
             self.playCount();
-        }
+        });
     },
     // 记录播放次数
     playCount () {

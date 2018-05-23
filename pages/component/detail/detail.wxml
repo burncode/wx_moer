@@ -23,13 +23,13 @@
                     <image 
                         class="img" 
                         mode="aspectFill" 
-                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png?ver=201805181639"></image>
+                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png"></image>
                     <text>{{count.isZan?'已赞':'点赞'}}</text>
                 </button>
             </view>
             <view class="item operate-share">
                 <button open-type="share" hover-class="none">
-                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png?ver=201805181639"></image>
+                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png"></image>
                     <text>分享</text>
                 </button>
             </view>
@@ -54,18 +54,6 @@
                     bindtap="payArticle" 
                     wx:if="{{btnStatus.coupon}}"
                     >使用一张试读券</button>
-                <button 
-                    class="btn btn-share" 
-                    data-kind="2"
-                    open-type="{{useButtonType}}" 
-                    bindgetuserinfo="userBtnHandler"
-                    bindgetphonenumber="phoneBtnHandler"
-                    bindtap="receiveHandler" 
-                    wx:if="{{btnStatus.receive}}">领券免费读</button>
-                <view 
-                    class="remind" 
-                    wx:if="{{btnStatus.receive}}"
-                    ><image src="{{staticFile}}/detail/invite-tip.jpg"></image>{{tips}}</view>
             </view>
             <view class="access-info">
                 <text>{{count.saleCount}}人已购买</text>
@@ -85,7 +73,11 @@
                         </view>
                         <text wx:if="{{buttonInfo.userCouponCount > 0}}">使用试读券</text>
                     </view>
-                    <button class="goPay" bindtap="goPay">{{useCouponStatus?'免费读':'￥'+serviceBuyInfo.price}}</button>
+                    <form name="notice" report-submit bindsubmit='orderSign'> 
+                        <button 
+                            class="goPay" 
+                            bindtap="goPay">{{useCouponStatus?'免费读':'￥'+serviceBuyInfo.price}}</button>
+                    </form>
                 </view>
                 <view class="sub-service">
                     <text class="txt">订阅{{serviceBuyInfo.serviceName}}</text>
@@ -123,7 +115,7 @@
             <image src="{{staticFile}}/detail/goHome.png"></image>
         </navigator>
         <button class="contact" open-type="contact" wx:if="{{articleInfo.showIndex == 0}}">
-            <image src="{{staticFile}}/index/contact.png"></image>
+            <image src="{{staticFile}}/contact.png?ver=20180523"></image>
         </button> 
     </view>
     <!--弹窗-->

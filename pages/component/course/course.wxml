@@ -2,15 +2,24 @@
 <view class="container">
     <view class="course" wx:if="{{list.length > 0}}">
         <!-- 课程视频播放 开始 -->
-        <view class="video {{isLogin}}">
-             <video id="myVideo" class="myVideo" src="{{list[index].videoUrl}}" 
-            controls
-            autoplay="{{isLogin}}"
-            direction="90"
-            bindplay="beforePlay"
-            bindwaiting="waitHandler"
-            bindended="nextHandler"
-            ></video> 
+        <view class="video">
+            <button 
+                class="loginBtn" 
+                open-type="getUserInfo"  
+                wx:if="{{!isLogin}}"
+                bindgetuserinfo="bindgetuserinfo">
+                    <image src="img/play.png" class="play-icon"></image>
+                    <image src="{{list[index].videoImg}}" lazy-load mode="aspectFill" class="play-bg"></image>
+                </button> 
+            <video id="myVideo" class="myVideo" src="{{list[index].videoUrl}}" 
+                controls
+                autoplay="{{isLogin}}"
+                direction="90"
+                bindwaiting="waitHandler"
+                bindended="nextHandler"
+                wx:else
+                ></video> 
+            
             <view class="heading">
                 <text class="topicTitle">{{list[index].videoTitle}}</text>
                 <button class="next" 

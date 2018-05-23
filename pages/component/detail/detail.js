@@ -17,11 +17,9 @@ Page({
         showModalStatus: false, // 购买文章的对话框
         btnStatus: {
             pay: false,    // 单篇购买
-            coupon: false, // 使用优惠券
-            receive: false // 免费领取优惠券
+            coupon: false // 使用优惠券
         },
         isIphoneX: app.globalData.isIphoneX,
-        tips: '最多可得3张免费试读券', // 按钮下优惠券的提示
         count: {}, // 文章阅读数、购买数、点赞数......
         serviceBuyInfo: {},  // 购买摩研社服务 展示价格等信息
         pack: ['包月', '包季', '包年'],
@@ -190,13 +188,11 @@ Page({
     btnStatusHandler: function () {
         const self = this;
         const { buttonInfo } = self.data;
-        const tips = '';
 
         self.setData({
             btnStatus: {
                 pay: false,    // 单篇购买
-                coupon: false, // 使用优惠券
-                receive: false // 免费领取优惠券
+                coupon: false // 使用优惠券
             }
         })        
 
@@ -213,21 +209,10 @@ Page({
                 });
             }
             // 优惠券 结束
-
-            if (buttonInfo.userUnlockRecord < 3) { //优惠券未到达上限 显示领取优惠券
-                self.setData({
-                    ['btnStatus.receive']: true
-                });
-            } else {
-                self.setData({
-                    ['btnStatus.receive']: false
-                });
-            }
         } else { //未登录
 
             self.setData({
-                ['btnStatus.pay']: true,
-                ['btnStatus.receive']: true
+                ['btnStatus.pay']: true
             });
         }
     },
@@ -382,50 +367,6 @@ Page({
                 });
             }
         });
-    },
-    // 免费领取优惠券  
-    receiveHandler() {
-        const self = this;
-
-        if (!app.globalData.isLogin) {
-            // 调用登录接口 
-            self.loginBack(function () {
-                wx.showToast({
-                    title: '领取失败',
-                    icon: 'none',
-                    duration: 2000
-                });
-            });
-        } else {
-            const authorizePhone = wx.getStorageSync('authorizePhone') || 0;
-            const { articleInfo, inviteUid, userInfo } = self.data;
-
-            // 用户登录 且 (用户信息中有手机号 || 用户没有手机号但是弹过一次授权)
-            if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
-                // 领取免费优惠券 TODO
-                util.sendRequest(util.urls.freeCoupon, {
-                    uid: userInfo.userId,
-                    authorId: articleInfo.authorId,
-                    inviteUid: inviteUid,
-                    articleId: articleInfo.articleId
-                }, function (r) {
-                    if (r.data.code == util.ERR_OK) {
-
-                        wx.showToast({
-                            title: r.data.result,
-                            icon: 'success',
-                            duration: 2000,
-                            complete: function () {
-                                // 设置定时器，是因为API的BUG hideLoading 会把showToast 给关闭
-                                setTimeout(function () {
-                                    self.getInfo();
-                                }, 1000)
-                            }
-                        });
-                    }
-                });
-            }
-        }
     },
     // 未登录，获取用户信息
     userBtnHandler(res) { 

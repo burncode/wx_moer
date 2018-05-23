@@ -25,8 +25,6 @@ Page({
         },        
         sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
         flag: true,   //  防止最新文章列表多次加载数据
-        isContact: true, //  是显示联系客服还是显示领取试读券 （调研通，且未领取试读券） 
-        couponInfo: null,  //调研通下是显示领取试读券还是联系客服
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
@@ -76,9 +74,6 @@ Page({
                     type: type,
                     sort: sort
                 });
-
-                // 当我拒绝授权登录，然后重新授权成功后，获取 是否显示优惠券的相关信息
-                self.getCouponInfo();
             }
         } else {
 
@@ -142,7 +137,7 @@ Page({
     //0、摩研社； 1、摩股学院的数据请求
     switchHandler: function(num) {
         const self = this;
-        let { sort, isContact } = self.data;
+        let { sort } = self.data;
         const str = 'info['+ num +']';
 
         // //摩研社数据请求
@@ -301,12 +296,12 @@ Page({
     // 在调研通 默认是领取试读券，否则是联系客服
     isConcatHandler (num) {
         const self = this;
-        let { sort, isContact, userInfo } = self.data;
+        let { sort, userInfo } = self.data;
         const isLogin = app.globalData.isLogin;
 
         if (num == 0 && sort == 0) { //是否在调研通频道
             if (isLogin) {
-                self.getCouponInfo();
+                
             } else {
                 self.setData({
                     isContact: false
@@ -317,83 +312,6 @@ Page({
                 isContact: true
             });
         }
-    },
-    // 点击领取试读券
-    goCoupon () {
-        const self = this;
-        let { couponInfo, type, isLogin } = self.data;
-
-        if (isLogin) {
-            self.freeCoupon(couponInfo);
-        }
-        // } else {
-        //     util.wxLoginHandler(function () {
-        //         self.freeCoupon(couponInfo);
-        //     }, function () {
-        //         wx.openSetting({
-        //             success: (res) => {
-        //                 res.authSetting = {
-        //                     "scope.userInfo": true
-        //                 }
-        //             }
-        //         })
-        //     }); 
-        // }
-    },
-    bindgetuserinfo () {
-        const self = this;
-
-        util.wxLoginHandler(function () {
-            self.setData({
-                userInfo: app.globalData.userInfo,
-                isLogin: app.globalData.isLogin
-            });
-
-            self.getCouponInfo();
-        }, function () {
-            fn && fn();
-        });
-    },
-    getCouponInfo () {
-        const self = this;
-        let { isContact, userInfo } = self.data;
-
-        util.sendRequest(util.urls.isGetCoupon, { uid: userInfo.userId }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-
-                if (d.flag == 'false') {
-                    isContact = false;
-                } else {
-                    isContact = true;
-                }
-
-                self.setData({
-                    isContact: isContact,
-                    couponInfo: d
-                });
-            }
-        });
-    },
-    // 领取免费优惠券 TODO
-    freeCoupon(params) {
-        const self = this;
-        
-        util.sendRequest(util.urls.freeCoupon, params, function (r) {
-            if (r.data.code == util.ERR_OK) {
-
-                wx.showToast({
-                    title: r.data.result,
-                    icon: 'success',
-                    duration: 2000,
-                    success: function () {
-                        self.setData({
-                            isContact: true
-                        });
-                    }
-                });
-            }
-        });
     },
     // 未读消息数
     getUnReadMsg() {

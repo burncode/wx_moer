@@ -11,7 +11,7 @@
         </view>
         <view class="contact">
             <button bindtap="phoneCall" class="btn">
-                <image src="{{staticFile}}/contact.png"></image><text>联系客服</text>
+                <image src="{{staticFile}}/tel.png"></image><text>联系客服</text>
             </button>
             <view class="time">工作日 8：00 - 17：00</view>
         </view>

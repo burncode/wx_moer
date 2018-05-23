@@ -186,19 +186,6 @@
     color: #e84c3d;
     border-color: #e84c3d;
 }
-.access .remind {
-    height: 24rpx;
-    line-height: 24rpx;
-    
-    font-size: 24rpx;
-}
-.access .remind image {
-    display: inline-block;
-    width: 22rpx;
-    height: 20rpx;
-    margin: 2rpx 10rpx 0 0;
-    vertical-align: top;
-}
 .access .access-info {
     display: flex;
     padding: 0 0 40rpx;
@@ -436,8 +423,8 @@
     background: none;
 }
 .contact image{
-    width: 118rpx;
-    height: 118rpx;
+    width: 130rpx;
+    height: 100rpx;
 }
 
 .mask {
