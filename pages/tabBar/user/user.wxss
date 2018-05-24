@@ -148,6 +148,11 @@
     color: #e84c3d;
     font-size: 28rpx;
 }
+.home .item .tips {
+    flex: 2;
+    color: #879193;
+    font-size: 24rpx;
+}
 .home .item .arrow {
     position: relative;
     display: inline-block;
@@ -171,29 +176,4 @@
 .home .arrow::after {
     top: 58%;
     transform: rotate(-45deg);
-}
-
-.contact {
-    position: absolute;
-    bottom: 80rpx;
-    width: 100%;
-    text-align: center;
-    font-size: 28rpx;
-}
-.contact .btn {
-    display: inline-block;
-    line-height: 36rpx;
-    font-size: 28rpx;
-    color: #3badda;
-    background: none;
-}
-.contact image {
-    width: 36rpx;
-    height: 36rpx;
-    margin: 0 20rpx 0 0;
-    vertical-align: top;
-}
-.contact .time {
-    font-size: 24rpx;
-    color: #879193;
 }

@@ -23,13 +23,13 @@
                     <image 
                         class="img" 
                         mode="aspectFill" 
-                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png"></image>
+                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png?ver=20180524"></image>
                     <text>{{count.isZan?'已赞':'点赞'}}</text>
                 </button>
             </view>
             <view class="item operate-share">
                 <button open-type="share" hover-class="none">
-                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png"></image>
+                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png?ver=20180524"></image>
                     <text>分享</text>
                 </button>
             </view>
@@ -123,8 +123,8 @@
     <view class="modal-dialog" wx:if="{{refresh && !isPop}}">
         <image class="modal-head" src="{{staticFile}}/detail/pop-head.png" mode="aspectFit"></image>
         <view class="modal-content">
-            <view class="modal-title">获得盘中指导和日常问题反馈</view>
-            <view class="modal-desc">24小时在线客服</view>
+            <view class="modal-title">盘中私密指导和问题反馈</view>
+            <view class="modal-desc">工作日 8:00-22:00</view>
         </view>
         <view class="modal-footer">
             <view class="btn-cancel" bindtap="hideTips">稍后加入</view>
