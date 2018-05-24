@@ -30,7 +30,7 @@ Page({
         authorizePhone: 0, // 手机号是否弹窗授权
         isPop: 0 // 是否显示购买文章后的弹窗
     },
-    onShow: function () {
+    onShow: function (options) {
         const self = this;
         const userInfo = wx.getStorageSync('userInfo') || null;
         const isLogin = wx.getStorageSync('isLogin') || false;
@@ -47,6 +47,7 @@ Page({
     },
     onLoad: function (options) {
         const { articleId, inviteUid, sort } = options;
+        
 
         this.setData({
             articleId: articleId || '',
@@ -62,16 +63,17 @@ Page({
         if (sort == 0) {
             wx.setNavigationBarTitle({ title: '调研通' });
         } else {
-            wx.setNavigationBarTitle({ title: '券商晨会' });
+            wx.setNavigationBarTitle({ title: '券商晨会速递' });
         }
 
         this.getInfo();
         this.authorizeHandler();
+        
     },
     // 获取文章信息
     getInfo: function () {
         const self = this;
-        const { articleId, refresh, inviteUid } = self.data;
+        const { articleId, refresh, inviteUid, sort } = self.data;
 
         util.sendRequest(util.urls.articleDetails, {
             articleId: articleId, // 文章ID
@@ -82,6 +84,7 @@ Page({
                 const d = res.data.result;
                 const articleStr = self.showColor(d.articleInfo.content);
                 const updateLog = d.articleInfo.updateLog;
+                const keys = [110012, 110011];
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
 
@@ -102,6 +105,7 @@ Page({
                 self.getBrowseCount();
                 self.articleInfo();
                 wx.hideLoading();
+                util.statistics(keys[sort], app);
             } else {
                 wx.showToast({
                     title: res.data.message,

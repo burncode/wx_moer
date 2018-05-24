@@ -43,7 +43,7 @@
                     class="item-list"
                     open-type="contact">
                     <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/join.png"></image>
-                    <text class="type-text">加入私密群</text>
+                    <text class="type-text">加入私密直播</text>
                     <text class="arrow"></text>
                 </button>
             </view>
@@ -80,11 +80,5 @@
                 </button>
             </view>
         </view>
-    </view>
-    <view class="contact">
-        <button bindtap="phoneCall" class="btn">
-            <image src="{{staticFile}}/tel.png"></image><text>联系客服</text>
-        </button>
-        <view class="time">工作日 8：00 - 17：00</view>
     </view>
 </view>

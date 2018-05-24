@@ -263,11 +263,14 @@ Page({
     showDesc (e) {
         const self = this;
         const { type, sort, showBrief } = self.data;
+        const keys = [110005, 110004];
 
         self.setData({
             showBrief: !showBrief,
             briefInfo: dataList.list[type][sort]
         });
+
+        util.statistics(keys[sort], app);
     },
     hiddenBrief () {
         const self = this;

@@ -25,7 +25,8 @@ const urls = {
     'freeCoupon': '/miniProgram/v1/freeCoupon.json', // 领取试读券
     'playCount': '/miniProgram/v1/playCount.json', // 播放次数
     'isGetCoupon': '/miniProgram/v1/isGetCoupon.json', // 调研通领取试读券
-    'doZan': '/wapcommon_doZan.json'                   //文章详情页点赞
+    'doZan': '/wapcommon_doZan.json',                   //文章详情页点赞
+    'actLog': '/miniProgram/v1/actLog.json',   // 数据统计
 };
 const ERR_OK = 0; //请求结果的状态 0：成功
 
@@ -127,11 +128,29 @@ const wxLoginHandler = function (success, fail) {
     })
 };
 
+const statistics = function (key, app) {
+    const params = {
+        key: key,
+        value: ''
+    };
+
+    sendRequest(urls.actLog, params, function (r) {
+
+        if (r.data.code == ERR_OK) {
+            const data = r.data.result;
+
+        } else {
+
+        }
+    });
+}
+
 module.exports = {
     domain: domain,
     urls: urls,
     ERR_OK: ERR_OK,
     sendRequest: sendRequest,
     wxLoginHandler: wxLoginHandler,
-    staticFile: staticFile
+    staticFile: staticFile,
+    statistics: statistics
 }
