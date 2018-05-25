@@ -51,7 +51,7 @@ Page({
 
         this.setData({
             articleId: articleId || '',
-            sort: sort || 0,
+            sort: sort || '',
             inviteUid: inviteUid || ''
         });
 
@@ -59,12 +59,6 @@ Page({
             title: '加载中',
             mask: true
         });
-
-        if (sort == 0) {
-            wx.setNavigationBarTitle({ title: '调研通' });
-        } else {
-            wx.setNavigationBarTitle({ title: '券商晨会速递' });
-        }
 
         this.getInfo();
         this.authorizeHandler();
@@ -85,6 +79,7 @@ Page({
                 const articleStr = self.showColor(d.articleInfo.content);
                 const updateLog = d.articleInfo.updateLog;
                 const keys = [110012, 110011];
+                const uids = ['117558573', '117521660'];
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
 
@@ -95,11 +90,17 @@ Page({
                         WxParse.wxParse('upArticle[' + index + ']', 'html', updateArticle, self, 20);
                     });
                 }
-
+                
                 self.setData({
                     articleInfo: d.articleInfo,
                     buttonInfo: d.buttonInfo
                 });
+
+                if (sort == 0 || uids[0] == d.articleInfo.authorId) {
+                    wx.setNavigationBarTitle({ title: '调研通' });
+                } else if (sort == 1 || uids[1] == d.articleInfo.authorId) {
+                    wx.setNavigationBarTitle({ title: '券商晨会速递' });
+                }
 
                 self.btnStatusHandler();
                 self.getBrowseCount();
