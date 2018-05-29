@@ -56,7 +56,7 @@ const sendRequest = function (urlPath, params, success, fail, mode) {
             success(res);
         },
         fail: function (res) {
-            fail(res);
+            fail && fail(res);
         }
     })
 };
@@ -106,7 +106,7 @@ const wxLoginHandler = function (success, fail) {
                             clearInterval(app.data.timer);
                             app.data.timer = setInterval(function () {
                                 getUnReadMsg();
-                            }, 3000);
+                            }, 60000);
                         } else {
                             
                         }
