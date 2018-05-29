@@ -24,7 +24,6 @@ Page({
             videoMax: 4  // 视频已加载的总量： 默认是4课
         },        
         sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
-        flag: true,   //  防止最新文章列表多次加载数据
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
@@ -81,7 +80,6 @@ Page({
         
         // 初始化
         self.switchHandler(type);
-        self.getUnReadMsg();
     },
     //展示类型的切换： 0、摩研社； 1、摩股学院；
     changeType: function (e) {
@@ -120,8 +118,8 @@ Page({
             if (type == 0) {
 
                 // if (tabFlag[current]) {
-                    self.tryReadArticleHandler();
                     self.latestArticlesHandler();
+                    self.tryReadArticleHandler();
                 // }
 
             } else if (type == 1) {
@@ -150,8 +148,8 @@ Page({
                         [str]: d
                     });
 
-                    self.tryReadArticleHandler();
                     self.latestArticlesHandler();
+                    self.tryReadArticleHandler();
                 }
             });            
         } else if (num == 1) {
@@ -186,40 +184,47 @@ Page({
     //最新文章的数据请求
     latestArticlesHandler: function () {
         const self = this;
-        const { latestArticles, sort, sortTime, info, type, flag } = self.data;
+        const { latestArticles, sort, sortTime, info, type } = self.data;
         const str = 'latestArticles[' + sort + ']';
         const strTimes = 'sortTime[' + sort +']';
 
-        if (flag) {
-            self.setData({
-                flag: false
-            });
+        wx.hideLoading();
 
-            util.sendRequest(util.urls.latestArticles, {
-                authorId: info[type].services[sort].authorId,
-                sortTime: sortTime[sort] || ''
-            }, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
-                    const loading = 'status.loading[' + sort + ']'
+        util.sendRequest(util.urls.latestArticles, {
+            authorId: info[type].services[sort].authorId,
+            sortTime: sortTime[sort] || ''
+        }, function (res) {
+            if (res.data.code == util.ERR_OK) {
+                const d = res.data.result;
+                const loading = 'status.loading[' + sort + ']';
 
-                    if (d.length > 0) {
-                        self.setData({
-                            [loading]: 0,
-                            [str]: latestArticles[sort] ? latestArticles[sort].concat(d) : d,
-                            [strTimes]: d.length > 0 ? d[d.length - 1].sortTime : sortTime[sort],
-                            flag: true
-                        });
-                    } else {
-                        self.setData({
-                            [loading]: 2,
-                            flag: true
-                        });
-                    }
-
+                if (d.length > 0) {
+                    self.setData({
+                        [loading]: 0,
+                        [str]: latestArticles[sort] ? latestArticles[sort].concat(d) : d,
+                        [strTimes]: d.length > 0 ? d[d.length - 1].sortTime : sortTime[sort]
+                    });
+                } else {
+                    self.setData({
+                        [loading]: 2
+                    });
                 }
+
+            } else {
+
+            }
+        }, function (res) {
+            const loading = 'status.loading[' + sort + ']';
+
+            wx.showLoading({
+                title: '数据加载中',
             });
-        };        
+
+            self.switchHandler(type);
+            self.setData({
+                [loading]: 0
+            });
+        });
     },
     //课程目录
     collegeHandler: function() {
@@ -315,21 +320,6 @@ Page({
                 isContact: true
             });
         }
-    },
-    // 未读消息数
-    getUnReadMsg() {
-        util.sendRequest(util.urls.unReadMsg, {}, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-
-                if (d.msgCount > 0) {
-                    wx.setTabBarBadge({
-                        index: 1,
-                        text: d.msgCount + '' // 必须为字符串
-                    });
-                }
-            }
-        });
     },
     onPullDownRefresh() { 
         const self = this;

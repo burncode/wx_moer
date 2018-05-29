@@ -102,6 +102,11 @@ const wxLoginHandler = function (success, fail) {
                             wx.setStorageSync('isLogin', app.globalData.isLogin);
 
                             success && success(r);
+
+                            clearInterval(app.data.timer);
+                            app.data.timer = setInterval(function () {
+                                getUnReadMsg();
+                            }, 3000);
                         } else {
                             
                         }
@@ -128,6 +133,7 @@ const wxLoginHandler = function (success, fail) {
     })
 };
 
+// 摩尔统计
 const statistics = function (key, app) {
     const params = {
         key: key,
@@ -145,6 +151,22 @@ const statistics = function (key, app) {
     });
 }
 
+// 获取未读数
+const getUnReadMsg = function () {
+    sendRequest(urls.unReadMsg, {}, function (res) {
+        if (res.data.code == ERR_OK) {
+            const d = res.data.result;
+
+            if (d.msgCount > 0) {
+                wx.setTabBarBadge({
+                    index: 1,
+                    text: d.msgCount + ''  // 必须为字符串
+                });
+            }
+        }
+    });
+};
+
 module.exports = {
     domain: domain,
     urls: urls,
@@ -152,5 +174,6 @@ module.exports = {
     sendRequest: sendRequest,
     wxLoginHandler: wxLoginHandler,
     staticFile: staticFile,
-    statistics: statistics
+    statistics: statistics,
+    getUnReadMsg: getUnReadMsg
 }

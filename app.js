@@ -3,6 +3,7 @@ const util = require('utils/util.js');
 
 App({
     data: {
+        timer: null
     },
     onLaunch: function () {
         const self = this;
@@ -36,13 +37,17 @@ App({
     */
     getUserInfo(callback) {
         const self = this;
+        let { timer } = self.data;
+        let num = null;
+
+        clearInterval(self.data.timer);
 
         if (self.globalData.userInfo) {
             typeof callback == "function" && callback(self.globalData.userInfo);
 
             // 已购消息
-            setInterval(function () {
-                self.getUnReadMsg();
+            self.data.timer = setInterval(function () {
+                util.getUnReadMsg();
             }, 60000);
 
         } else {
@@ -63,6 +68,7 @@ App({
                             util.sendRequest(util.urls.authorizedLogin, params, function(r) {
                                 if (r.data.code == util.ERR_OK) {
                                     const data = r.data.result;
+                                    let num = null;
 
                                     self.globalData.userInfo = data;
                                     self.globalData.isLogin = true
@@ -73,8 +79,8 @@ App({
                                         self.userInfoReadyCallback(self.globalData.userInfo);
                                     }
 
-                                    setInterval(function () {
-                                        self.getUnReadMsg();
+                                    self.data.timer = setInterval(function () {
+                                        util.getUnReadMsg();
                                     }, 60000);
                                 }
                             });
@@ -87,21 +93,6 @@ App({
             })
         }
     },  
-    getUnReadMsg() {
-        util.sendRequest(util.urls.unReadMsg, {}, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-
-                if (d.msgCount > 0) {
-                    wx.setTabBarBadge({
-                        index: 1,
-                        text: d.msgCount + ''  // 必须为字符串
-                    });
-                }
-
-            }
-        });
-    },
     globalData: {
         userInfo: null,
         isIphoneX: false,

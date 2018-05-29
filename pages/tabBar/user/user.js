@@ -65,6 +65,9 @@ Page({
         } else {
             wx.setNavigationBarTitle({ title: '登录' });
         }
+
+        // 退出帐号后， 清除定时请求未读信息数
+        clearInterval(app.data.timer);
     },
     wxLogin() {
         const self = this;
