@@ -17,6 +17,7 @@ const urls = {
     'noticeList': '/miniProgram/v1/noticeList.json', // 更新消息列表
     'userInfo': '/miniProgram/v1/userInfo.json',  // 用户信息
     'login': '/miniProgram/v1/login.json', // 摩尔账户登录
+    'unlock':'/miniProgram/v1/unlock.json', // 帮好友解锁
     'userCouponList': '/miniProgram/v1/userCouponList.json', // 我的优惠券
     'unReadMsg':'/miniProgram/v1/findUnReadMsg.json', //未读消息数
     'updateMsg': '/miniProgram/v1/updateMsgStatus.json', // 更新消息数状态

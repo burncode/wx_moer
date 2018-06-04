@@ -289,7 +289,7 @@ Page({
         const { sort } = this.data;
 
         wx.navigateTo({
-            url: `/pages/component/detail/detail?articleId=${id}&sort=${sort}`
+            url: `/pages/component/detail/detail?articleId=${id}&sort=${sort}&jump=index`
         });
     },
     goToCourse: function(e) {

@@ -12,22 +12,27 @@ Page({
         articleId: '',    // 文章ID
         refresh: false,   // 是否 是购买后重新请求
         inviteUid: '',  // 当前文章分享者的UID
+        source: null,   // 来源，是否是通过APP分享的卡片
         articleInfo: null,        // 文章的详情数据
         buttonInfo: {},         // 按钮的状态数据
         showModalStatus: false, // 购买文章的对话框
         btnStatus: {
             pay: false,    // 单篇购买
-            coupon: false // 使用优惠券
+            coupon: false, // 使用优惠券
+            help: false,   // 帮解锁
+            share: false   // 达到上限 
         },
         isIphoneX: app.globalData.isIphoneX,
         count: {}, // 文章阅读数、购买数、点赞数......
         serviceBuyInfo: {},  // 购买摩研社服务 展示价格等信息
         pack: ['包月', '包季', '包年'],
         agreementStatus: false,
-        isAgree:true,  // 是否同意包时段协议
-        useCouponStatus: false,
+        isAgree: true,  // 是否同意包时段协议
+        useCouponStatus: false, 
         useButtonType: '',  // 未登录时，按钮授权登录；已登录且未填写手机号，则是授权手机号
         authorizePhone: 0, // 手机号是否弹窗授权
+        tips: '',  // 解锁按钮下的提示
+        isShowHome: '',  // 不是从首页进入文章的 显示 回到首页的按钮 否则显示客服的按钮
         isPop: 0 // 是否显示购买文章后的弹窗
     },
     onShow: function (options) {
@@ -46,13 +51,14 @@ Page({
         });
     },
     onLoad: function (options) {
-        const { articleId, inviteUid, sort } = options;
-        
+        const { articleId, inviteUid, sort, source, jump } = options;
 
         this.setData({
             articleId: articleId || '',
             sort: sort || '',
-            inviteUid: inviteUid || ''
+            inviteUid: inviteUid || '',
+            source: source || '',
+            isShowHome: jump
         });
 
         wx.showLoading({
@@ -62,12 +68,13 @@ Page({
 
         this.getInfo();
         this.authorizeHandler();
-        
+
     },
     // 获取文章信息
     getInfo: function () {
         const self = this;
         const { articleId, refresh, inviteUid, sort } = self.data;
+        let index = sort;
 
         util.sendRequest(util.urls.articleDetails, {
             articleId: articleId, // 文章ID
@@ -90,15 +97,17 @@ Page({
                         WxParse.wxParse('upArticle[' + index + ']', 'html', updateArticle, self, 20);
                     });
                 }
-                
+
                 self.setData({
                     articleInfo: d.articleInfo,
                     buttonInfo: d.buttonInfo
                 });
 
-                if (sort == 0 || uids[0] == d.articleInfo.authorId) {
+                if ((sort == '' || sort == 0) && uids[0] == d.articleInfo.authorId) {
+                    index = 0;
                     wx.setNavigationBarTitle({ title: '调研通' });
-                } else if (sort == 1 || uids[1] == d.articleInfo.authorId) {
+                } else if ((sort == '' || sort == 1) && uids[1] == d.articleInfo.authorId) {
+                    index = 1;
                     wx.setNavigationBarTitle({ title: '券商晨会速递' });
                 }
 
@@ -106,7 +115,7 @@ Page({
                 self.getBrowseCount();
                 self.articleInfo();
                 wx.hideLoading();
-                util.statistics(keys[sort], app);
+                util.statistics(keys[index], app);
             } else {
                 wx.showToast({
                     title: res.data.message,
@@ -123,7 +132,7 @@ Page({
         self.authorizeHandler();
     },
     // 获取文章阅读数
-    getBrowseCount: function() {
+    getBrowseCount: function () {
         const self = this;
         const { articleId } = self.data;
 
@@ -157,12 +166,12 @@ Page({
                 content: '',
                 success: function (res) {
                     if (res.confirm) {
-                        self.payHandler(params);  
+                        self.payHandler(params);
                     }
                 }
             });
         } else {
-            self.payHandler(params);  
+            self.payHandler(params);
         }
     },
     // 购买包时段服务
@@ -171,7 +180,7 @@ Page({
         const { id } = e.currentTarget;
         const { articleInfo, isAgree } = self.data;
 
-        if (isAgree) { 
+        if (isAgree) {
             util.sendRequest(util.urls.payPacket, { writerId: articleInfo.authorId, packetPay_id: id }, function (res) {
                 if (res.data.code == util.ERR_OK) {
                     const d = res.data.result;
@@ -192,14 +201,17 @@ Page({
     // 按钮状态
     btnStatusHandler: function () {
         const self = this;
-        const { buttonInfo } = self.data;
+        const { buttonInfo, source, inviteUid } = self.data;
 
         self.setData({
             btnStatus: {
                 pay: false,    // 单篇购买
-                coupon: false // 使用优惠券
-            }
-        })        
+                coupon: false, // 使用优惠券
+                help: false,   // 帮解锁
+                share: false   // 达到上限 
+            },
+            tips: ''
+        })
 
         if (app.globalData.isLogin) { //已登录
 
@@ -214,15 +226,36 @@ Page({
                 });
             }
             // 优惠券 结束
+
+            if (source && inviteUid) {  //  有来源即APP分享的卡片，并且有分享者的uid（有可能会未登录分享）
+                if (buttonInfo.userUnlockRecord < 3) {
+                    self.setData({
+                        ['btnStatus.help']: true,
+                        tips: '解锁后，您将免费获得本文'
+                    });
+                } else {
+                    self.setData({
+                        ['btnStatus.share']: true,
+                        tips: '已获得3张试读券'
+                    });
+                }
+            }
         } else { //未登录
 
             self.setData({
                 ['btnStatus.pay']: true
             });
+
+            if (source && inviteUid) {
+                self.setData({
+                    ['btnStatus.help']: true,
+                    tips: '解锁后，您将免费获得本文'
+                });
+            }
         }
     },
     // 单篇购买文章 || 使用优惠券
-    payArticle (options) {
+    payArticle(options) {
         const self = this;
         const { kind } = options.currentTarget.dataset;
 
@@ -234,18 +267,18 @@ Page({
 
             // 用户登录 且 (用户信息中有手机号 || 用户没有手机号但是弹过一次授权)
             if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
-                if( kind == 1) {
+                if (kind == 1) {
                     self.setData({
                         useCouponStatus: true
                     });
-                    
+
                 }
                 self.showModal();
             }
         }
     },
     // 购买摩研社服务 展示价格等信息
-    articleInfo () {
+    articleInfo() {
         const self = this;
         const { articleInfo } = self.data;
 
@@ -262,7 +295,7 @@ Page({
             }
         });
     },
-    agreementHanler () {
+    agreementHanler() {
         const self = this;
         const { isAgree } = self.data;
 
@@ -303,7 +336,7 @@ Page({
                     if (res.data.success) {
                         const d = res.data.data;
 
-                        util.sendRequest(util.urls.payment, { 
+                        util.sendRequest(util.urls.payment, {
                             orderId: d.orderId,
                             wxjsapiCode: r.code
                         }, function (da) {
@@ -374,7 +407,7 @@ Page({
         });
     },
     // 未登录，获取用户信息
-    userBtnHandler(res) { 
+    userBtnHandler(res) {
         const self = this;
         const d = res.detail.errMsg;
 
@@ -438,7 +471,7 @@ Page({
         self.authorizeHandler();
     },
     // 购买和使用优惠券的按钮功能： 1、未登录：弹窗授权登录 2、已登录，但没手机号：弹窗授权手机号（有过一次弹窗记录则不弹）
-    authorizeHandler () {
+    authorizeHandler() {
         const self = this;
 
         if (app.globalData.userInfo) {
@@ -465,7 +498,7 @@ Page({
         }
     },
     // 文章之间跳转
-    wxParseTagATap (e) {
+    wxParseTagATap(e) {
         const { src } = e.currentTarget.dataset;
         let articleId = '';
 
@@ -484,7 +517,7 @@ Page({
         if (r != null) return unescape(r[2]); return null;
     },
     // 为了显示可点击的链接
-    showColor (data) {
+    showColor(data) {
         var temp = '';
 
         data = data.split(/(\<a.+?\a>)/)
@@ -527,7 +560,7 @@ Page({
         });
     },
     // 点赞
-    doZan () {
+    doZan() {
         const self = this;
         const { articleId, isLogin } = self.data;
         const { isZan, zanCount } = self.data.count;
@@ -547,7 +580,7 @@ Page({
         util.sendRequest(util.urls.doZan, {
             targetId: articleId,
             isDoZan: flag,
-            from:'miniProgram',
+            from: 'miniProgram',
             zanType: 1
         }, function (r) {
             if (r.data.success) {
@@ -559,13 +592,13 @@ Page({
         });
     },
     // 未登录点赞 先授权，后点赞
-    bindgetuserinfo () {
+    bindgetuserinfo() {
         const self = this;
 
         self.loginBack();
     },
     // 登录成功后，重新刷新文章数据
-    loginBack (fn) {
+    loginBack(fn) {
         const self = this;
 
         util.wxLoginHandler(function () {
@@ -580,7 +613,7 @@ Page({
         });
     },
     // 购买文章后的弹窗
-    hideTips () {
+    hideTips() {
         const { refresh } = this.data;
 
         wx.setStorageSync('isPop', 1);
@@ -590,11 +623,45 @@ Page({
             isPop: 1
         })
     },
+    // 帮好友解锁
+    unlock() {
+        const self = this;
+        const { articleId, inviteUid, articleInfo } = self.data;
+
+        if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
+            util.sendRequest(util.urls.unlock, {
+                inviteUid: inviteUid,
+                articleId: articleId,
+                authorId: articleInfo.authorId
+            }, function (r) {
+                if (r.data.code == util.ERR_OK) {
+                    wx.showModal({
+                        title: '解锁成功',
+                        content: '您获得了一张试读券',
+                        showCancel: false,
+                        complete: function (res) {
+                            self.hideModal();
+                            self.getInfo();
+                        }
+                    });
+                } else {
+                    wx.showModal({
+                        content: r.data.message,
+                        showCancel: false,
+                        complete: function (res) {
+                            self.hideModal();
+                            self.getInfo();
+                        }
+                    });
+                }
+            });
+        }
+    },
     // 转发分享
     onShareAppMessage(res) {
         const self = this;
         const { articleInfo, sort } = self.data;
-        const inviteUid = app.globalData.userInfo ? app.globalData.userInfo.userId:'';
+        const inviteUid = app.globalData.userInfo ? app.globalData.userInfo.userId : '';
         const titles = ['调研通抢先试读券，免费领取中', '第一时间获取券商晨会秘钥'];
 
         return {

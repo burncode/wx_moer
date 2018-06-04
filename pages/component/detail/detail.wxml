@@ -54,6 +54,19 @@
                     bindtap="payArticle" 
                     wx:if="{{btnStatus.coupon}}"
                     >使用一张试读券</button>
+                <button 
+                    class="btn btn-help" 
+                    open-type="{{useButtonType}}" 
+                    bindgetuserinfo="userBtnHandler"
+                    bindtap="unlock" 
+                    wx:if="{{btnStatus.help}}"
+                    >帮<view>{{buttonInfo.inviterName}}</view>解锁</button>
+                <button 
+                    class="btn btn-share" 
+                    open-type="share" 
+                    wx:if="{{btnStatus.share}}"
+                    >您已达上线<text>●</text>帮转</button>
+                <view class="remind" wx:if="{{btnStatus.help || btnStatus.share}}"><image src="{{staticFile}}/detail/invite-tip.jpg"></image>{{tips}}</view>
             </view>
             <view class="access-info">
                 <text>{{count.saleCount}}人已购买</text>
@@ -111,10 +124,10 @@
             </view>
         </view>
         <view class="mask {{showModalStatus?'active':''}}" bindtap="hideModal"></view>
-        <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{articleInfo.showIndex != 0}}">
+        <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
             <image src="{{staticFile}}/detail/goHome.png"></image>
         </navigator>
-        <button class="contact" open-type="contact" wx:if="{{articleInfo.showIndex == 0}}">
+        <button class="contact" open-type="contact" wx:if="{{isShowHome == 'index'}}">
             <image src="{{staticFile}}/contact.png?ver=20180523"></image>
         </button> 
     </view>

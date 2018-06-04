@@ -36,7 +36,14 @@
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": []
+			"list": [
+				{
+					"id": -1,
+					"name": "ios",
+					"pathName": "pages/component/detail/detail",
+					"query": ""
+				}
+			]
 		}
 	}
 }

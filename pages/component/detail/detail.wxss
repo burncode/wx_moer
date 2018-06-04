@@ -186,6 +186,16 @@
     color: #e84c3d;
     border-color: #e84c3d;
 }
+.access .remind {
+    font-size: 24rpx;
+    color: #5193ad;
+}
+.access .remind image {
+    display: inline-block;
+    width: 22rpx;
+    height: 20rpx;
+    margin-right: 10rpx;
+}
 .access .access-info {
     display: flex;
     padding: 0 0 40rpx;
@@ -417,7 +427,7 @@
 .contact {
     position: fixed;
     right: 30rpx;
-    bottom: 200rpx;
+    bottom: 300rpx;
     z-index: 9;
     padding: 0;
     background: none;
