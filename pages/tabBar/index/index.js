@@ -115,17 +115,14 @@ Page({
                 [videoMax]: videoLen
             });
 
-            if (type == 0) {
-
-                // if (tabFlag[current]) {
+            if (info[type].services && info[type].services[sort]) {
+                if (type == 0) {
                     self.latestArticlesHandler();
                     self.tryReadArticleHandler();
-                // }
-
-            } else if (type == 1) {
-
-                if (tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
-                    self.collegeHandler();
+                } else if (type == 1) {
+                    if (tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
+                        self.collegeHandler();
+                    }
                 }
             }
 
@@ -148,8 +145,10 @@ Page({
                         [str]: d
                     });
 
-                    self.latestArticlesHandler();
-                    self.tryReadArticleHandler();
+                    if (d.services && d.services[sort]) {
+                        self.latestArticlesHandler();
+                        self.tryReadArticleHandler();
+                    }
                 }
             });            
         } else if (num == 1) {
@@ -161,7 +160,9 @@ Page({
                         [str]: d
                     });
 
-                    self.collegeHandler();
+                    if (d.services && d.services[sort]) {
+                        self.collegeHandler();
+                    }
                 }
             });  
         }
