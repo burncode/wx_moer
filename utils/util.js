@@ -28,71 +28,6 @@ const urls = {
     'isGetCoupon': '/miniProgram/v1/isGetCoupon.json', // 调研通领取试读券
     'doZan': '/wapcommon_doZan.json',                   //文章详情页点赞
     'actLog': '/miniProgram/v1/actLog.json',   // 数据统计
-    'getHistory': '/v1/group/api/msg/history', // 获取直播间历史记录
-    'lastestmsg': '/v1/group/api/msg/lastestmsg', // 获取直播间最新消息
-    'getPersonalInfo': '/v1/group/api/group/member', // 获取个人信息
-};
-const Emoji = {
-    path: 'https://static.moer.cn/staticFile/img/emoji/',
-    map: {
-        '[微笑]': 'huanglianwx_thumb.gif',
-        '[色眼]': 'huanglianse_thumb.gif',
-        '[流泪]': 'sada_thumb.gif',
-        '[爱你]': 'lovea_thumb.gif',
-        '[白眼]': 'landeln_thumb.gif',
-        '[抓狂]': 'crazya_thumb.gif',
-        '[抱抱]': 'bba_thumb.gif',
-        '[悲伤]': 'bs_thumb.gif',
-        '[鄙视]': 'bs2_thumb.gif',
-        '[闭嘴]': 'bz_thumb.gif',
-        '[馋嘴]': 'cza_thumb.gif',
-        '[太开心]': 'mb_thumb.gif',
-        '[偷笑]': 'heia_thumb.gif',
-        '[吃惊]': 'cj_thumb.gif',
-        '[给力]': 'geiliv2_thumb.gif',
-        '[鼓掌]': 'gza_thumb.gif',
-        '[哈哈]': 'laugh.gif',
-        '[哈欠]': 'haqianv2_thumb.gif',
-        '[害羞]': 'shamea_thumb.gif',
-        '[流汗]': 'sweata_thumb.gif',
-        '[黑线]': 'h_thumb.gif',
-        '[生气]': 'hatea_thumb.gif',
-        '[挤眼]': 'zy_thumb.gif',
-        '[可爱]': 'tza_thumb.gif',
-        '[可怜]': 'kl_thumb.gif',
-        '[得意]': 'cool_thumb.gif',
-        '[发困]': 'kunv2_thumb.gif',
-        '[勾引]': 'come_thumb.gif',
-        '[发怒]': 'angrya_thumb.gif',
-        '[怒骂]': 'numav2_thumb.gif',
-        '[亲亲]': 'qq_thumb.gif',
-        '[疑问]': 'yw_thumb.gif',
-        '[阴险]': 'yx_thumb.gif',
-        '[伤心]': 'unheart.gif',
-        '[生病]': 'sb_thumb.gif',
-        '[失望]': 'sw_thumb.gif',
-        '[衰了]': 'cry.gif',
-        '[睡觉]': 'huangliansj_thumb.gif',
-        '[思考]': 'sk_thumb.gif',
-        '[呕吐]': 't_thumb.gif',
-        '[挖鼻]': 'wabi_thumb.gif',
-        '[晕头]': 'dizzya_thumb.gif',
-        '[委屈]': 'wq_thumb.gif',
-        '[嘻嘻]': 'tootha_thumb.gif',
-        '[笑哭]': 'xiaoku_thumb.gif',
-        '[猪头]': 'pig.gif',
-        '[爱心]': 'hearta_thumb.gif',
-        '[别出声]': 'x_thumb.gif',
-        '[左哼哼]': 'zhh_thumb.gif',
-        '[右哼哼]': 'yhh_thumb.gif',
-        '[拜拜]': '88_thumb.gif',
-        '[bad]': 'sad_thumb.gif',
-        '[弓虽]': 'good_thumb.gif',
-        '[小狗]': 'doge_thumb.gif',
-        '[no]': 'buyao_org.gif',
-        '[ok]': 'ok_thumb.gif',
-        '[胜利]': 'ye_thumb.gif'
-    }
 };
 const ERR_OK = 0; //请求结果的状态 0：成功
 
@@ -233,23 +168,6 @@ const getUnReadMsg = function () {
     });
 };
 
-// 时间戳转换
-const formatTime = date => {
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const hour = date.getHours()
-    const minute = date.getMinutes()
-    const second = date.getSeconds()
-
-    return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
-}
-const formatNumber = n => {
-    n = n.toString()
-    return n[1] ? n : '0' + n
-}
-
-
 module.exports = {
     domain: domain,
     urls: urls,
@@ -258,7 +176,5 @@ module.exports = {
     wxLoginHandler: wxLoginHandler,
     staticFile: staticFile,
     statistics: statistics,
-    getUnReadMsg: getUnReadMsg,
-    Emoji: Emoji,
-    formatTime: formatTime
+    getUnReadMsg: getUnReadMsg
 }

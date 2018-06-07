@@ -39,13 +39,13 @@
                 </button>
             </view>
             <view class="item" hover-class="active">
-                <navigator 
+                <button 
                     class="item-list"
-                    url="/pages/component/live/live">
+                    open-type="contact">
                     <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/join.png"></image>
                     <text class="type-text">加入私密直播</text>
                     <text class="arrow"></text>
-                </navigator>
+                </button>
             </view>
             <view class="item" hover-class="active">
                 <navigator 
