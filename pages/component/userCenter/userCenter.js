@@ -3,8 +3,8 @@ const util = require('../../../utils/util.js');
 
 Page({
     data: {
-        types: 1, //数据类型：0、我的优惠券； 1、我的邀请
-        title: ['我的优惠券', '我的邀请'],
+        types: 1, //数据类型：0、我的优惠券；
+        title: ['我的优惠券'],
         list: []
     },
 
@@ -25,26 +25,13 @@ Page({
             });
             this.getCoupon(params);
         } else {
-            this.getMsg(params);
+            
         }
     },
     getCoupon(params) {
         const self = this;
 
         util.sendRequest(util.urls.userCouponList, params, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-
-                self.setData({
-                    list: d
-                })
-            }
-        });
-    },
-    getMsg(params) {
-        const self = this;
-
-        util.sendRequest(util.urls.inviteList, params, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
 

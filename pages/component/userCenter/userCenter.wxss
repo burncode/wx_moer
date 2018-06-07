@@ -88,23 +88,3 @@
     height: 250rpx;
     padding: 200rpx 0 50rpx; 
 }
-
-.invite {}
-.invite  .item{
-    padding-bottom: 25rpx;
-    border-bottom: 2rpx solid #dedede;
-    margin: 0 25rpx 40rpx;
-}
-.brief {
-    font-size: 32rpx;
-    line-height: 44rpx;
-    color: #202d32
-}
-.brief text {
-    color: #5193ad;
-}
-.date {
-    text-align: right;
-    font-size: 24rpx;
-    color: #879194;
-}

@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/tabBar/live/live",
         "pages/tabBar/index/index",
         "pages/tabBar/buy/buy",
         "pages/tabBar/user/user"
@@ -16,6 +17,12 @@
         "list": [
             {
                 "pagePath": "pages/tabBar/index/index",
+                "iconPath": "assets/img/home.png",
+                "selectedIconPath": "assets/img/home-active.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/tabBar/live/live",
                 "iconPath": "assets/img/home.png",
                 "selectedIconPath": "assets/img/home-active.png",
                 "text": "首页"
