@@ -10,7 +10,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "1.9.98",
 	"appid": "wx318665667d80203e",
-	"projectname": "wx_moer",
+	"projectname": "moer",
 	"isGameTourist": false,
 	"scripts": {
 		"beforeCompile": "",

@@ -406,8 +406,8 @@
 
 .goHome {
     position: fixed;
-    right: 20rpx;
-    bottom: 300rpx;
+    right: 35rpx;
+    bottom: 420rpx;
 }
 .goHome.active::before {
     display: block;
@@ -427,7 +427,7 @@
 .contact {
     position: fixed;
     right: 30rpx;
-    bottom: 300rpx;
+    bottom: 250rpx;
     z-index: 9;
     padding: 0;
     background: none;

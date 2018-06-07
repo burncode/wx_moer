@@ -127,7 +127,7 @@
         <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
             <image src="{{staticFile}}/detail/goHome.png"></image>
         </navigator>
-        <button class="contact" open-type="contact" wx:if="{{isShowHome == 'index'}}">
+        <button class="contact" open-type="contact">
             <image src="{{staticFile}}/contact.png?ver=20180523"></image>
         </button> 
     </view>
