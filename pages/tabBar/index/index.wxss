@@ -190,7 +190,7 @@
 
 /** 摩研社试读文章   开始 **/
 .trial {
-    display: flex;
+    display: flex; 
     height: 234rpx;
     padding-top: 10rpx;
     margin: 30rpx 0 70rpx 0;
@@ -317,30 +317,36 @@
     position: relative;
 }
 .newest .title {
-    font-size: 32rpx;
-    line-height: 44rpx;
+    font-size: 36rpx;
+    line-height: 52rpx;
     color: #202d33;
     word-break: break-all;
-    overflow:hidden;
-    height:132rpx;
-    display:-webkit-box;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:3;
-    -webkit-box-direction:normal;
-    white-space: pre-wrap;
+}
+.newest .desc {
+    line-height:44rpx;
+    margin: 20rpx 0;
+    font-size:28rpx;
+    color:rgba(72,83,89,1);
 }
 .newest .info {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     display: flex;
+    width: 100%;
+    color: #879193;
+}
+.newest .status {
+    width: 50rpx;
+    padding-right: 20rpx;
+    border-right: 2rpx solid #dedede;
+    margin-right: 20rpx;
+    font-size: 24rpx;
+    line-height: 24rpx;
 }
 .newest .date, .newest .amount {
     flex: 1;
     font-size: 24rpx;
-    color: #879193;
+    line-height: 24rpx;
 }
-.newest .amount {
+.newest .date {
     text-align: right;
 }
 .more-status .loading-more,  .more-status .no-more {

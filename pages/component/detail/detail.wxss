@@ -212,28 +212,13 @@
     border: 0;
 }
 
-.sub {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 2000;
-    transform: translateY(100%);
-    transition: transform .6s ease;
-    background: #fff;
-}
-.sub.active {
-    transform: translateY(0);
-}
-.sub .sub-main {
-    padding: 0 30rpx;
-}
-.sub .txt {
+/* 包时段弹窗  开始 */
+.sub-header .txt {
     display: inline-block;
     padding: 20rpx 0;
     font-size: 34rpx;
 }
-.sub .sub-header {
+.sub-header {
     display: flex;
     line-height: 60rpx;
     font-size: 0;
@@ -254,14 +239,14 @@
     display: inline-block;
     padding: 20rpx;
     font-size: 28rpx;
-    color: #e84c3d;
+    color: #5193ad;
     text-align: right;
 }
 .sub-header .useCoupon view {
     display: inline-block;
     width: 20rpx;
     height: 20rpx;
-    border: 2rpx solid #e84c3d;
+    border: 2rpx solid #5193ad;
     margin: 18rpx 10rpx 0 0;
     vertical-align: top;
     text-align: center;
@@ -275,7 +260,7 @@
     vertical-align: top;
 }
 .sub-header .useCoupon .active {
-    background: #e84c3d;
+    background: #5193ad;
 }
 .sub-header .useCoupon .active icon {
     display: inline-block;
@@ -296,118 +281,13 @@
 .sub-header .del {
     text-decoration: line-through;
 }
-.sub-service {
-    padding-bottom: 50rpx;
-}
-.sub-service .sub-type {
-    font-size: 0;
-}
-.sub-service .sub-type.active .goSub {
-    color:#dedede;
-    border: 2rpx solid #dedede;
-}
-.sub-service .type-item {
-    display: flex;
-    height: 60rpx;
-    line-height: 60rpx;
-    padding-bottom: 30rpx;
-}
-.sub-service .name {
-    display: inline-block;
-    width: 120rpx;
-    font-size: 32rpx;
-}
-.sub-service .name image {
-    display: inline-block;
-    width: 36rpx;
-    height: 36rpx;
-    margin-top: 12rpx;
-    margin-right: 10rpx;
-    vertical-align: top;
-}
-.sub-service .cost {
-    flex: 1;
-    padding-right: 50rpx;
-    text-align: right;
-    font-size: 32rpx;
-    color: #879193;
-    text-decoration:line-through;
-}
-.sub-service .goSub {
-    display:inline-block;
-    width:150rpx;
-    padding:0;
-    border: 2rpx solid #e84c3d;
-    line-height:56rpx;
-    font-size:26rpx;
-    color:#e84c3d;
-    border-radius:60rpx;
-    vertical-align:top;
-    background: none;
-}
-.sub-service .agreement {
-    padding-bottom: 10rpx;
-    border-bottom: 2rpx solid #dedede;
-    font-size: 24rpx;
-    color: #5193ad;
-}
-.sub-service .agreebtn .active icon {
-    display: inline-block;
-}
-.sub-service .agreebtn view {
-    display: inline-block;
-    width: 20rpx;
-    height: 20rpx;
-    border: 2rpx solid #5193ad;
-    margin: 4rpx 10rpx 0 0;
-    vertical-align: top;
-    text-align: center;
-    border-radius: 100%;
-}
-.sub-service .agreebtn view icon {
-    display: none;
-    line-height: 20rpx;
-    height: 20rpx;
-    margin-top: 2rpx;
-    vertical-align: top;
-}
-.sub-service .agreetext {
-    height: 0;
-    font-size: 0;
-    padding: 4rpx 0 0;
-    line-height: 40rpx;
-    color: #879193;
-    transition: height ease 0.4s;
-    overflow: hidden;
-}
-.sub-service .agreetext text {
-    display: block;
-    font-size: 24rpx;
-}
-.sub-service .agreement.active .agreetext {
-    height: auto;
-    /* height: 130rpx; */
-}
-.sub-service .welfare {
-    display: flex;
-    line-height: 62rpx;
-    font-size: 24rpx;
-    color: #202d33
-}
-.sub-service .welfare image {
-    width: 62rpx;
-    height: 62rpx;
-    margin-right: 15rpx;
-    vertical-align: top;
-}
-.sub-service .welfare view {
-    flex: 1;
-}
+/* 包时段弹窗  结束 */
+
 
 .goHome {
     position: fixed;
-    right: 20rpx;
-    bottom: 300rpx;
+    right: 35rpx;
+    bottom: 420rpx;
 }
 .goHome.active::before {
     display: block;
@@ -427,7 +307,7 @@
 .contact {
     position: fixed;
     right: 30rpx;
-    bottom: 300rpx;
+    bottom: 250rpx;
     z-index: 9;
     padding: 0;
     background: none;

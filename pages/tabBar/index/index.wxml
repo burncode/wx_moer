@@ -63,12 +63,13 @@
         <view class="newest" wx:if="{{latestArticles[sort].length > 0}}">
             <view class="item" wx:for="{{latestArticles[sort]}}" wx:key="index" id="{{item.id}}" hover-class="active"  bindtap="goToArticle">
                 <view class="item-box">
-                    <image src="{{item.headImg}}" class="item-img" mode="aspectFill"></image>
                     <view class="item-main">
                         <view class="title">{{item.title}}</view>
+                        <view class="desc">{{item.title}}</view>
                         <view class="info">
-                            <view class="date">{{item.pubTime}}</view>
+                            <view class="status">免费</view>
                             <view class="amount">阅读 {{item.browseCount}}</view>
+                            <view class="date">{{item.pubTime}}</view>
                         </view>
                     </view>
                 </view>

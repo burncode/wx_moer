@@ -25,9 +25,6 @@ Page({
         isIphoneX: app.globalData.isIphoneX,
         count: {}, // 文章阅读数、购买数、点赞数......
         serviceBuyInfo: {},  // 购买摩研社服务 展示价格等信息
-        pack: ['包月', '包季', '包年'],
-        agreementStatus: false,
-        isAgree: true,  // 是否同意包时段协议
         useCouponStatus: false, 
         useButtonType: '',  // 未登录时，按钮授权登录；已登录且未填写手机号，则是授权手机号
         authorizePhone: 0, // 手机号是否弹窗授权
@@ -113,7 +110,7 @@ Page({
 
                 self.btnStatusHandler();
                 self.getBrowseCount();
-                self.articleInfo();
+                self.subInfo();
                 wx.hideLoading();
                 util.statistics(keys[index], app);
             } else {
@@ -174,29 +171,16 @@ Page({
             self.payHandler(params);
         }
     },
-    // 购买包时段服务
-    goSub: function (e) {
+    // 购买包时段成功后的回调
+    successHandler () {
         const self = this;
-        const { id } = e.currentTarget;
-        const { articleInfo, isAgree } = self.data;
 
-        if (isAgree) {
-            util.sendRequest(util.urls.payPacket, { writerId: articleInfo.authorId, packetPay_id: id }, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
-                    const params = {
-                        goodsId: d.id, // 文章ID
-                        goodsType: '6',   //  商品类型 1、文章； 6、包时段
-                        orderType: '6', // 订单类型  1、文章购买  6、包时段购买
-                        payType: '19',  // 小程序购买
-                        couponId: '',  // 优惠券id
-                        checkoutType: ''  // 优惠券类型 1,.优惠券 2.卡券
-                    };
+        self.setData({
+            refresh: true
+        });
 
-                    self.payHandler(params);
-                }
-            });
-        }
+        self.getInfo();
+        self.hideModal();
     },
     // 按钮状态
     btnStatusHandler: function () {
@@ -273,17 +257,20 @@ Page({
                     });
 
                 }
-                self.showModal();
+
+                self.setData({
+                    showModalStatus: true
+                });
             }
         }
     },
     // 购买摩研社服务 展示价格等信息
-    articleInfo() {
+    subInfo() {
         const self = this;
-        const { articleInfo } = self.data;
+        const { articleId, articleInfo } = self.data;
 
         util.sendRequest(util.urls.serviceBuyInfo, {
-            articleId: articleInfo.articleId,
+            articleId: articleId,
             writerId: articleInfo.authorId
         }, function (res) {
             if (res.data.code == util.ERR_OK) {
@@ -295,22 +282,6 @@ Page({
             }
         });
     },
-    agreementHanler() {
-        const self = this;
-        const { isAgree } = self.data;
-
-        self.setData({
-            isAgree: !isAgree
-        })
-    },
-    // 线上摩尔金融包时段服务协议内容
-    showAgreement: function () {
-        const { agreementStatus } = this.data;
-
-        this.setData({
-            agreementStatus: !agreementStatus
-        })
-    },
     // 选择是否使用优惠券
     couponHandler: function () {
         const self = this;
@@ -321,91 +292,91 @@ Page({
         });
     },
     // 支付流程
-    payHandler: function (params) {
-        const self = this;
+    // payHandler: function (params) {
+    //     const self = this;
 
-        // 生成购买订单
-        wx.showLoading({
-            title: '加载中',
-            mask: true
-        });
+    //     // 生成购买订单
+    //     wx.showLoading({
+    //         title: '加载中',
+    //         mask: true
+    //     });
 
-        wx.login({
-            success: r => {
-                util.sendRequest(util.urls.payOrder, params, function (res) {
-                    if (res.data.success) {
-                        const d = res.data.data;
+    //     wx.login({
+    //         success: r => {
+    //             util.sendRequest(util.urls.payOrder, params, function (res) {
+    //                 if (res.data.success) {
+    //                     const d = res.data.data;
 
-                        util.sendRequest(util.urls.payment, {
-                            orderId: d.orderId,
-                            wxjsapiCode: r.code
-                        }, function (da) {
-                            wx.hideLoading();
+    //                     util.sendRequest(util.urls.payment, {
+    //                         orderId: d.orderId,
+    //                         wxjsapiCode: r.code
+    //                     }, function (da) {
+    //                         wx.hideLoading();
 
-                            if (da.data.success) {
-                                const d = da.data.data;
+    //                         if (da.data.success) {
+    //                             const d = da.data.data;
 
-                                if (da.data.errorCode == 30001) {  // 使用优惠券
-                                    //使用免费券 弹窗提示成功！
-                                    wx.showToast({
-                                        title: '使用成功',
-                                        success: () => {
-                                            wx.showLoading({
-                                                title: '加载中',
-                                                mask: true
-                                            });
+    //                             if (da.data.errorCode == 30001) {  // 使用优惠券
+    //                                 //使用免费券 弹窗提示成功！
+    //                                 wx.showToast({
+    //                                     title: '使用成功',
+    //                                     success: () => {
+    //                                         wx.showLoading({
+    //                                             title: '加载中',
+    //                                             mask: true
+    //                                         });
 
-                                            self.setData({
-                                                refresh: true
-                                            });
-                                            self.getInfo();
-                                            self.hideModal();
-                                        }
-                                    });
-                                } else {
-                                    //微信支付
-                                    wx.requestPayment({
-                                        timeStamp: d.timestamp,
-                                        nonceStr: d.nonceStr,
-                                        package: d.package,
-                                        signType: 'MD5',
-                                        paySign: d.paySign,
-                                        complete: function (res) {
-                                            if (res.errMsg === 'requestPayment:ok') {
+    //                                         self.setData({
+    //                                             refresh: true
+    //                                         });
+    //                                         self.getInfo();
+    //                                         self.hideModal();
+    //                                     }
+    //                                 });
+    //                             } else {
+    //                                 //微信支付
+    //                                 wx.requestPayment({
+    //                                     timeStamp: d.timestamp,
+    //                                     nonceStr: d.nonceStr,
+    //                                     package: d.package,
+    //                                     signType: 'MD5',
+    //                                     paySign: d.paySign,
+    //                                     complete: function (res) {
+    //                                         if (res.errMsg === 'requestPayment:ok') {
 
-                                                self.setData({
-                                                    refresh: true
-                                                });
+    //                                             self.setData({
+    //                                                 refresh: true
+    //                                             });
 
-                                                self.getInfo();
-                                                self.hideModal();
-                                            } else if (res.errMsg === 'requestPayment:fail cancel') {
-                                                wx.showModal({
-                                                    title: '提示',
-                                                    content: '支付失败',
-                                                    cancelText: '取消',
-                                                    confirmText: '重新支付',
-                                                    success: function (f) {
-                                                        if (f.confirm) {
-                                                            self.payHandler(params);
-                                                        } else if (f.cancel) {
+    //                                             self.getInfo();
+    //                                             self.hideModal();
+    //                                         } else if (res.errMsg === 'requestPayment:fail cancel') {
+    //                                             wx.showModal({
+    //                                                 title: '提示',
+    //                                                 content: '支付失败',
+    //                                                 cancelText: '取消',
+    //                                                 confirmText: '重新支付',
+    //                                                 success: function (f) {
+    //                                                     if (f.confirm) {
+    //                                                         self.payHandler(params);
+    //                                                     } else if (f.cancel) {
 
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        wx.hideLoading();
-                    }
-                });
-            }
-        });
-    },
+    //                                                     }
+    //                                                 }
+    //                                             });
+    //                                         }
+    //                                     }
+    //                                 });
+    //                             }
+    //                         }
+    //                     });
+    //                 } else {
+    //                     wx.hideLoading();
+    //                 }
+    //             });
+    //         }
+    //     });
+    // },
     // 未登录，获取用户信息
     userBtnHandler(res) {
         const self = this;

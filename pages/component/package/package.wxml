@@ -1,0 +1,70 @@
+<!--订阅包时段弹窗-->
+<!--pages/component/package/package.wxml-->
+<view class="sub {{showModalStatus?'active':''}}">
+    <view class="sub-main">
+        <slot name="top"></slot>
+        <view class="sub-service">
+            <text class="txt">订阅{{serviceBuyInfo.serviceName}}</text>
+            <view class="sub-type {{!isAgree?'active':''}}">
+                <view class="type-item" wx:for="{{serviceBuyInfo.packet}}" wx:key="index">
+                    <view class="name"><image src="{{staticFile}}/detail/unpack-0{{item.type}}.jpg"></image>{{pack[item.type - 1]}}</view>
+                    <view class="cost">
+                        <block wx:if="{{real_price || index == 1}}">
+                            {{real_price > 0 ?item.original_price:''}}
+                        </block>
+                        <view wx:else class="useCoupon" bindtap="chooseCoupon">使用免费券</view>
+                    </view>
+                    
+                    <button class="goSub" id="{{item.id}}" catchtap="goSub">￥{{item.real_price?item.real_price:item.original_price}}</button>
+                </view>
+            </view>
+            <view class="agreement {{agreementStatus?'active':''}}">
+                <view class="agreebtn">
+                    <view class="{{isAgree?'active':''}}"  catchtap="agreementHanler">
+                        <icon type="success_no_circle" size="8" color="#5193ad"/>
+                    </view>
+                    <text catchtap="showAgreement">摩尔金融包时段服务协议</text>    </view>
+                <view class="agreetext">
+                        <text wx:for="{{serviceBuyInfo.agreement}}" wx:key="index">{{item}}</text> 
+                </view>
+            </view> 
+            <view class="privilege">
+                <text class="txt">订阅特权</text>
+                <view class="welfare">
+                    <view wx:for="{{serviceBuyInfo.franchise}}" wx:key="index">
+                        <image src="{{staticFile}}/detail/{{index}}.gif"></image>
+                        {{item}}
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
+<view class="sub-coupon">
+    <view class="coupon-head">选择可用的优惠券</view>
+    <view class="coupon-main">
+        <view class="item">
+            <view class="discount"><text>8</text> 折</view>
+            <view class="time">有效期至： 2018-05-20</view>
+            <view class="btn">
+                <icon type="success_no_circle" size="12" color="#fff"/>
+            </view>
+        </view>
+        <view class="item">
+            <view class="discount"><text>9</text> 折</view>
+            <view class="time">有效期至： 2018-05-20</view>
+            <view class="btn">
+                <icon type="success_no_circle" size="12" color="#fff"/>
+            </view>
+        </view>
+        <view class="item">
+            <view class="discount"><text>999</text> 元</view>
+            <view class="time">有效期至： 2018-05-20</view>
+            <view class="btn">
+                <icon type="success_no_circle" size="12" color="#fff"/>
+            </view>
+        </view>
+        <view class="noUsed" catchtap="hideMask">暂不使用优惠券</view>
+    </view>
+</view>
+<view class="sub-mask {{showModalStatus ?'active':''}}" catchtap="hideMask" style="z-index:{{zIndex}}"></view>

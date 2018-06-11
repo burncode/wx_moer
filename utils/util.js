@@ -234,21 +234,34 @@ const getUnReadMsg = function () {
 };
 
 // 时间戳转换
-const formatTime = date => {
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const hour = date.getHours()
-    const minute = date.getMinutes()
-    const second = date.getSeconds()
+const formatTime = (date, format) => { // 毫秒时间戳； 日期格式："yyyy-MM-dd hh:mm:ss EEE"
+    const t = new Date(Number(date));
+    const weekday = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    const o = {
+        "M+": t.getMonth() + 1, //月份   
+        "d+": t.getDate(), //日   
+        "h+": t.getHours(), //小时   
+        "m+": t.getMinutes(), //分   
+        "s+": t.getSeconds() //秒   
+    };
+    format = format || "yyyy-MM-dd hh:mm:ss";
 
-    return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
-}
-const formatNumber = n => {
-    n = n.toString()
-    return n[1] ? n : '0' + n
-}
+    if (/(y+)/.test(format)) { //根据y的长度来截取年  
+        format = format.replace(RegExp.$1, (t.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
 
+    if (/(E+)/.test(format)) { // 星期
+        format = format.replace(RegExp.$1, (weekday[t.getDay()] + ""));
+    }
+    
+    for (var k in o) { // 时分秒
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+
+    return format;
+}
 
 module.exports = {
     domain: domain,

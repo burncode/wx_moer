@@ -75,59 +75,34 @@
             </view>
         </view>
 
-        <view class="sub {{showModalStatus?'active':''}}">
-            <view class="sub-main">
-                <view class="sub-header">
-                    <text class="txt">当前文章</text>
-                    <!-- <button class="share" open-type="share">请好友解锁 免费</button> -->
-                    <view class="useCoupon" bindtap="couponHandler">
-                        <view class="{{useCouponStatus?'active':''}}" wx:if="{{buttonInfo.userCouponCount > 0}}">
-                            <icon type="success_no_circle" size="8" color="#fff"/>
-                        </view>
-                        <text wx:if="{{buttonInfo.userCouponCount > 0}}">使用试读券</text>
+        <!-- 包时段弹窗 开始 -->
+        <package 
+            articleId="{{articleId}}" 
+            authorId="{{articleInfo.authorId}}" 
+            serviceBuyInfo="{{serviceBuyInfo}}" 
+            bind:successHandler="successHandler"
+            showModalStatus="{{showModalStatus}}"
+            >
+            <view class="sub-header" slot="top">
+                <text class="txt">当前文章</text>
+                <view class="useCoupon" bindtap="couponHandler">
+                    <view class="{{useCouponStatus?'active':''}}" wx:if="{{buttonInfo.userCouponCount > 0}}">
+                        <icon type="success_no_circle" size="8" color="#fff"/>
                     </view>
-                    <form name="notice" report-submit bindsubmit='orderSign'> 
-                        <button 
-                            class="goPay" 
-                            bindtap="goPay">{{useCouponStatus?'免费读':'￥'+serviceBuyInfo.price}}</button>
-                    </form>
+                    <text wx:if="{{buttonInfo.userCouponCount > 0}}">使用试读券</text>
                 </view>
-                <view class="sub-service">
-                    <text class="txt">订阅{{serviceBuyInfo.serviceName}}</text>
-                    <view class="sub-type {{!isAgree?'active':''}}">
-                        <view class="type-item" wx:for="{{serviceBuyInfo.packet}}" wx:key="index">
-                            <view class="name"><image src="{{staticFile}}/detail/unpack-0{{item.type}}.jpg"></image>{{pack[item.type - 1]}}</view>
-                            <text class="cost">{{real_price > 0 ?item.original_price:''}}</text>
-                            <button class="goSub" id="{{item.id}}" bindtap="goSub">￥{{item.real_price?item.real_price:item.original_price}}</button>
-                        </view>
-                    </view>
-                    <view class="agreement {{agreementStatus?'active':''}}">
-                        <view class="agreebtn">
-                            <view class="{{isAgree?'active':''}}"  bindtap="agreementHanler">
-                                <icon type="success_no_circle" size="8" color="#5193ad"/>
-                            </view>
-                            <text bindtap="showAgreement">摩尔金融包时段服务协议</text>    </view>
-                        <view class="agreetext">
-                             <text wx:for="{{serviceBuyInfo.agreement}}" wx:key="index">{{item}}</text> 
-                        </view>
-                    </view>
-                    <view class="privilege">
-                        <text class="txt">订阅特权</text>
-                        <view class="welfare">
-                            <view wx:for="{{serviceBuyInfo.franchise}}" wx:key="index">
-                                <image src="{{staticFile}}/detail/{{index}}.gif"></image>
-                                {{item}}
-                            </view>
-                        </view>
-                    </view>
-                </view>
+                <form name="notice" report-submit bindsubmit='orderSign'> 
+                    <button 
+                        class="goPay" 
+                        bindtap="goPay">{{useCouponStatus?'免费读':'￥'+ articleInfo.price}}</button>
+                </form>
             </view>
-        </view>
-        <view class="mask {{showModalStatus?'active':''}}" bindtap="hideModal"></view>
+        </package>
+        <!-- 包时段弹窗 结束 -->
         <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
             <image src="{{staticFile}}/detail/goHome.png"></image>
         </navigator>
-        <button class="contact" open-type="contact" wx:if="{{isShowHome == 'index'}}">
+        <button class="contact" open-type="contact">
             <image src="{{staticFile}}/contact.png?ver=20180523"></image>
         </button> 
     </view>

@@ -19,43 +19,32 @@
             <scroll-view 
                 class="chat-main"
                 scroll-y="true"
-                upper-threshold="1"
+                upper-threshold="10"
+                scroll-into-view="{{toView[type]}}"
                 enable-back-to-top="true"
-                scroll-top="{{aaa}}"
-                bindscrolltoupper="loadHistory">
-                <view class="section" wx:for="{{list}}" wx:key="index">
-                    <view class="notice"><text>{{item.timeStamp}}</text></view>
+                bindscrolltoupper="loadHistory"
+                >
+                <view id="{{'to' + item.mid}}" class="section" wx:for="{{list}}" wx:key="index" wx:if="{{!onlyPrivate.isChange || onlyPrivate.isChange && (item.show_type == 8 || item.show_type == 9)}}">
+                    <view class="notice" wx:if="{{item.timeStamp}}"><text>{{item.timeStamp}}</text></view>
                     <view class="section-main {{(type==0&&userCache[item.send + item.recv].role_flag!=1)?'owner':''}}">
                         <image src="{{userCache[item.send + item.recv].img_url}}" class="avatar"></image>
+                        <image src="img/v.png" wx:if="{{userCache[item.send + item.recv].user_type == 2}}" class="certified"></image>
                         <view class="pop">
                             <view class="info"><text class="name">{{userCache[item.send + item.recv].user_name}}</text>
                                 <text class="role {{role[item.send + item.recv].role}}">{{role[item.send + item.recv].title}}</text></view>
                             <view class="content">
-                                <image class="bubble" src="img/bubble{{role[item.send + item.recv].role == 'admin'? '-admin':''}}.png"></image> 
-                                <view class="inner {{role[item.send + item.recv].role}}">
+                                <image class="bubble" src="img/bubble{{role[item.send + item.recv].part == 'admin'? '-admin':''}}.png"></image> 
+                                <view class="inner {{role[item.send + item.recv].part}}" bindtap="{{item.subReply?'subPackage':''}}">
                                     <rich-text class="reply" nodes="{{item.data}}"></rich-text>
-                                    <view class="source">
-                                        <rich-text nodes="{{item.data}}"></rich-text>
+                                    <view class="source" wx:if="{{item.objects.length > 0}}" wx:for="{{item.objects}}"  wx:for-item="obj" wx:key="n"  bindtap="{{obj.subSource?'subPackage':''}}" id="{{item.subSource}}">
+                                        <rich-text nodes="{{'@' + obj.data}}"></rich-text>
                                     </view>
                                     
-                                    <image wx:if="{{item.private}}" class="private" src="img/private.png"></image>
+                                    <image wx:if="{{item.privateIcon}}" class="private" src="img/private.png"></image>
                                 </view>
                             </view>
                         </view>
                     </view>
-                    <!-- <view class="section-main owner">
-                        <image src="" class="avatar"></image> 
-                        <view class="pop">
-                            <view class="info"><text class="name">怀旧的文学小青年</text><text class="role">主播</text></view>
-                            <view class="content">
-                                <image class="bubble" src="img/bubble-normal.png"></image> 
-                                <view class="inner">
-                                    <view class="reply">回复别人的内容回复别人的内容回复别人的内容回复别人的内容</view>
-                                    <view class="source">这个内容是来源</view>
-                                </view>
-                            </view>
-                        </view>
-                    </view> -->
                 </view>
                 <view class="more-status more-status-0{{status.loading[type]}}">
                     <view class="more">上拉，加载更多内容</view>
@@ -70,5 +59,10 @@
             </scroll-view>
         </swiper-item> -->
     </swiper>
-    <!-- <button class="contact">互动提问，请下载摩尔金融APP</button> -->
+    <view class="privateTab" wx:if="{{!onlyPrivate.isShow}}" bindtap="changePrivate">{{onlyPrivate.isChange?'返回全部':'只看私密'}}</view>
+    <button class="contact" open-type="contact" >互动提问，请下载摩尔金融APP</button> 
+    <view class="sub {{showModalStatus?'active':''}}">
+        <package serviceBuyInfo="{{serviceBuyInfo}}" authorId="{{articleInfo.authorId}}" isAgree="{{isAgree}}" bind:successHandler="successHandler"></package>
+    </view>
+    <view class="mask {{showModalStatus?'active':''}}" bindtap="hideModal"></view>
 </view>

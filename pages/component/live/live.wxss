@@ -74,6 +74,7 @@ page {
 }
 /** 气泡内容主体 **/
 .section-main {
+    position: relative;
     display: flex;
     width:100%;
     font-size: 28rpx;
@@ -86,6 +87,13 @@ page {
     margin-right: 20rpx;
     border-radius: 100%;
     background: #e6461a;
+}
+.certified {
+    position: absolute;
+    left: 60rpx;
+    top: 60rpx;
+    width: 28rpx;
+    height: 28rpx;
 }
 .bubble {
     position: relative;
@@ -142,6 +150,7 @@ page {
     border: 2rpx solid #d9dde0;
     border-radius: 10rpx;
     background-color: #fff;
+    word-wrap:break-word;
 }
 .content .inner .reply {
     font-size: 0;
@@ -151,8 +160,11 @@ page {
     font-size: 0;
     padding: 25rpx 20rpx;
     margin-top: 20rpx;
-    border-radius: 4rpx;
+    border-radius: 6rpx;
     background: #f2f2f2;
+}
+.content .inner.admin .source {
+    background:rgba(255,218,216,1);
 }
 .private {
     position: absolute;
@@ -188,13 +200,25 @@ page {
     transform: scaleX(-1);
     margin: 24rpx 0 0 -2rpx;
 }
+.owner .certified {
+    left: auto;
+    right: 15rpx;
+}
 /** 内容区域   结束 **/
 
 .contact {
     position: fixed;
-    bottom: 0;
+    bottom: 20rpx;
     left: 0;
-    width: 80%;
+    height:64rpx;
+    line-height: 64rpx;
+    padding: 0 50rpx;
+    transform: translateX(27%);
+    border-radius:32rpx;
+    font-size:28rpx;
+    color: #fff;
+    background:rgba(232,76,61,1);
+    box-shadow:1px 0px 10px rgba(242,90,75,0.54);
 }
 
 /** 加载更多   结束 **/
@@ -222,3 +246,50 @@ page {
     display: block;
 }
 /** 加载更多   结束 **/
+.privateTab {
+    position: absolute;
+    bottom: 180rpx;
+    right: 30rpx;
+    height:46rpx;
+    line-height: 46rpx;
+    padding: 0 20rpx;
+    opacity:0.8;
+    font-size: 24rpx;
+    color: #fff;
+    border-radius:23rpx;
+    background:rgba(234,75,54,1);
+    box-shadow:4px 0px 5px rgba(12,3,6,0.2);
+}
+
+/** 包时段 内容区域 开始  **/
+.sub {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2000;
+    transform: translateY(100%);
+    transition: transform .6s ease;
+    background: #fff;
+}
+.sub.active {
+    transform: translateY(0);
+}
+.mask {
+  width: 100%;
+  height: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0;
+  overflow: hidden;
+  z-index: 1000;
+  color: #fff;
+  transition: opacity 0.6s ease;
+}
+.mask.active {
+    height: 100%;
+    opacity: 0.4;
+}
+/** 包时段 内容区域 结束  **/
