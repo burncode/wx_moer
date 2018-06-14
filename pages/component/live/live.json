@@ -1,8 +1,8 @@
 {
     "backgroundColorTop": "#ebeff2",
     "backgroundColorBottom": "#ebeff2",
-    "navigationBarTitleText": "调研通",
+    "navigationBarTitleText": "调研通的直播间",
     "usingComponents": {
-        "package": "../package/package"
+        "package": "/pages/modules/package/package"
     }
 }

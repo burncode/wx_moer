@@ -1,5 +1,5 @@
 {
     "usingComponents": {
-        "package": "../package/package"
+        "package": "/pages/modules/package/package"
     }
 }

@@ -12,6 +12,74 @@
 .sub.active {
     transform: translateY(0);
 }
+.sub-header .txt {
+    display: inline-block;
+    padding: 20rpx 0;
+    font-size: 34rpx;
+}
+.sub-header {
+    display: flex;
+    line-height: 60rpx;
+    font-size: 0;
+    border-bottom: 2rpx solid #dedede;
+}
+.sub-header .share {
+    flex: 1;
+    padding: 0 0 0 30rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 28rpx;
+    color: #5193ad;
+    text-align: left;
+    background: none;
+}
+.sub-header .useCoupon {
+    flex: 1;
+    display: inline-block;
+    padding: 20rpx;
+    font-size: 28rpx;
+    color: #5193ad;
+    text-align: right;
+}
+.sub-header .useCoupon view {
+    display: inline-block;
+    width: 20rpx;
+    height: 20rpx;
+    border: 2rpx solid #5193ad;
+    margin: 18rpx 10rpx 0 0;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 100%;
+}
+.sub-header .useCoupon view icon {
+    display: none;
+    line-height: 20rpx;
+    height: 20rpx;
+    margin-top: 2rpx;
+    vertical-align: top;
+}
+.sub-header .useCoupon .active {
+    background: #5193ad;
+}
+.sub-header .useCoupon .active icon {
+    display: inline-block;
+}
+.sub-header .goPay {
+    display: inline-block;
+    width: 150rpx;
+    height: 60rpx;
+    padding: 0;
+    margin: 20rpx 0;
+    line-height: 60rpx;
+    font-size: 26rpx;
+    color: #fff;
+    border-radius: 60rpx;
+    vertical-align: top;
+    background: #e84c3d;
+}
+.sub-header .del {
+    text-decoration: line-through;
+}
 .sub-main {
     padding: 0 30rpx;
 }
@@ -91,6 +159,9 @@
     text-align: center;
     border-radius: 100%;
 }
+.sub-service .agreebtn view.active{
+    background: #5193ad;
+}
 .sub-service .agreebtn view icon {
     display: none;
     line-height: 20rpx;
@@ -151,6 +222,10 @@
     color:rgba(32,45,51,1);
     text-align: center
 }
+.coupon-main {
+    max-height: 400rpx;
+    overflow-y: auto;
+}
 .sub-coupon .item {
     display: flex;
     height: 40rpx;
@@ -189,13 +264,19 @@
     vertical-align: top;
     text-align: center;
     border-radius: 100%;
-    background:#E84C3D;
+    
 }
 .sub-coupon .btn icon {
-    display: inline-block;
+    display: none;
     line-height: 28rpx;
     height: 28rpx;
     margin-top: 2rpx;
+}
+.sub-coupon .btn.active {
+    background:#E84C3D;
+}
+.sub-coupon .btn.active icon {
+    display:inline-block;
 }
 .sub-coupon .noUsed {
     height: 88rpx;

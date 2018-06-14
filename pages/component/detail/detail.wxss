@@ -1,5 +1,14 @@
 /* pages/detail/detail.wxss */
 @import "/plugin/wxParse/wxParse.wxss";
+.no-scroll {
+    position: fixed;
+    z-index: 0;
+    top:0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 
 .detail {
     padding: 0 25rpx;
@@ -13,7 +22,6 @@
     word-break:break-all;
 }
 .detail .info {
-    display: flex;
     height: 24rpx;
     margin: 20rpx 0 0;
     font-size: 0;
@@ -21,14 +29,23 @@
     color: #879193;
     overflow: hidden;
 }
-.detail .author {
+.detail .amount {
+    display: inline-block;
     height: 24rpx;
     font-size: 24rpx;
-    padding-right: 0.4rem;
+    padding-right: 16rpx;
+    vertical-align: top;
+}
+.detail .amount image {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
+    border-radius: 100%;
     vertical-align: top;
 }
 .detail .date {
-    flex: 2;
+    display: inline-block;
     height: 24rpx;
     font-size: 24rpx;
 }
@@ -43,7 +60,9 @@
     vertical-align: middle;
 }
 .detail .view {
+    display: inline-block;
     height: 24rpx;
+    padding-right: 16rpx;
     font-size: 24rpx;
     text-align: right;
 }
@@ -213,74 +232,7 @@
 }
 
 /* 包时段弹窗  开始 */
-.sub-header .txt {
-    display: inline-block;
-    padding: 20rpx 0;
-    font-size: 34rpx;
-}
-.sub-header {
-    display: flex;
-    line-height: 60rpx;
-    font-size: 0;
-    border-bottom: 2rpx solid #dedede;
-}
-.sub-header .share {
-    flex: 1;
-    padding: 0 0 0 30rpx;
-    height: 100rpx;
-    line-height: 100rpx;
-    font-size: 28rpx;
-    color: #5193ad;
-    text-align: left;
-    background: none;
-}
-.sub-header .useCoupon {
-    flex: 1;
-    display: inline-block;
-    padding: 20rpx;
-    font-size: 28rpx;
-    color: #5193ad;
-    text-align: right;
-}
-.sub-header .useCoupon view {
-    display: inline-block;
-    width: 20rpx;
-    height: 20rpx;
-    border: 2rpx solid #5193ad;
-    margin: 18rpx 10rpx 0 0;
-    vertical-align: top;
-    text-align: center;
-    border-radius: 100%;
-}
-.sub-header .useCoupon view icon {
-    display: none;
-    line-height: 20rpx;
-    height: 20rpx;
-    margin-top: 2rpx;
-    vertical-align: top;
-}
-.sub-header .useCoupon .active {
-    background: #5193ad;
-}
-.sub-header .useCoupon .active icon {
-    display: inline-block;
-}
-.sub-header .goPay {
-    display: inline-block;
-    width: 150rpx;
-    height: 60rpx;
-    padding: 0;
-    margin: 20rpx 0;
-    line-height: 60rpx;
-    font-size: 26rpx;
-    color: #fff;
-    border-radius: 60rpx;
-    vertical-align: top;
-    background: #e84c3d;
-}
-.sub-header .del {
-    text-decoration: line-through;
-}
+
 /* 包时段弹窗  结束 */
 
 
@@ -315,6 +267,32 @@
 .contact image{
     width: 130rpx;
     height: 100rpx;
+}
+
+.goLive {
+    position: fixed;
+    right: 40rpx;
+    bottom: 250rpx;
+    z-index: 9;
+    padding: 0;
+    font-size: 0;
+    text-align: center;
+    background: none;
+}
+.goLive image{
+    width: 94rpx;
+    height: 80rpx;
+}
+.goLive .join {
+    height: 36rpx;
+    line-height: 34rpx;
+    padding: 0 15rpx;
+    margin-top: -4rpx;
+    background: rgba(11,21,26,1);
+    opacity: 0.8;
+    border-radius: 18rpx;
+    font-size: 18rpx;
+    color: #fff;
 }
 
 .mask {

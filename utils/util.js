@@ -31,6 +31,12 @@ const urls = {
     'getHistory': '/v1/group/api/msg/history', // 获取直播间历史记录
     'lastestmsg': '/v1/group/api/msg/lastestmsg', // 获取直播间最新消息
     'getPersonalInfo': '/v1/group/api/group/member', // 获取个人信息
+    'optionCouponList': '/miniProgram/v1/optionCouponList.json', // 包时段服务页面优惠券列表
+    'prepare': '/v1/group/api/order/prepare', // 直播间包时段下单
+    'groupInfo': '/v1/group/api/group/info', // 直播间的信息
+    'lastestmsg': '/v1/group/api/msg/lastestmsg', // 最新消息
+    'findAd': '/miniProgram/v1/findAd.json', // 广告
+    'scanQrcode': '/miniProgram/v1/recordScanQrcode.json' // 扫码记录
 };
 const Emoji = {
     path: 'https://static.moer.cn/staticFile/img/emoji/',
@@ -261,6 +267,83 @@ const formatTime = (date, format) => { // 毫秒时间戳； 日期格式："yyy
     }
 
     return format;
+};
+
+// 购买文章、包时段
+const payHandler = function (params, successHandler, failHandler) {
+    const self = this;
+
+    // 生成购买订单
+    wx.showLoading({
+        title: '加载中',
+        mask: true
+    });
+
+    wx.login({
+        success: r => {
+            sendRequest(urls.payOrder, params, function (res) {
+                if (res.data.success) {
+                    const d = res.data.data;
+
+                    sendRequest(urls.payment, {
+                        orderId: d.orderId,
+                        wxjsapiCode: r.code
+                    }, function (da) {
+                        wx.hideLoading();
+
+                        if (da.data.success) {
+                            const d = da.data.data;
+
+                            if (da.data.errorCode != 30001) {  // 30001 是使用0折优惠券 不走微信支付流程
+                                //微信支付
+                                wx.requestPayment({
+                                    timeStamp: d.timestamp,
+                                    nonceStr: d.nonceStr,
+                                    package: d.package,
+                                    signType: 'MD5',
+                                    paySign: d.paySign,
+                                    complete: function (res) {
+                                        if (res.errMsg === 'requestPayment:ok') {
+                                            successHandler && successHandler();
+                                        } else if (res.errMsg === 'requestPayment:fail cancel') {
+                                            wx.showModal({
+                                                title: '提示',
+                                                content: '支付失败',
+                                                cancelText: '取消',
+                                                confirmText: '重新支付',
+                                                success: function (f) {
+                                                    if (f.confirm) {
+                                                        payHandler(params);
+                                                    } else if (f.cancel) {
+                                                        failHandler && failHandler();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                // 使用免费券 弹窗提示成功！
+                                wx.showToast({
+                                    title: '使用成功',
+                                    success: () => {
+                                        wx.showLoading({
+                                            title: '加载中',
+                                            mask: true
+                                        });
+
+                                        successHandler && successHandler();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    wx.hideLoading();
+                }
+            });
+        }
+    });
 }
 
 module.exports = {
@@ -273,5 +356,6 @@ module.exports = {
     statistics: statistics,
     getUnReadMsg: getUnReadMsg,
     Emoji: Emoji,
-    formatTime: formatTime
+    formatTime: formatTime,
+    payHandler: payHandler
 }

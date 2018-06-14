@@ -1,0 +1,114 @@
+<!--订阅包时段弹窗-->
+<!--pages/component/package/package.wxml-->
+<view class="sub {{showModalStatus?'active':''}}">
+    <view class="sub-main">
+        <view class="sub-header" wx:if="{{sort == 'article'}}">
+            <text class="txt">当前文章</text>
+            <view class="useCoupon">
+                <text wx:if="{{serviceBuyInfo.checkOutType}}" bindtap="chooseArticleCoupon" data-id="{{serviceBuyInfo.couponId}}">
+                    <block wx:if="{{serviceBuyInfo.couponType == 1}}">
+                        <text>{{serviceBuyInfo.couponNum}}</text>元优惠券
+                    </block>
+                    <block wx:elif="{{serviceBuyInfo.couponType == 2}}">
+                        <text>{{serviceBuyInfo.couponNum}}</text>折优惠券
+                    </block>
+                    <block wx:else>
+                        <text>不使用优惠券</text>
+                    </block>
+                </text>
+            </view>
+            <form name="notice" report-submit bindsubmit='orderSign'> 
+                <button 
+                    class="goPay" 
+                    bindtap="goPay">
+                    <block wx:if="{{serviceBuyInfo.couponType == 1}}">
+                        {{(price * 100 - serviceBuyInfo.couponNum * 100) / 100}}
+                    </block>
+                    <block wx:elif="{{serviceBuyInfo.couponType == 2}}">
+                        {{price * 100 * serviceBuyInfo.couponNum / 10 /100 > 0 ? '￥' + price * 100 * serviceBuyInfo.couponNum / 10 /100 : '免费读'}}
+                    </block>
+                    <block wx:else>
+                        ￥{{price}}
+                    </block>
+                </button>
+            </form>
+        </view>
+        <view class="sub-service">
+            <text class="txt">订阅{{serviceBuyInfo.serviceName}}</text>
+            <view class="sub-type {{!isAgree?'active':''}}">
+                <view class="type-item" wx:if="{{packInfo != ''}}" wx:for="{{packInfo}}" wx:key="index">
+                    <view class="name"><image src="{{staticFile}}/detail/unpack-0{{item.type}}.jpg"></image>{{pack[item.type - 1]}}</view>
+                    <view class="cost">
+                        <view class="useCoupon" wx:if="{{item.checkOutType}}" bindtap="chooseCoupon" 
+                            data-price="{{item.realPrice}}" 
+                            data-index="{{index}}"
+                            data-id="{{item.couponId}}">
+                            <block wx:if="{{item.couponType == 1}}">
+                                <text>{{item.couponNum}}</text>元优惠券
+                            </block>
+                            <block wx:elif="{{item.couponType == 2}}">
+                                <text>{{item.couponNum}}</text>折优惠券
+                            </block>
+                            <block wx:else>
+                                不使用优惠券
+                            </block>
+                        </view>
+                        <view wx:else class="useCoupon">{{saveTxt}}</view> 
+                    </view>
+                    
+                    <button class="goSub" id="{{item.id}}" catchtap="goSub" data-index="{{index}}">
+                        <block wx:if="{{item.couponType == 1}}">
+                            ￥{{(item.realPrice * 100 - item.couponNum * 100) / 100}}
+                        </block>
+                        <block wx:elif="{{item.couponType == 2}}">
+                           ￥{{item.realPrice * 100 * item.couponNum / 10 /100}}
+                        </block>
+                        <block wx:else>
+                           ￥{{item.realPrice}}
+                        </block>
+                    </button>
+                </view>
+            </view>
+            <view class="agreement {{agreementStatus?'active':''}}">
+                <view class="agreebtn">
+                    <view class="{{isAgree?'active':''}}"  catchtap="agreementHanler">
+                        <icon type="success_no_circle" size="8" color="#fff"/>
+                    </view>
+                    <text catchtap="showAgreement">摩尔金融包时段服务协议</text>    </view>
+                <view class="agreetext">
+                        <text wx:for="{{serviceBuyInfo.agreement}}" wx:key="index">{{item}}</text> 
+                </view>
+            </view> 
+            <view class="privilege">
+                <text class="txt">订阅特权</text>
+                <view class="welfare">
+                    <view wx:for="{{serviceBuyInfo.franchise}}" wx:key="index">
+                        <image src="{{staticFile}}/detail/{{index}}.gif"></image>
+                        {{item}}
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
+<view class="sub-coupon" wx:if="{{couponStatus}}">
+    <view class="coupon-head">选择可用的优惠券</view>
+    <view class="coupon-main">
+        <view class="item" bindtap="changeCoupon" wx:for="{{couponList}}" wx:key="index" id="{{item.id}}" data-index="{{index}}">
+            <view class="discount">
+                <block wx:if="{{item.type == 1}}">
+                    <text>{{item.money}}</text>元
+                </block>
+                <block wx:else>
+                    <text>{{item.money}}</text>折
+                </block>
+            </view>
+            <view class="time">{{item.effectiveDate}}</view>
+            <view class="btn {{item.id == curIndex ? 'active': ''}}">
+                <icon type="success_no_circle" size="12" color="#fff"/>
+            </view>
+        </view>
+    </view>
+    <view class="noUsed" catchtap="changeCoupon" data-index="-1">暂不使用优惠券</view>
+</view>
+<view class="sub-mask {{showModalStatus ?'active':''}}" catchtap="hideMask" style="z-index:{{zIndex}}"></view>

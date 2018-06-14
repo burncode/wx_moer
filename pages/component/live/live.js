@@ -5,44 +5,53 @@ const ERR_OK = 1000; //请求结果的状态 1000：成功
 
 Page({
     data: {
-        gid: '16823659593729',
+        isLogin: false,
+        gid: '47513290735617',
         staticFile: util.staticFile,
         uid: '',
-        type: 1,   // 默认显示区域，0： 直播区 1：交流区 
+        isIphoneX: app.globalData.isIphoneX,
+        groupInfo: {}, // 直播间的信息
+        type: 0,   // 默认显示区域，0： 直播区 1：交流区 
         groupsCache: {}, // 直播间相关信息
         userCache: {}, // 用户的相关信息
-        num: 5, // 历史记录默认展示 3条
+        num: 10, // 历史记录默认展示 3条
         isPrivate: false,  // 只看私密 
         msgList: {},
         role: {}, // 当前用户角色： 普通用户，播主，嘉宾，管理员，主持人
         status: {
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
         },
+        lastestTs: {}, // 最新一条消息的时间戳
         toView: [], // 滚动到该元素
         onlyPrivate: {
             isShow: 0,
             isChange: 0
         }, // 只看私密
-        showModalStatus: false, // 购买包时段的对话框
+        flag: true, //  能否加载数据
     }, 
     onLoad: function (options) {
         const self = this;
         const { gid, num, type } = self.data;
 
         if (!app.globalData.userInfo) {
-            return false;
+            wx.navigateTo({
+                url: '/pages/component/login/login',
+            });
+        } else {
+            self.setData({
+                uid: app.globalData.userInfo.userId,
+                gid: options.gid || gid
+            });
+            self.getPersonalInfo(gid, app.globalData.userInfo.userId, function () {
+                const { gid, userCache, uid, num, type } = self.data;
+
+                self.setData({
+                    ['onlyPrivate.isShow']: userCache[uid + gid].private_expire_flag
+                });
+            });
         }
 
-        self.setData({
-            uid: app.globalData.userInfo.userId
-        });
-        self.getPersonalInfo(gid, app.globalData.userInfo.userId, function () {
-            const { gid, userCache, uid, num, type } = self.data;
-
-            self.setData({
-                ['onlyPrivate.isShow']: userCache[uid + gid].private_expire_flag
-            });
-        });
+        self.groupInfo();
     },
     onShow: function (options) {
         const self = this;
@@ -65,16 +74,39 @@ Page({
         };
 
         if (!app.globalData.userInfo) {
-            return false;
+            wx.navigateTo({
+                url: '/pages/component/login/login',
+            });
+        } else {
+            self.setData({
+                groupsCache: groupCache,
+                isLogin: true
+            });
+            // 初始化 加载历史消息及当前用户在该直播间的角色信息
+            self.getHistroy(gid, 0, num, function () {
+                self.scrollLast(0);
+            });
+            self.getHistroy(gid, 1, num, function () {
+                self.scrollLast(1);
+            });
         }
+    },
+    groupInfo () {
+        const self = this;
+        const { gid } = self.data;
 
-        self.setData({
-            groupsCache: groupCache
-        });
-        // 初始化 加载历史消息及当前用户在该直播间的角色信息
-        self.getHistroy(gid, 0, num);
-        self.getHistroy(gid, 1, num, function () {
-            self.scrollLast();
+        util.sendRequest(util.urls.groupInfo, {
+            gid: gid
+        }, function (res) {
+            if (res.data.code == 1000) {
+                const d = res.data.data;
+
+                self.setData({
+                    groupInfo: d
+                });
+
+                wx.setNavigationBarTitle({ title: d.name });
+            }
         });
     },
     changeTab (e) {
@@ -88,14 +120,28 @@ Page({
             });
         };
     },
+    tapTab (e) {
+        const self = this;
+        const { current } = e.currentTarget.dataset;
+
+        self.setData({
+            type: current
+        });
+    },
     loadHistory () {
         const self = this;
-        const { gid, type, msgList } = self.data;
+        const { gid, type, msgList, flag } = self.data;
 
-        wx.startPullDownRefresh();
-        self.getHistroy(gid, type, 20, function() {
-            self.scrollLast(); 
-        });  
+        if (flag) {
+            self.setData({
+                flag: false
+            });
+
+            self.getHistroy(gid, type, 20, function () {
+                self.scrollLast(type);
+            });
+        }
+          
     },
     getHistroy (gid, type, amount, callback) {
         const self = this;
@@ -123,8 +169,6 @@ Page({
                 count: count,
                 ts: groupsCache.timeFlags[type].last
             }, function (res) {
-                wx.stopPullDownRefresh();
-
                 if (res.data.code == ERR_OK) {
                     const datas = res.data.data;
 
@@ -132,9 +176,10 @@ Page({
                         msg = null;
 
                     if (datas.length > 0) {
-                        const setTs = 'groupsCache.timeFlags[' + type + '].last';
+                        const oldTs = 'groupsCache.timeFlags[' + type + '].last';
+                        const newTs = 'groupsCache.timeFlags[' + type + '].first';
                         const msgData = 'msgList[' + type + ']';
-                        let list = [], timer = 0, timeStamp = '';
+                        let list = [], timer = 0, timeStamp = '', dList = null;
                         
                         datas.forEach((item, index) => {
                             ext = JSON.parse(item.extp);
@@ -154,10 +199,13 @@ Page({
                             timer = ext.time_stamp;
                         });
 
+                        dList = (msgList[type] && msgList[type].length > 0) ? list.reverse().concat(msgList[type]) : list.reverse();
+
                         self.setData({
-                            [setTs]: datas[datas.length - 1].send_time, //  最旧一条消息的时间戳
+                            [oldTs]: datas[datas.length - 1].send_time, //  最旧一条消息的时间戳
+                            [newTs]: dList[dList.length - 1].send_time, //  最新一条消息的时间戳
                             [loading]: 0,
-                            [msgData]: (msgList[type] && msgList[type].length > 0) ? list.reverse().concat(msgList[type]) : list.reverse(),
+                            [msgData]: dList,
                             toView: toViews
                         });
                     } else {
@@ -198,6 +246,7 @@ Page({
                 // ext: ext,
                 send: data.send,
                 recv: data.recv,
+                send_time: data.send_time,
                 show_type: data.show_type,
                 subReply: (data.show_type == 8 || data.show_type == 9) ? true : false,
                 subSource: (data.extp.show_type == 8 || data.extp.show_type == 9) ? true : false,
@@ -220,9 +269,11 @@ Page({
                     
                     msg = {
                         data: '<div style="font-size:16px;">' + (reply ? '@' + data.nick_name + '：':'') + data.msg + '</div>',
+                        type: 'txt',
                         mid: data.mid,
                         send: data.send,
                         recv: data.recv,
+                        send_time: data.send_time,
                         show_type: data.show_type,
                         privateIcon: false
                     };
@@ -238,10 +289,14 @@ Page({
                     }
 
                     msg = {
-                        data: '<img class="img" style="width:auto; height:auto; max-width: 100%;" src="' + iSrc + '" />',
+                        // data: '<img class="img" style="width:auto; height:auto; max-width: 100%;" src="' + iSrc + '" />',
+                        data: iSrc,
+                        type: 'img',
+                        size: data.msg.size,
                         mid: data.mid,
                         send: data.send,
                         recv: data.recv,
+                        send_time: data.send_time,
                         show_type: data.show_type,
                         privateIcon: false
                     };
@@ -348,9 +403,9 @@ Page({
 
         return timeText;
     },
-    scrollLast () {
+    scrollLast (type) {
         const self = this;
-        let { type, msgList, toView } = self.data;
+        let { msgList, toView } = self.data;
         const mid = 'to' + msgList[type][0].mid;
 
         toView[type] = mid;
@@ -361,7 +416,9 @@ Page({
     subPackage () {
         const self = this;
 
-        self.showModal();
+        // 调用自定义组件里 包时段接口
+        self.package = self.selectComponent("#package");
+        self.package.subInfo();
     },
     // 切换私密按钮
     changePrivate () {
@@ -372,18 +429,25 @@ Page({
             ['onlyPrivate.isChange']: !onlyPrivate.isChange
         })
     },
-    // 显示对话框 
-    showModal: function () {
+    successHandler () {
+
+    },
+    touchend () {
         const self = this;
+        const { flag } = self.data;
 
         self.setData({
-            showModalStatus: true
-        })
-    },
-    // 隐藏对话框
-    hideModal: function () {
-        this.setData({
-            showModalStatus: false
+            flag: true
         });
     },
+    previewImg (e) {
+        const self = this;
+        const { src } = e.target.dataset;
+        
+        if (typeof (src) != 'undefined') {
+            wx.previewImage({
+                urls: [src] // 当前显示图片的http链接
+            })
+        } 
+    }
 })

@@ -1,7 +1,6 @@
 {
     "pages": [
         "pages/tabBar/index/index",
-        
         "pages/tabBar/buy/buy",
         "pages/tabBar/user/user"
     ],
@@ -44,8 +43,8 @@
                 "userCenter/userCenter",
                 "about/about",
                 "login/login",
-				"live/live",
-                "package/package"
+                "live/live",
+                "ad/ad"
             ]
         }
     ]

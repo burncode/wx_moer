@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="container {{showBrief?'no-scroll':''}}" 
+<view class="container {{noScroll?'no-scroll':''}}" 
     enable-back-to-top="true">
     <!-- 头部详情 开始 -->
     <view class="header">
@@ -67,8 +67,16 @@
                         <view class="title">{{item.title}}</view>
                         <view class="desc">{{item.title}}</view>
                         <view class="info">
-                            <view class="status">免费</view>
-                            <view class="amount">阅读 {{item.browseCount}}</view>
+                            <view class="status">{{freeTxt[item.freeFlag]}}</view>
+                            <view class="amount {{item.freeFlag}}">
+                                <block wx:if="{{item.freeFlag == 0}}">
+                                    阅读 {{item.browseCount}}
+                                </block>
+                                <block wx:else>
+                                    <image wx:for="{{item.images}}" wx:key="num" wx:for-item="img" src="{{img}}"></image>
+                                     购买 {{item.saleCount > 500?'500+':item.saleCount}}
+                                </block>
+                            </view>
                             <view class="date">{{item.pubTime}}</view>
                         </view>
                     </view>
@@ -113,6 +121,10 @@
     </view>
     <!-- 摩股学院 结束 -->
 
+    <view class="ad" wx:if="{{ad.imgUrl}}">
+        <image src="{{ad.imgUrl}}" mode="aspectFill" bindtap="jumpAd"></image>
+        <view class="adClose" bindtap="closeAd"></view>
+    </view>
     <!-- 联系客服 -->
     <button class="contact" open-type="contact" >
         <image src="{{staticFile}}/contact.png?ver=20180523"></image>

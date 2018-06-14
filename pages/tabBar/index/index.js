@@ -27,7 +27,9 @@ Page({
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
-        canIUse: wx.canIUse('button.open-type.getUserInfo')
+        freeTxt: ['免费', '收费'],
+        ad: {}, // 首页广告相关信息
+        noScroll: false
     },
     onShow: function () {
         const self = this;
@@ -49,6 +51,7 @@ Page({
         const self = this;
 
         self.hiddenBrief();
+        self.closeAd();
     },
     onLoad: function (options) {
         const self = this;
@@ -64,22 +67,16 @@ Page({
                 type: type,
                 sort: sort
             });
-        } else if (self.data.canIUse) {
-            // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-            // 所以此处加入 callback 以防止这种情况
-            app.userInfoReadyCallback = res => {
-                self.setData({
-                    userInfo: app.globalData.userInfo,
-                    type: type,
-                    sort: sort
-                });
-            }
         } else {
-
+            self.setData({
+                type: type,
+                sort: sort
+            });
         }
         
         // 初始化
         self.switchHandler(type);
+        self.showAd();
     },
     //展示类型的切换： 0、摩研社； 1、摩股学院；
     changeType: function (e) {
@@ -133,7 +130,7 @@ Page({
     switchHandler: function(num) {
         const self = this;
         let { sort } = self.data;
-        const str = 'info['+ num +']';
+        const str = 'info.'+ num;
 
         // //摩研社数据请求
         if (num == 0) {
@@ -268,11 +265,12 @@ Page({
     //展示Tab下的简介
     showDesc (e) {
         const self = this;
-        const { type, sort, showBrief } = self.data;
+        const { type, sort, showBrief, noScroll } = self.data;
         const keys = [110005, 110004];
 
         self.setData({
             showBrief: !showBrief,
+            noScroll: !noScroll,
             briefInfo: dataList.list[type][sort]
         });
 
@@ -282,7 +280,8 @@ Page({
         const self = this;
 
         self.setData({
-            showBrief: false
+            showBrief: false,
+            noScroll: false
         });
     },
     goToArticle: function(e) {
@@ -321,6 +320,46 @@ Page({
                 isContact: true
             });
         }
+    },
+    showAd () {
+        const self = this;
+        const { noScroll } = self.data;
+        const adTimes = wx.getStorageSync('ad');
+
+        if(adTimes < 1) {
+            util.sendRequest(util.urls.findAd, {
+                adType: 'E1',
+                advX: '490',
+                advY: '654'
+            }, function (res) {
+                if (res.data.code == util.ERR_OK) {
+                    self.setData({
+                        ad: res.data.result[0],
+                        noScroll: true
+                    });
+
+                    wx.setStorageSync('ad', 1);
+                }
+            });
+        }
+    },
+    jumpAd () {
+        const self = this;
+        const { url } = self.data.ad;
+
+        if (url) {
+            wx.navigateTo({
+                url: '/pages/component/ad/ad?url=' + url
+            })
+        }
+    },
+    closeAd () {
+        const self = this;
+
+        self.setData({
+            ad: {},
+            noScroll: false
+        });
     },
     onPullDownRefresh() { 
         const self = this;

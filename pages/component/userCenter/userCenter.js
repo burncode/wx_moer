@@ -40,5 +40,19 @@ Page({
                 })
             }
         });
+    },
+    useCoupon (e) {
+        const { type } = e.currentTarget.dataset;
+        let num = '';
+
+        if (type == 1) {
+            num = 1;
+        } else if (type == 2) {
+            num = 0;
+        }
+
+        wx.reLaunch({
+            url: `/pages/tabBar/index/index?type=0&sort=${num}`
+        })
     }
 })

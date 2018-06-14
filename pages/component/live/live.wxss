@@ -43,12 +43,17 @@ page {
 /** 内容区域   开始 **/
 .main {
     height: calc(100% - 90rpx);
-    padding-top: 90rpx;
+    padding: 90rpx 0 0;
     background: #ebeff2;
 }
 
 .chat-main {
     height: 100%;
+    overflow-y: auto;
+}
+
+.box {
+    padding-bottom: 60rpx;
 }
 
 /** 单个气泡内容   开始 **/
@@ -86,7 +91,6 @@ page {
     height:80rpx;
     margin-right: 20rpx;
     border-radius: 100%;
-    background: #e6461a;
 }
 .certified {
     position: absolute;
@@ -151,6 +155,11 @@ page {
     border-radius: 10rpx;
     background-color: #fff;
     word-wrap:break-word;
+}
+.content .inner .img {
+    display: block;
+   
+    max-width:420rpx;
 }
 .content .inner .reply {
     font-size: 0;
@@ -221,10 +230,11 @@ page {
     box-shadow:1px 0px 10px rgba(242,90,75,0.54);
 }
 
+
 /** 加载更多   结束 **/
 .more-status .more, .more-status .loading-more,  .more-status .no-more {
     display: none;  
-    padding: 40rpx 0;
+    padding: 30rpx 0;
     font-size: 24rpx;
     line-height: 24rpx;
     color:#879194;
@@ -247,7 +257,7 @@ page {
 }
 /** 加载更多   结束 **/
 .privateTab {
-    position: absolute;
+    position: fixed;
     bottom: 180rpx;
     right: 30rpx;
     height:46rpx;
@@ -293,3 +303,13 @@ page {
     opacity: 0.4;
 }
 /** 包时段 内容区域 结束  **/
+
+.isIphoneX .contact {
+    bottom: 80rpx;
+}
+.isIphoneX .privateTab {
+    bottom: 240rpx;
+}
+.isIphoneX .box {
+    padding-bottom: 120rpx;
+}

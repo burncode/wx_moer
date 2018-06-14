@@ -1,10 +1,14 @@
 <!--pages/detail/detail.wxml-->
 <import src="../../../plugin/wxParse/wxParse.wxml"/>
-<view class="container">
+<view class="container {{noScroll?'no-scroll':''}}">
     <view class="detail" hidden="{{!articleInfo}}">
         <text class="title">{{articleInfo.title}}</text>
         <view class="info">
-            <text class="author">{{articleInfo.source}} </text><text class="date">{{articleInfo.pubTime}}</text><text class="view">阅读 {{count.browseCount}}</text>
+            <view class="amount" wx:if="{{articleInfo.freeFlag}}">
+                <image wx:for="{{buyImg}}" wx:key="num" wx:for-item="img" src="{{img}}"></image>
+                 购买 {{count.saleCount > 500?'500+':count.saleCount}}</view>
+            <view class="view" wx:else>阅读 {{count.browseCount}}</view>
+            <view class="date">{{articleInfo.pubTime}}</view>
         </view>
         <view class="tips" wx:if="{{articleInfo.summary != ''}}">{{articleInfo.summary}}</view>
         <view class="main">
@@ -77,34 +81,25 @@
 
         <!-- 包时段弹窗 开始 -->
         <package 
-            articleId="{{articleId}}" 
-            authorId="{{articleInfo.authorId}}" 
-            serviceBuyInfo="{{serviceBuyInfo}}" 
+            id="package"
+            goodsId="{{articleId}}"
+            sort="article"
+            writerUid="{{articleInfo.authorId}}" 
+            articlePrice="{{articleInfo.price}}"
             bind:successHandler="successHandler"
-            showModalStatus="{{showModalStatus}}"
             >
-            <view class="sub-header" slot="top">
-                <text class="txt">当前文章</text>
-                <view class="useCoupon" bindtap="couponHandler">
-                    <view class="{{useCouponStatus?'active':''}}" wx:if="{{buttonInfo.userCouponCount > 0}}">
-                        <icon type="success_no_circle" size="8" color="#fff"/>
-                    </view>
-                    <text wx:if="{{buttonInfo.userCouponCount > 0}}">使用试读券</text>
-                </view>
-                <form name="notice" report-submit bindsubmit='orderSign'> 
-                    <button 
-                        class="goPay" 
-                        bindtap="goPay">{{useCouponStatus?'免费读':'￥'+ articleInfo.price}}</button>
-                </form>
-            </view>
         </package>
         <!-- 包时段弹窗 结束 -->
         <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
             <image src="{{staticFile}}/detail/goHome.png"></image>
         </navigator>
-        <button class="contact" open-type="contact">
+        <button class="contact" open-type="contact" wx:if="{{articleInfo.buyFlag != 1}}">
             <image src="{{staticFile}}/contact.png?ver=20180523"></image>
         </button> 
+        <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
+            <image src="img/live.gif"></image>
+            <view class="join">{{liveInfo.subscibe_num}}已加入</view>
+        </view>
     </view>
     <!--弹窗-->
     <view class="modal-mask" bindtap="hideTips" wx:if="{{refresh && !isPop}}"></view>

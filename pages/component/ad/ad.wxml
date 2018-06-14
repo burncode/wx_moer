@@ -1,0 +1,2 @@
+<!--pages/component/ad/ad.wxml-->
+ <web-view src="{{path}}"></web-view> 
