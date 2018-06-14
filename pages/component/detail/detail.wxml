@@ -4,7 +4,7 @@
     <view class="detail" hidden="{{!articleInfo}}">
         <text class="title">{{articleInfo.title}}</text>
         <view class="info">
-            <view class="amount" wx:if="{{articleInfo.freeFlag}}">
+            <view class="amount" wx:if="{{freeFlag == 1}}">
                 <image wx:for="{{buyImg}}" wx:key="num" wx:for-item="img" src="{{img}}"></image>
                  购买 {{count.saleCount > 500?'500+':count.saleCount}}</view>
             <view class="view" wx:else>阅读 {{count.browseCount}}</view>

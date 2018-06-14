@@ -10,12 +10,12 @@ Page({
         sort: 0,
         staticFile: util.staticFile,
         articleId: '',    // 文章ID
+        freeFlag: 0,      // 是否是付费文章标识 0： 免费 1：收费
         refresh: false,   // 是否 是购买后重新请求
         inviteUid: '',  // 当前文章分享者的UID
         source: null,   // 来源，是否是通过APP分享的卡片
         articleInfo: null,        // 文章的详情数据
         buttonInfo: {},         // 按钮的状态数据
-        showModalStatus: false, // 购买文章的对话框
         btnStatus: {
             pay: false,    // 单篇购买
             coupon: false, // 使用优惠券
@@ -99,6 +99,7 @@ Page({
                 self.setData({
                     articleInfo: d.articleInfo,
                     buttonInfo: d.buttonInfo,
+                    freeFlag: d.freeFlag,
                     buyImg: d.images,
                     liveInfo: d.liveInfo
                 });
@@ -374,20 +375,6 @@ Page({
         }
 
         return temp;
-    },
-    // 显示对话框 
-    showModal: function () {
-        const self = this;
-
-        self.setData({
-            showModalStatus: true
-        })
-    },
-    // 隐藏对话框
-    hideModal: function () {
-        this.setData({
-            showModalStatus: false
-        });
     },
     // 点赞
     doZan() {

@@ -45,7 +45,7 @@
                                     <image class="bubble" src="img/bubble{{role[item.send + item.recv].part == 'admin'? '-admin':''}}.png"></image> 
                                     <view class="inner {{role[item.send + item.recv].part}}" bindtap="{{item.subReply?'subPackage':''}}"> 
                                         <block wx:if="{{item.type == 'img'}}">
-                                            <image bindtap="previewImg" mode="widthFix" class="img" src="{{item.data}}" data-src="{{item.data}}"></image>
+                                            <image bindtap="previewImg" mode="widthFix" class="img" src="{{item.data}}" data-src="{{item.data}}" lazy-load="true"></image>
                                         </block>
                                         <block wx:else>
                                             <rich-text class="reply" nodes="{{item.data}}"></rich-text>
