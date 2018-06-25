@@ -112,7 +112,7 @@ Page({
                 [videoMax]: videoLen
             });
 
-            if (info[type].services && info[type].services[sort]) {
+            if (info[type] && info[type].services && info[type].services[sort]) {
                 if (type == 0) {
                     self.latestArticlesHandler();
                     self.tryReadArticleHandler();
@@ -325,16 +325,22 @@ Page({
         const self = this;
         const { noScroll } = self.data;
         const adTimes = wx.getStorageSync('ad');
+        const w = '490';
+        const h = '654';
 
         if(adTimes < 1) {
             util.sendRequest(util.urls.findAd, {
                 adType: 'E1',
-                advX: '490',
-                advY: '654'
+                advX: w,
+                advY: h
             }, function (res) {
                 if (res.data.code == util.ERR_OK) {
+                    const d = res.data.result[0];
+
+                    d['w'] = w;
+                    d['h'] = h;
                     self.setData({
-                        ad: res.data.result[0],
+                        ad: d,
                         noScroll: true
                     });
 
@@ -384,6 +390,15 @@ Page({
                 [str]: 1
             });
             this.latestArticlesHandler();
+        }
+    },
+    sendMsgId(e) {
+        const self = this;
+        const { formId } = e.detail;
+        const isLogin = app.globalData.isLogin;
+
+        if (isLogin) {
+            util.sendFormId(formId);
         }
     },
     onShareAppMessage: function () {

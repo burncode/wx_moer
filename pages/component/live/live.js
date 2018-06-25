@@ -14,48 +14,31 @@ Page({
         type: 0,   // 默认显示区域，0： 直播区 1：交流区 
         groupsCache: {}, // 直播间相关信息
         userCache: {}, // 用户的相关信息
-        num: 10, // 历史记录默认展示 3条
+        num: 100, // 历史记录默认展示 3条
         isPrivate: false,  // 只看私密 
         msgList: {},
         role: {}, // 当前用户角色： 普通用户，播主，嘉宾，管理员，主持人
         status: {
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
         },
-        lastestTs: {}, // 最新一条消息的时间戳
-        toView: [], // 滚动到该元素
         onlyPrivate: {
             isShow: 0,
             isChange: 0
         }, // 只看私密
-        flag: true, //  能否加载数据
+        isLoading: true, //  能否加载数据
+        isMove: false,  // 是否能够拖拽加载
+        maxTop: -100, // 拖动最大高度
+        scrollTop: [0, 0], // 加载数据时，滚动的高度（解决滚动到上一次的位置）
+        lastTop: [0, 0],   // 记录上一次内容的高度
     }, 
     onLoad: function (options) {
         const self = this;
-        const { gid, num, type } = self.data;
 
-        if (!app.globalData.userInfo) {
-            wx.navigateTo({
-                url: '/pages/component/login/login',
-            });
-        } else {
-            self.setData({
-                uid: app.globalData.userInfo.userId,
-                gid: options.gid || gid
-            });
-            self.getPersonalInfo(gid, app.globalData.userInfo.userId, function () {
-                const { gid, userCache, uid, num, type } = self.data;
-
-                self.setData({
-                    ['onlyPrivate.isShow']: userCache[uid + gid].private_expire_flag
-                });
-            });
-        }
-
-        self.groupInfo();
+        self.init(options);
     },
-    onShow: function (options) {
+    init (options) {
         const self = this;
-        const { gid, userCache, uid, num, type } = self.data;
+        const { gid, num } = self.data;
         const time = new Date().getTime();
         let groupCache = {};
 
@@ -79,9 +62,20 @@ Page({
             });
         } else {
             self.setData({
+                uid: app.globalData.userInfo.userId,
+                gid: options.gid || gid,
                 groupsCache: groupCache,
                 isLogin: true
             });
+
+            self.getPersonalInfo(gid, app.globalData.userInfo.userId, function () {
+                const { gid, userCache, uid, num, type } = self.data;
+
+                self.setData({
+                    ['onlyPrivate.isShow']: userCache[uid + gid].private_expire_flag
+                });
+            });
+
             // 初始化 加载历史消息及当前用户在该直播间的角色信息
             self.getHistroy(gid, 0, num, function () {
                 self.scrollLast(0);
@@ -90,6 +84,8 @@ Page({
                 self.scrollLast(1);
             });
         }
+
+        self.groupInfo();
     },
     groupInfo () {
         const self = this;
@@ -130,25 +126,17 @@ Page({
     },
     loadHistory () {
         const self = this;
-        const { gid, type, msgList, flag } = self.data;
+        const { gid, type } = self.data;
 
-        if (flag) {
-            self.setData({
-                flag: false
-            });
-
-            self.getHistroy(gid, type, 20, function () {
-                self.scrollLast(type);
-            });
-        }
-          
+        self.getHistroy(gid, type, 20, function () {
+            self.scrollLast(type);
+        });
     },
     getHistroy (gid, type, amount, callback) {
         const self = this;
-        let { num, msgList, status, groupsCache, toView, onlyPrivate } = self.data;
+        let { num, msgList, status, groupsCache, onlyPrivate } = self.data;
         const count = amount || num;
         const loading = 'status.loading[' + type + ']';
-        const toViews = wx.getStorageSync('toView') || toView;
         const show_type = {
             '00': '1',
             '01': '8',
@@ -156,7 +144,7 @@ Page({
             '11': '9'
         }; // 直播间类型： 1、直播区； 3、交流区
 
-        if (status.loading[type] == 0) {
+        if (status.loading[type] != 2) {
 
             self.setData({
                 [loading]: 1
@@ -206,20 +194,22 @@ Page({
                             [newTs]: dList[dList.length - 1].send_time, //  最新一条消息的时间戳
                             [loading]: 0,
                             [msgData]: dList,
-                            toView: toViews
+                            isLoading: true
                         });
+
+                        callback && callback();
                     } else {
                         self.setData({
-                            [loading]: 2
+                            [loading]: 2,
+                            isLoading: true
                         });
                     }
                 } else {
                     self.setData({
-                        [loading]: 0
+                        [loading]: 0,
+                        isLoading: true
                     });
                 }
-
-                callback && callback();
             }); 
         }
         
@@ -261,11 +251,10 @@ Page({
                     for (var face in emoji.map) {
                         if (emoji.map.hasOwnProperty(face)) {
                             while (data.msg.indexOf(face) > -1) {
-                                data.msg = data.msg.replace(face, '<img style="vertical-align: top;" class="emoji" src="' + emoji.path + emoji.map[face] + '" />');
+                                data.msg = data.msg.replace(face, '<img style="vertical-align: top; width:20px;height:20px" class="emoji" src="' + emoji.path + emoji.map[face] + '" />');
                             }
                         }
                     }
-
                     
                     msg = {
                         data: '<div style="font-size:16px;">' + (reply ? '@' + data.nick_name + '：':'') + data.msg + '</div>',
@@ -398,19 +387,25 @@ Page({
             } else { // 大于7天，显示完整的时间戳
                 timeText = util.formatTime(onlyToday);
             }
-
         }
 
         return timeText;
     },
     scrollLast (type) {
         const self = this;
-        let { msgList, toView } = self.data;
-        const mid = 'to' + msgList[type][0].mid;
+        let { msgList, lastTop, scrollTop } = self.data;
+        const last = 'to' + msgList[type][msgList[type].length - 1].mid; 
+        const scorllT = 'scrollTop[' + type + ']'; 
+        const lastT = 'lastTop[' + type +']';
 
-        toView[type] = mid;
+        wx.createSelectorQuery().select('#' + last).boundingClientRect(function (rect) {
+            let top = 0;
 
-        wx.setStorageSync('toView', toView);
+            self.setData({
+                [scorllT]: rect.top - lastTop[type],
+                [lastT]: rect.top
+            })
+        }).exec()
     },
     // 订阅包时段弹窗
     subPackage () {
@@ -430,15 +425,9 @@ Page({
         })
     },
     successHandler () {
-
-    },
-    touchend () {
         const self = this;
-        const { flag } = self.data;
 
-        self.setData({
-            flag: true
-        });
+        self.init();
     },
     previewImg (e) {
         const self = this;
@@ -449,5 +438,56 @@ Page({
                 urls: [src] // 当前显示图片的http链接
             })
         } 
-    }
+    },
+    imgError (e) {
+        const self = this;
+
+        if (e.type == 'error') {
+            
+        }
+        console.log(e)
+    },
+    // 拖动加载历史消息
+    scroll (ev) {
+        const self = this;
+        const { maxTop, isMove } = self.data;
+        const { scrollTop, scrollHeight } = ev.detail;
+
+        if (scrollTop <= maxTop && !isMove) {
+            self.setData({
+                isMove: true
+            });
+        }
+    },
+    touchstart() {
+        const self = this;
+
+        self.setData({
+            isMove: false,
+            isLoading: true
+        });
+    },
+    touchmove(ev) {
+        const self = this;
+        const { isMove, type } = self.data;
+        const loading = 'status.loading[' + type + ']';
+
+        if (isMove) {
+            self.setData({
+                [loading]: 1
+            });
+        }
+    },
+    touchend() {
+        const self = this;
+        const { isMove, isLoading } = self.data;
+
+        if (isMove && isLoading) {
+            self.loadHistory();
+            self.setData({
+                isMove: false
+            });
+            return
+        }
+    },
 })

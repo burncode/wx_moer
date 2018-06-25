@@ -139,6 +139,15 @@ Page({
             index: index
         });
     },
+    sendMsgId(e) {
+        const self = this;
+        const { formId } = e.detail;
+        const isLogin = app.globalData.isLogin;
+
+        if (isLogin) {
+            util.sendFormId(formId);
+        }
+    },
     onShareAppMessage: function () {
         const { sort } = this.data;
         const titles = ['一个向国内顶级私募学习的机会', '一套完整从低到高的缠论学习课程'];

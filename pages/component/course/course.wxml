@@ -1,5 +1,6 @@
 <!--pages/course/course.wxml-->
 <view class="container">
+    <form name="notice" report-submit bindsubmit='sendMsgId'>
     <view class="course" wx:if="{{list.length > 0}}">
         <!-- 课程视频播放 开始 -->
         <view class="video">
@@ -31,7 +32,6 @@
             </view>
         </view>
         <!-- 课程视频播放 结束 -->
-        
 
         <scroll-view scroll-y class="main">
             <!-- 视频课程目录 开始 -->
@@ -45,7 +45,7 @@
                     data-index="{{index}}"
                     bindtap="playHandler"
                     hover-class="active">
-                    <view class="item-main">
+                    <button formType="submit" class="item-main" hover-class="active">
                         <view class="title">{{item.videoTitle}}</view>
                         <view class="info">
                             <view class="time">
@@ -53,7 +53,7 @@
                             </view>
                             <view class="times">播放次数： {{item.playCount}}</view>
                         </view>
-                    </view>
+                    </button>
                 </view>
                 <view class="showMore {{max>=list.length?'active':''}}" bindtap="getVideo" wx:if="{{list.length > 4}}">
                     <image class="icon-more" mode="aspectFit" src="{{staticFile}}/more.jpg"></image>
@@ -68,4 +68,5 @@
             <!-- 视频课程介绍 结束 -->
         </scroll-view>
     </view>
+    </form>
 </view>

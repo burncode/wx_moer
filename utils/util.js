@@ -36,7 +36,9 @@ const urls = {
     'groupInfo': '/v1/group/api/group/info', // 直播间的信息
     'lastestmsg': '/v1/group/api/msg/lastestmsg', // 最新消息
     'findAd': '/miniProgram/v1/findAd.json', // 广告
-    'scanQrcode': '/miniProgram/v1/recordScanQrcode.json' // 扫码记录
+    'scanQrcode': '/miniProgram/v1/recordScanQrcode.json', // 扫码记录
+    'sendTemplateMsg': '/miniProgram/v1/sendTemplateMsg.json', // 支付成功发送模版消息
+    'recordFormId': '/miniProgram/v1/recordFormId.json', // 提交表单发送模版消息
 };
 const Emoji = {
     path: 'https://static.moer.cn/staticFile/img/emoji/',
@@ -152,7 +154,9 @@ const wxLoginHandler = function (success, fail) {
                     const params = {
                         encryptedData: d.encryptedData,
                         iv: d.iv,
-                        code: code
+                        code: code,
+                        channel: app.globalData.channel,
+                        scene: app.globalData.scene
                     };
 
                     sendRequest(urls.authorizedLogin, params, function (r) {
@@ -302,6 +306,18 @@ const payHandler = function (params, successHandler, failHandler) {
                                     package: d.package,
                                     signType: 'MD5',
                                     paySign: d.paySign,
+                                    success: function() {
+                                        setTimeout(()=>{
+                                            sendRequest(urls.sendTemplateMsg, {
+                                                orderType: params.orderType,
+                                                goodsType: params.goodsType,
+                                                goodsId: params.goodsId,
+                                                prepayId: d.package
+                                            }, function (r) {
+
+                                            });
+                                        }, 3 * 60 * 1000);
+                                    },
                                     complete: function (res) {
                                         if (res.errMsg === 'requestPayment:ok') {
                                             successHandler && successHandler();
@@ -344,7 +360,13 @@ const payHandler = function (params, successHandler, failHandler) {
             });
         }
     });
-}
+};
+
+// 发送formId 模版消息
+const sendFormIdHandler = function (formId) {
+    sendRequest(urls.recordFormId, { formId: formId}, function (res) {
+    });
+};
 
 module.exports = {
     domain: domain,
@@ -357,5 +379,6 @@ module.exports = {
     getUnReadMsg: getUnReadMsg,
     Emoji: Emoji,
     formatTime: formatTime,
-    payHandler: payHandler
+    payHandler: payHandler,
+    sendFormId: sendFormIdHandler
 }

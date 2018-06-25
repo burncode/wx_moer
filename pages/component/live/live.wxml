@@ -19,13 +19,16 @@
             <scroll-view 
                 class="chat-main"
                 scroll-y="true"
-                upper-threshold="-100"
-                scroll-into-view="{{toView[type]}}"
                 enable-back-to-top="true"
-                bindtouchend="touchend"
-                bindscrolltoupper="loadHistory"
+                scroll-top="{{scrollTop[type]}}"
+                bindscroll="scroll"
                 >
-                <view class="box">
+                <!-- scroll-into-view="{{toView[type]}}"  -->
+                <view 
+                    class="box"
+                    bind:touchstart="touchstart" 
+                    bind:touchmove="touchmove" 
+                    bind:touchend="touchend">
                     <view class="more-status more-status-0{{status.loading[type]}}">
                         <view class="more">查看更多消息</view>
                         <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
@@ -45,7 +48,7 @@
                                     <image class="bubble" src="img/bubble{{role[item.send + item.recv].part == 'admin'? '-admin':''}}.png"></image> 
                                     <view class="inner {{role[item.send + item.recv].part}}" bindtap="{{item.subReply?'subPackage':''}}"> 
                                         <block wx:if="{{item.type == 'img'}}">
-                                            <image bindtap="previewImg" mode="widthFix" class="img" src="{{item.data}}" data-src="{{item.data}}" lazy-load="true"></image>
+                                            <image bindtap="previewImg" mode="widthFix" class="img" src="{{item.data}}" data-src="{{item.data}}" lazy-load="true" binderror="imgError"></image>
                                         </block>
                                         <block wx:else>
                                             <rich-text class="reply" nodes="{{item.data}}"></rich-text>

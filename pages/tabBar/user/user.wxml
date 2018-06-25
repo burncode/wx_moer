@@ -13,7 +13,6 @@
             <image class="avatar" src="{{userInfo.userImg}}"></image>
             <view class="info">
                 <view class="name">{{userInfo.userName}}</view>
-                <!-- <view class="phone" wx:if="{{!userInfo.userPhone}}"><text>手机号：</text><button open-type="getPhoneNumber" class="bindPhone">绑定手机号</button></view> -->
             </view>
             <button class="switch" bindtap="switchAccount">切换帐号</button>
         </view>
@@ -57,13 +56,22 @@
                     <text class="arrow"></text>
                 </navigator>
             </view>
+            <view class="item" hover-class="active">
+                <button 
+                    class="item-list"
+                    open-type="feedback">
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/feedback.png?ver=20180621"></image>
+                    <text class="type-text">意见反馈</text>
+                    <text class="arrow"></text>
+                </button>
+            </view>
         </view>
         <view class="main">
             <view class="item" hover-class="active">
                 <button 
                     class="item-list"
                     open-type="contact">
-                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/online.png"></image>
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/online.png?ver=201806211005"></image>
                     <text class="type-text">在线客服</text>
                     <view class="tips">工作日 8:00-22:00</view>
                     <text class="arrow"></text>

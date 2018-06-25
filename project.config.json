@@ -57,6 +57,13 @@
 					"pathName": "pages/component/live/live",
 					"query": "",
 					"scene": "1001"
+				},
+				{
+					"id": 3,
+					"name": "某篇文章",
+					"pathName": "pages/component/detail/detail",
+					"query": "articleId=247368&sort=0&jump=index",
+					"scene": "1001"
 				}
 			]
 		}

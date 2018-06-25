@@ -82,6 +82,7 @@
 .course .item-main {
     padding-bottom: 40rpx;
     margin: 0 30rpx;
+    text-align: left;
     border-bottom: 1rpx solid #dedede;
 }
 .course .title {

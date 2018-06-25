@@ -95,13 +95,17 @@ App({
     },  
     scanQrcode(options) {
         const self = this;
-        const { channel } = options.query
+        const { channel } = options.query;
         const scene = decodeURIComponent(options.scene);
         let params = {};
 
+        self.globalData.channel = channel || '';
+        self.globalData.scene = scene;
+
         params = {
             channel: channel || '',
-            scene: scene
+            scene: scene,
+            uid: self.globalData.userInfo ? self.globalData.userInfo.userId : ''
         };
 
         wx.login({
@@ -114,6 +118,8 @@ App({
     globalData: {
         userInfo: null,
         isIphoneX: false,
-        isLogin: false
+        isLogin: false,
+        channel: '',
+        scene: ''
     }
 })

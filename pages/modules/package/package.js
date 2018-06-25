@@ -101,22 +101,30 @@ Component({
                 goodsType: '1',   //  商品类型 1、文章； 6、包时段
                 orderType: '1', // 订单类型  1、文章购买  6、包时段购买
                 payType: '19',  // 小程序购买
-                couponId: serviceBuyInfo.couponId,  // 优惠券id
-                checkoutType: serviceBuyInfo.checkOutType  // 优惠券类型 1,.优惠券 2.卡券
+                couponId: serviceBuyInfo.couponId || '',  // 优惠券id
+                checkoutType: serviceBuyInfo.checkOutType || ''  // 优惠券类型 1,.优惠券 2.卡券
             };
 
-            if (serviceBuyInfo.couponNum == 0 && serviceBuyInfo.checkOutType == 2) {
+            if (serviceBuyInfo.couponNum != '' && serviceBuyInfo.couponNum == 0 && serviceBuyInfo.checkOutType == 2) {
                 wx.showModal({
                     title: '确认使用免费券吗？',
                     content: '',
                     success: function (res) {
                         if (res.confirm) {
-                            util.payHandler(params, self._successHandler);
+                            util.payHandler(params, () => {
+                                self._successHandler();
+                            }, () => {
+                                self._fileHandler();
+                            });
                         }
                     }
                 });
             } else {
-                util.payHandler(params, self._successHandler);
+                util.payHandler(params, () =>{
+                    self._successHandler();
+                }, () => {
+                    self._fileHandler();
+                });
             }
         },
         chooseArticleCoupon (e) {
@@ -163,7 +171,11 @@ Component({
                             checkoutType: packInfo[index].checkOutType  // 优惠券类型 1,.优惠券 2.卡券
                         };
 
-                        util.payHandler(params, self._successHandler);
+                        util.payHandler(params, () => {
+                            self._successHandler();
+                        }, () => {
+                            self._fileHandler();
+                        });
                     } else {
                         wx.showModal({
                             title: '购买失败',
@@ -245,7 +257,6 @@ Component({
             }
 
             self.hideMask();
-            console.log(serviceBuyInfo)
         },
         // 同意协议按钮
         agreementHanler() {
@@ -258,20 +269,24 @@ Component({
         },
         // 线上摩尔金融包时段服务协议内容
         showAgreement: function () {
-            const { agreementStatus } = this.data;
+            const self = this;
+            const { agreementStatus } = self.data;
 
-            this.setData({
+            self.setData({
                 agreementStatus: !agreementStatus
             })
         },
         _successHandler() {
+            const self = this;
             // 购买触发成功的回调
-            this.triggerEvent("successHandler")
+            self.triggerEvent("successHandler");
+            self.hideMask();
         },
         _fileHandler() {
             const self = this;
             // 购买触发失败的回调
             self.triggerEvent("fileHandler");
+            self.hideMask();
         },
         // 显示对话框 
         showMask: function () {

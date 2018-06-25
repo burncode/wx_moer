@@ -50,7 +50,9 @@ Page({
                     params = {
                         code: code,
                         email: user,
-                        password: passwd
+                        password: passwd,
+                        channel: app.globalData.channel,
+                        scene: app.globalData.scene
                     }
                     util.sendRequest(util.urls.login, params, function (res) {
                         if (res.data.code == util.ERR_OK) {

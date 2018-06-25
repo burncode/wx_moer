@@ -4,10 +4,6 @@ page {
 }
 /** 顶部样式   开始 **/
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9;
     width: 100%;
     display: flex;
     height: 88rpx;
@@ -43,13 +39,12 @@ page {
 /** 内容区域   开始 **/
 .main {
     height: calc(100% - 90rpx);
-    padding: 90rpx 0 0;
+    padding: 0;
     background: #ebeff2;
 }
 
 .chat-main {
     height: 100%;
-    overflow-y: auto;
 }
 
 .box {
@@ -158,12 +153,10 @@ page {
 }
 .content .inner .img {
     display: block;
-   
     max-width:420rpx;
 }
 .content .inner .reply {
     font-size: 0;
-    
 }
 .content .inner .source {
     font-size: 0;

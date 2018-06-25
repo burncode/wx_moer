@@ -1,8 +1,9 @@
 {
     "pages": [
         "pages/tabBar/index/index",
-        "pages/tabBar/buy/buy",
-        "pages/tabBar/user/user"
+        "pages/tabBar/user/user",
+        
+        "pages/tabBar/buy/buy"
     ],
     "window": {
         "backgroundTextStyle": "light",

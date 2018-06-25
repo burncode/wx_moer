@@ -153,7 +153,6 @@ Page({
         });
 
         self.getInfo();
-        self.hideModal();
     },
     // 按钮状态
     btnStatusHandler: function () {
@@ -457,7 +456,6 @@ Page({
                         content: '您获得了一张试读券',
                         showCancel: false,
                         complete: function (res) {
-                            self.hideModal();
                             self.getInfo();
                         }
                     });
@@ -466,7 +464,6 @@ Page({
                         content: r.data.message,
                         showCancel: false,
                         complete: function (res) {
-                            self.hideModal();
                             self.getInfo();
                         }
                     });
@@ -488,6 +485,16 @@ Page({
             });
         }
     },
+    // 发送模版消息
+    sendMsgId(e) {
+        const self = this;
+        const { formId } = e.detail;
+        const isLogin = app.globalData.isLogin;
+
+        if (isLogin) {
+            util.sendFormId(formId);
+        }
+    },
     // 转发分享
     onShareAppMessage(res) {
         const self = this;
@@ -503,5 +510,5 @@ Page({
             fail: function (res) {
             }
         }
-    }
+    },
 })
