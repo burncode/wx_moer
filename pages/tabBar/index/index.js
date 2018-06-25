@@ -17,7 +17,10 @@ Page({
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
         },
         tryReadArticles: [],  // 试读文章的数据
-        latestArticles: {},  // 最新文章的数据
+        latestArticles: {
+            0: [],
+            1: []
+        },  // 最新文章的数据
         videoInfo: {},
         videoNum: {
             videoLen: 4,  // 每次加载视频课程的数量
@@ -182,11 +185,17 @@ Page({
     //最新文章的数据请求
     latestArticlesHandler: function () {
         const self = this;
-        const { latestArticles, sort, sortTime, info, type } = self.data;
+        const { latestArticles, sort, sortTime, info, type, status } = self.data;
         const str = 'latestArticles[' + sort + ']';
         const strTimes = 'sortTime[' + sort +']';
+        const loading = 'status.loading[' + sort + ']';
+
+        if (status.loading[sort] != 0) return;
 
         wx.hideLoading();
+        self.setData({
+            [loading]: 1
+        });
 
         util.sendRequest(util.urls.latestArticles, {
             authorId: info[type].services[sort].authorId,
@@ -194,12 +203,11 @@ Page({
         }, function (res) {
             if (res.data.code == util.ERR_OK) {
                 const d = res.data.result;
-                const loading = 'status.loading[' + sort + ']';
 
                 if (d.length > 0) {
                     self.setData({
                         [loading]: 0,
-                        [str]: latestArticles[sort] ? latestArticles[sort].concat(d) : d,
+                        [str]: [...latestArticles[sort], ...d],
                         [strTimes]: d.length > 0 ? d[d.length - 1].sortTime : sortTime[sort]
                     });
                 } else {
@@ -212,7 +220,6 @@ Page({
 
             }
         }, function (res) {
-            const loading = 'status.loading[' + sort + ']';
 
             wx.showLoading({
                 title: '数据加载中',
@@ -386,9 +393,6 @@ Page({
         const str = 'status.loading[' + sort +']';
 
         if( type == 0) {
-            this.setData({
-                [str]: 1
-            });
             this.latestArticlesHandler();
         }
     },

@@ -307,16 +307,14 @@ const payHandler = function (params, successHandler, failHandler) {
                                     signType: 'MD5',
                                     paySign: d.paySign,
                                     success: function() {
-                                        setTimeout(()=>{
-                                            sendRequest(urls.sendTemplateMsg, {
-                                                orderType: params.orderType,
-                                                goodsType: params.goodsType,
-                                                goodsId: params.goodsId,
-                                                prepayId: d.package
-                                            }, function (r) {
+                                        sendRequest(urls.sendTemplateMsg, {
+                                            orderType: params.orderType,
+                                            goodsType: params.goodsType,
+                                            goodsId: params.goodsId,
+                                            prepayId: d.package
+                                        }, function (r) {
 
-                                            });
-                                        }, 3 * 60 * 1000);
+                                        });
                                     },
                                     complete: function (res) {
                                         if (res.errMsg === 'requestPayment:ok') {
