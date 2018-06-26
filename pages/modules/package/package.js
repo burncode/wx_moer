@@ -52,45 +52,48 @@ Component({
                 title: '加载中...',
             });
 
-            util.sendRequest(util.urls.serviceBuyInfo, {
-                writerId: writerUid,
-                articleId: goodsId
-            }, function (res) {
+            util.sendRequest({
+                path: util.urls.serviceBuyInfo,
+                data: { writerId: writerUid, articleId: goodsId }
+            }).then(res => {
                 wx.hideLoading();
-                
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
 
                     self.setData({
                         serviceBuyInfo: d,
                         showModalStatus: !showModalStatus,
                         packInfo: d.packet,
                         price: articlePrice
-                    });                    
+                    }); 
                 }
-            });
+            }); 
         },
         // 包时段优惠券
         couponListHandler(goodsType, goodsId, price, fn) {
             const self = this;
             const { writerUid } = self.data;
 
-            util.sendRequest(util.urls.optionCouponList, {
-                writerUid: writerUid,
-                goodsType: goodsType,
-                goodsId: goodsId,
-                price: price
-            }, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            util.sendRequest({
+                path: util.urls.optionCouponList,
+                data: {
+                    writerUid: writerUid,
+                    goodsType: goodsType,
+                    goodsId: goodsId,
+                    price: price
+                }
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
 
                     self.setData({
                         couponList: d
                     });
 
-                    fn&&fn();
-                };
-            });
+                    fn && fn();
+                }
+            }); 
         },
         // 单篇文章支付购买
         goPay: function () {
@@ -159,9 +162,12 @@ Component({
             const { isAgree, writerUid, goodsType, goodsId, packInfo, payType } = self.data;
 
             if (isAgree) {
-                util.sendRequest(util.urls.payPacket, { writerId: writerUid, packetPay_id: id }, function (res) {
-                    if (res.data.code == util.ERR_OK) {
-                        const d = res.data.result;
+                util.sendRequest({
+                    path: util.urls.payPacket,
+                    data: { writerId: writerUid, packetPay_id: id }
+                }).then(res => {
+                    if (res.code == util.ERR_OK) {
+                        const d = res.result;
                         const params = {
                             goodsId: d.id, // 文章ID
                             goodsType: goodsType,   //  商品类型 1、文章； 6、包时段
@@ -185,7 +191,7 @@ Component({
                             }
                         });
                     }
-                });
+                }); 
             }
         },
         // 查看包时段服务的优惠券

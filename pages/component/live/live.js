@@ -14,7 +14,7 @@ Page({
         type: 0,   // 默认显示区域，0： 直播区 1：交流区 
         groupsCache: {}, // 直播间相关信息
         userCache: {}, // 用户的相关信息
-        num: 100, // 历史记录默认展示 3条
+        num: 10, // 历史记录默认展示 3条
         isPrivate: false,  // 只看私密 
         msgList: {},
         role: {}, // 当前用户角色： 普通用户，播主，嘉宾，管理员，主持人
@@ -91,11 +91,12 @@ Page({
         const self = this;
         const { gid } = self.data;
 
-        util.sendRequest(util.urls.groupInfo, {
-            gid: gid
-        }, function (res) {
-            if (res.data.code == 1000) {
-                const d = res.data.data;
+        util.sendRequest({
+            path: util.urls.groupInfo,
+            data: { gid: gid }
+        }).then(res => {
+            if (res.code == ERR_OK) {
+                const d = res.data;
 
                 self.setData({
                     groupInfo: d
@@ -103,7 +104,7 @@ Page({
 
                 wx.setNavigationBarTitle({ title: d.name });
             }
-        });
+        }); 
     },
     changeTab (e) {
         const self = this;
@@ -149,16 +150,19 @@ Page({
             self.setData({
                 [loading]: 1
             });
-            
-            util.sendRequest(util.urls.getHistory, {
-                from: 'wechat',  // 小程序特殊消息过滤
-                gid: gid,
-                show_type: show_type['' + type + Number(onlyPrivate.isChange)],
-                count: count,
-                ts: groupsCache.timeFlags[type].last
-            }, function (res) {
-                if (res.data.code == ERR_OK) {
-                    const datas = res.data.data;
+
+            util.sendRequest({
+                path: util.urls.getHistory,
+                data: { 
+                    from: 'wechat',  // 小程序特殊消息过滤
+                    gid: gid,
+                    show_type: show_type['' + type + Number(onlyPrivate.isChange)],
+                    count: count,
+                    ts: groupsCache.timeFlags[type].last
+                }
+            }).then(res => {
+                if (res.code == ERR_OK) {
+                    const datas = res.data;
 
                     let ext = {},
                         msg = null;
@@ -168,7 +172,7 @@ Page({
                         const newTs = 'groupsCache.timeFlags[' + type + '].first';
                         const msgData = 'msgList[' + type + ']';
                         let list = [], timer = 0, timeStamp = '', dList = null;
-                        
+
                         datas.forEach((item, index) => {
                             ext = JSON.parse(item.extp);
                             msg = self.getMsgObj(item, ext, timeStamp);
@@ -176,7 +180,7 @@ Page({
                             if (item.show_type != 8 && item.show_type != 9) {
                                 msg['objects'] = self.sourceMsg(ext.objects);
                             }
-                            
+
                             // 只看私密
                             if (onlyPrivate.isChange && (item.show_type != 8 && item.show_type != 9)) {
                                 return false;
@@ -212,7 +216,6 @@ Page({
                 }
             }); 
         }
-        
     },
     // 消息处理
     getMsgObj (data, ext, reply) {
@@ -331,36 +334,34 @@ Page({
             self.setData({
                 [cache]: '1' // 防止重复发送Ajax
             });
-            
-            util.sendRequest(util.urls.getPersonalInfo, {
-                gid: gid,
-                uid: who
-            }, function (r) {
-                const d = r.data;
-                let info = {};
 
-                if (d.code == ERR_OK) {
-                    
-                    if (d.data) {
-                        if (d.data.role_flag == 1) {
+            util.sendRequest({
+                path: util.urls.getPersonalInfo,
+                data: { gid: gid, uid: who }
+            }).then(res => {
+                if (res.code == ERR_OK) {
+                    let info = {};
+
+                    if (res.data) {
+                        if (res.data.role_flag == 1) {
                             info = { 'role': 'admin', 'title': '播主', 'part': 'admin' };
-                        } else if (d.data.role_flag == 2) {
+                        } else if (res.data.role_flag == 2) {
                             info = { 'role': 'manager', 'title': '管理员', 'part': 'manager' };
                         } else {
                             info = { 'role': 'normal', 'title': '用户', 'part': 'normal' };
                         }
 
-                        if (d.data.is_host) {
+                        if (res.data.is_host) {
                             info['role'] = 'host'
                             info['title'] = '主持人';
                         }
 
-                        if (d.data.is_guest) {
+                        if (res.data.is_guest) {
                             info = { 'role': 'guest', 'title': '嘉宾', 'part': 'manager' };
                         }
 
                         self.setData({
-                            [cache]: r.data.data,
+                            [cache]: res.data,
                             [roleInfo]: info
                         })
 
@@ -368,7 +369,7 @@ Page({
 
                     callback && callback();
                 }
-            });
+            }); 
         }
     },
     //  时间戳

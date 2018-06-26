@@ -31,15 +31,18 @@ Page({
     getCoupon(params) {
         const self = this;
 
-        util.sendRequest(util.urls.userCouponList, params, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.userCouponList,
+            data: params
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 self.setData({
                     list: d
                 })
             }
-        });
+        }); 
     },
     useCoupon (e) {
         const { type } = e.currentTarget.dataset;

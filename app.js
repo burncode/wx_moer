@@ -70,7 +70,7 @@ App({
         };
 
         util.login().then(res => {
-            util.sendApi({
+            util.sendRequest({
                 path: util.urls.scanQrcode,
                 data: params
             }).then(res => {

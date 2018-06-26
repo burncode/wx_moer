@@ -8,8 +8,7 @@ Page({
         staticFile: util.staticFile,
         userInfo: {},
         coupon: 0,
-        invite: 0,
-        canIUse: wx.canIUse('button.open-type.getUserInfo')
+        invite: 0
     },
     onLoad: function (options) {
         
@@ -34,16 +33,19 @@ Page({
         const self = this;
 
         if (app.globalData.isLogin) {
-            util.sendRequest(util.urls.getMyPageCount, { uid: app.globalData.userInfo.userId }, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            util.sendRequest({
+                path: util.urls.getMyPageCount,
+                data: { uid: app.globalData.userInfo.userId }
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
 
                     self.setData({
                         coupon: d.couponCount,
                         invite: d.inviteCount
                     });
                 }
-            });
+            }); 
         }
     },
     switchAccount () {

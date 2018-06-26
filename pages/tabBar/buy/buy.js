@@ -84,13 +84,16 @@ Page({
         const self = this;
         const { msg, pagesize } = self.data;
 
-        util.sendRequest(util.urls.noticeList, { pageNum: num }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.noticeList,
+            data: { pageNum: num  }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
                 let load = 0;
 
-                if(num != 1) {
-                    load = d.length >= pagesize? 0 : 2
+                if (num != 1) {
+                    load = d.length >= pagesize ? 0 : 2
                 } else {
                     load = d.length != 0 && d.length != 10 ? 2 : 0
                 }
@@ -101,24 +104,27 @@ Page({
                     ['info[0].loading']: load
                 });
             }
-            
+
             self.loadingEnd();
-        });
+        }); 
     },
     // 获取购买记录
     getOrder: function (num) {
         const self = this;
         const { order, pagesize } = self.data;
 
-        util.sendRequest(util.urls.payRecords, { 
-            page: num,       // 页数
-            pagesize: pagesize,  // 每页条数
-            orderTypes: '1,6', // 订单类型：1/6
-            goodsTypes: '1,6', // 商品类型
-            payStatuss: 2  // 订单状态
-         }, function (res) {
-            if (res.data.errorCode == util.ERR_OK) {
-                const d = res.data.rows;
+        util.sendRequest({
+            path: util.urls.payRecords,
+            data: { 
+                page: num,       // 页数
+                pagesize: pagesize,  // 每页条数
+                orderTypes: '1,6', // 订单类型：1/6
+                goodsTypes: '1,6', // 商品类型
+                payStatuss: 2  // 订单状态
+            }
+        }).then(res => {
+            if (res.errorCode == util.ERR_OK) {
+                const d = res.rows;
                 let load = 0;
 
                 if (num != 1) {
@@ -133,9 +139,8 @@ Page({
                     ['info[1].loading']: load
                 });
             }
-            
             self.loadingEnd();
-        });
+        }); 
     },
     goArticle (e) {
         const { id } = e.currentTarget;
@@ -168,14 +173,17 @@ Page({
         }); 
     },
     updateMsg () {
-        util.sendRequest(util.urls.updateMsg, {}, function (res) {
-            if (res.data.code == util.ERR_OK) {
+        util.sendRequest({
+            path: util.urls.updateMsg
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 wx.removeTabBarBadge({
                     index: 1
                 });
             }
-        });
+        }); 
     },
     // 下拉加载最新
     refresh: function () {

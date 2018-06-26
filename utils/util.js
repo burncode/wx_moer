@@ -106,38 +106,13 @@ const Emoji = {
 
 const ERR_OK = 0; //请求结果的状态 0：成功
 
-  /**
-    * 接口公共访问方法
-    * @param {String} urlPath 开发者服务器接口地址
-    * @param {Object} params 请求的参数
-    * @param {Object} success 成功回调
-    * @param {Object} fail 失败回调
-    * @param {String} mode 请求的方法，有效值：OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-   */
-const sendRequest = function (urlPath, params, success, fail, mode) {
-    const app = getApp();
-    const pptId = app.globalData.userInfo ? app.globalData.userInfo.pptId : '';
-    const sessionId = app.globalData.userInfo ? app.globalData.userInfo.sessionId : '';
-
-    wx.request({
-        url: domain + urlPath,
-        data: params || {},
-        method: mode || 'GET',
-        header: {
-            'content-type': 'application/json',
-            'Cookie': 'JSESSIONID=' + sessionId,
-            'pptId': pptId
-        },
-        success: function (res) {
-            success(res);
-        },
-        fail: function (res) {
-            fail && fail(res);
-        }
-    })
-};
-
-const sendApi = (op = {}) => {
+/**
+* 接口公共访问方法 op 参数
+* @param {String} path 开发者服务器接口地址
+* @param {Object} data 请求的参数
+* @param {String} mode 请求的方法，有效值：OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+*/
+const sendRequest = (op = {}) => {
     const app = getApp();
     const pptId = app.globalData.userInfo ? app.globalData.userInfo.pptId : '';
     const sessionId = app.globalData.userInfo ? app.globalData.userInfo.sessionId : '';
@@ -168,7 +143,7 @@ const wxLoginHandler = function (success, fail) {
         const code = res.code;
 
         getUserInfo().then(d => {
-            sendApi({
+            sendRequest({
                 path: urls.authorizedLogin,
                 data: {
                     code,
@@ -211,7 +186,7 @@ const wxLoginHandler = function (success, fail) {
 
 // 摩尔统计
 const statistics = (op = {}) => {
-    sendApi({
+    sendRequest({
         path: urls.actLog,
         ...op
     }).then(res => {
@@ -223,13 +198,13 @@ const statistics = (op = {}) => {
 
 // 获取未读数
 const getUnReadMsg = function () {
-    sendApi({
+    sendRequest({
         path: urls.unReadMsg,
     }).then(res => {
         if (res.code == ERR_OK) {
             const d = res.result;
 
-            if (d.msgCount == 0) {
+            if (d.msgCount > 0) {
                 wx.setTabBarBadge({
                     index: 1,
                     text: d.msgCount + ''  // 必须为字符串
@@ -280,7 +255,7 @@ const payHandler = function (params, successHandler, failHandler) {
     });
 
     login().then(r => {
-        sendApi({
+        sendRequest({
             path: urls.payOrder,
             data: {
                 ...params
@@ -289,7 +264,7 @@ const payHandler = function (params, successHandler, failHandler) {
             if (res.success) {
                 const d = res.data;
 
-                sendApi({
+                sendRequest({
                     path: urls.payment,
                     data: {
                         wxjsapiCode: r.code,
@@ -370,7 +345,7 @@ const payHandler = function (params, successHandler, failHandler) {
 
 // 发送formId 模版消息
 const sendFormIdHandler = (op = {}) => {
-    sendApi({
+    sendRequest({
         path: urls.recordFormId,
         ...op
     }).then(res => {
@@ -382,7 +357,7 @@ const sendFormIdHandler = (op = {}) => {
 };
 
 const sendTemplateMsg = (op = {}) => {
-    sendApi({
+    sendRequest({
         path: urls.sendTemplateMsg,
         data: {
             ...op
@@ -405,7 +380,6 @@ const getUserInfo = () => {
         return res;
     });
 };
-
 // 微信API封装 结束
 
 module.exports = {
@@ -413,7 +387,6 @@ module.exports = {
     domain: domain,
     urls: urls,
     ERR_OK: ERR_OK,
-    sendRequest: sendRequest,
     wxLoginHandler: wxLoginHandler,
     staticFile: staticFile,
     statistics: statistics,
@@ -424,7 +397,7 @@ module.exports = {
     sendFormId: sendFormIdHandler,
 
     // 微信API封装
-    sendApi: sendApi,
+    sendRequest: sendRequest,
     login: login
     
 }

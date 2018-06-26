@@ -16,7 +16,6 @@
                 controls
                 autoplay="{{isLogin}}"
                 direction="90"
-                bindwaiting="waitHandler"
                 bindended="nextHandler"
                 wx:else
                 ></video> 

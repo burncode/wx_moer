@@ -43,51 +43,52 @@ Page({
                 return;
             }
         } else {
-            wx.login({
-                success: function (res) {
-                    const code = res.code;
+            util.login().then(res => {
+                const code = res.code;
 
-                    params = {
-                        code: code,
-                        email: user,
-                        password: passwd,
-                        channel: app.globalData.channel,
-                        scene: app.globalData.scene
-                    }
-                    util.sendRequest(util.urls.login, params, function (res) {
-                        if (res.data.code == util.ERR_OK) {
-                            const d = res.data.result;
-
-                            app.globalData.userInfo = {
-                                pptId: d.pptId,
-                                sessionId: d.sessionId,
-                                userId: d.userId,
-                                userImg: d.userImg,
-                                userName: d.userName,
-                                userPhone: d.userPhone
-                            };
-                            app.globalData.isLogin = true
-                            wx.setStorageSync('userInfo', app.globalData.userInfo);
-                            wx.setStorageSync('isLogin', app.globalData.isLogin);
-                            
-                            clearInterval(app.data.timer);
-                            app.data.timer = setInterval(function () {
-                                util.getUnReadMsg();
-                            }, 60000);
-
-                            wx.switchTab({
-                                url: '/pages/tabBar/user/user',
-                            });
-                        } else {
-                            self.setData({
-                                warnTxt: res.data.message
-                            });
-                            self.showWarn();
-                        }
-                    });
+                params = {
+                    code: code,
+                    email: user,
+                    password: passwd,
+                    channel: app.globalData.channel,
+                    scene: app.globalData.scene
                 }
+
+                util.sendRequest({
+                    path: util.urls.login,
+                    data: params
+                }).then(res => {
+                    if (res.code == util.ERR_OK) {
+                        const d = res.result;
+
+                        app.globalData.userInfo = {
+                            pptId: d.pptId,
+                            sessionId: d.sessionId,
+                            userId: d.userId,
+                            userImg: d.userImg,
+                            userName: d.userName,
+                            userPhone: d.userPhone
+                        };
+                        app.globalData.isLogin = true
+                        wx.setStorageSync('userInfo', app.globalData.userInfo);
+                        wx.setStorageSync('isLogin', app.globalData.isLogin);
+
+                        clearInterval(app.data.timer);
+                        app.data.timer = setInterval(function () {
+                            util.getUnReadMsg();
+                        }, 60000);
+
+                        wx.switchTab({
+                            url: '/pages/tabBar/user/user',
+                        });
+                    } else {
+                        self.setData({
+                            warnTxt: res.message
+                        });
+                        self.showWarn();
+                    }
+                });
             });
-            
         }
     },
     phoneCall() {

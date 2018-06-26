@@ -74,13 +74,16 @@ Page({
         const { articleId, refresh, inviteUid, sort } = self.data;
         let index = sort;
 
-        util.sendRequest(util.urls.articleDetails, {
-            articleId: articleId, // 文章ID
-            refresh: refresh,
-            inviteUid: inviteUid         // 邀请者UID
-        }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.articleDetails,
+            data: {
+                articleId: articleId, // 文章ID
+                refresh: refresh,
+                inviteUid: inviteUid         // 邀请者UID
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
                 const articleStr = self.showColor(d.articleInfo.content);
                 const updateLog = d.articleInfo.updateLog;
                 const keys = [110012, 110011];
@@ -127,7 +130,7 @@ Page({
                     }
                 })
             }
-        });
+        }); 
 
         self.authorizeHandler();
     },
@@ -136,10 +139,15 @@ Page({
         const self = this;
         const { articleId } = self.data;
 
-        util.sendRequest(util.urls.getArticleCount, { articleId: articleId }, function (res) {
-            if (res.data.code == util.ERR_OK) {
+        util.sendRequest({
+            path: util.urls.getArticleCount,
+            data: { articleId: articleId }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
+
                 self.setData({
-                    count: res.data.result
+                    count: d
                 });
             }
         });
@@ -257,36 +265,41 @@ Page({
         if (d == 'getPhoneNumber:ok') {
             wx.checkSession({
                 success: function () {
-                    util.sendRequest(util.urls.savePhoneNumber, {
-                        iv: options.detail.iv,
-                        encryptedData: options.detail.encryptedData
-                    }, function (r) {
-                        const aaa = r;
-                        if (r.data.code == util.ERR_OK) {
 
-                            app.globalData.userInfo.userPhone = r.data.result;
+                    util.sendRequest({
+                        path: util.urls.savePhoneNumber,
+                        data: {
+                            iv: options.detail.iv,
+                            encryptedData: options.detail.encryptedData
+                        }
+                    }).then(res => {
+                        if (res.code == util.ERR_OK) {
+                            const d = res.result;
+
+                            app.globalData.userInfo.userPhone = d;
                             wx.setStorageSync('userInfo', app.globalData.userInfo);
                         }
                     });
                 },
                 fail: function () {
-                    wx.login({
-                        success: res => {
-                            const code = res.code;
+                    util.login().then(res => {
+                        const code = res.code;
 
-                            util.sendRequest(util.urls.savePhoneNumber, {
+                        util.sendRequest({
+                            path: util.urls.savePhoneNumber,
+                            data: {
                                 code: code,
                                 iv: options.detail.iv,
                                 encryptedData: options.detail.encryptedData
-                            }, function (r) {
-                                const aaa = r;
-                                if (r.data.code == util.ERR_OK) {
+                            }
+                        }).then(res => {
+                            if (res.code == util.ERR_OK) {
+                                const d = res.result;
 
-                                    app.globalData.userInfo.userPhone = r.data.result;
-                                    wx.setStorageSync('userInfo', app.globalData.userInfo);
-                                }
-                            });
-                        }
+                                app.globalData.userInfo.userPhone = d;
+                                wx.setStorageSync('userInfo', app.globalData.userInfo);
+                            }
+                        });
                     });
                 }
             });
@@ -393,12 +406,15 @@ Page({
             num++;
         }
 
-        util.sendRequest(util.urls.doZan, {
-            targetId: articleId,
-            isDoZan: flag,
-            from: 'miniProgram',
-            zanType: 1
-        }, function (r) {
+        util.sendRequest({
+            path: util.urls.doZan,
+            data: {
+                targetId: articleId,
+                isDoZan: flag,
+                from: 'miniProgram',
+                zanType: 1
+            }
+        }).then(res => {
             if (r.data.success) {
                 self.setData({
                     ['count.isZan']: !isZan,
@@ -445,25 +461,29 @@ Page({
         const { articleId, inviteUid, articleInfo } = self.data;
 
         if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
-            util.sendRequest(util.urls.unlock, {
-                inviteUid: inviteUid,
-                articleId: articleId,
-                authorId: articleInfo.authorId
-            }, function (r) {
-                if (r.data.code == util.ERR_OK) {
+
+            util.sendRequest({
+                path: util.urls.unlock,
+                data: {
+                    inviteUid: inviteUid,
+                    articleId: articleId,
+                    authorId: articleInfo.authorId
+                }
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
                     wx.showModal({
                         title: '解锁成功',
                         content: '您获得了一张试读券',
                         showCancel: false,
-                        complete: function (res) {
+                        complete: function () {
                             self.getInfo();
                         }
                     });
                 } else {
                     wx.showModal({
-                        content: r.data.message,
+                        content: res.message,
                         showCancel: false,
-                        complete: function (res) {
+                        complete: function () {
                             self.getInfo();
                         }
                     });

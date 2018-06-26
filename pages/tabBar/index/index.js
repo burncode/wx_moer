@@ -10,8 +10,11 @@ Page({
         userImg: util.staticFile + '/moer.jpg',
         staticFile: util.staticFile,
         type: 0, // 展示的类型： 0、摩研社； 1、摩股学院；
-        info: {}, // 切换的TAB数据
         sort: 0, // 栏目的切换，默认显示第一项
+        info: {
+            0: [],
+            1: []
+        }, // 切换的TAB数据
         status: {
             tabFlag: [true, true], // TAB 是否滑动的状态
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
@@ -115,13 +118,17 @@ Page({
                 [videoMax]: videoLen
             });
 
-            if (info[type] && info[type].services && info[type].services[sort]) {
+            if (info[type] && info[type].services && info[type].services[current]) {
                 if (type == 0) {
-                    self.latestArticlesHandler();
-                    self.tryReadArticleHandler();
+                    const uid = info[type].services[current].authorId;
+
+                    self.latestArticlesHandler(uid);
+                    self.tryReadArticleHandler(uid);
                 } else if (type == 1) {
                     if (tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
-                        self.collegeHandler();
+                        const courseId = info[type].services[current].id;
+
+                        self.collegeHandler(courseId);
                     }
                 }
             }
@@ -137,24 +144,27 @@ Page({
 
         // //摩研社数据请求
         if (num == 0) {
-            util.sendApi({
+            util.sendRequest({
                 path: util.urls.mResearchIndex
             }).then(res=>{
                 if (res.code == util.ERR_OK) {
                     const d = res.result;
+                    
 
                     self.setData({
                         [str]: d
                     });
 
                     if (d.services && d.services[sort]) {
-                        self.latestArticlesHandler();
-                        self.tryReadArticleHandler();
+                        const uid = d.services[sort].authorId;
+
+                        self.latestArticlesHandler(uid);
+                        self.tryReadArticleHandler(uid);
                     }
                 }
             });                      
         } else if (num == 1) {
-            util.sendApi({
+            util.sendRequest({
                 path: util.urls.stockCollegeHome
             }).then(res => {
                 if (res.code == util.ERR_OK) {
@@ -165,21 +175,24 @@ Page({
                     });
 
                     if (d.services && d.services[sort]) {
-                        self.collegeHandler();
+                        const courseId = d.services[sort].id;
+
+                        self.collegeHandler(courseId);
                     }
                 }
             }); 
         }
     },
     //试读文章数据请求
-    tryReadArticleHandler: function () {
+    tryReadArticleHandler: function (uid) {
         const self = this;
-        const { info, type, sort } = self.data;
 
-        util.sendApi({
+        if (uid == '') return;
+
+        util.sendRequest({
             path: util.urls.tryReadArticles,
             data: {
-                authorId: info[type].services[sort].authorId
+                authorId: uid
             }
         }).then(res => {
             if (res.code == util.ERR_OK) {
@@ -192,9 +205,9 @@ Page({
         }); 
     },
     //最新文章的数据请求
-    latestArticlesHandler: function () {
+    latestArticlesHandler: function (uid) {
         const self = this;
-        const { latestArticles, sort, sortTime, info, type, status } = self.data;
+        const { latestArticles, sort, sortTime, type, status } = self.data;
         const str = 'latestArticles.' + sort;
         const strTimes = 'sortTime[' + sort +']';
         const loading = 'status.loading[' + sort + ']';
@@ -206,10 +219,10 @@ Page({
             [loading]: 1
         });
 
-        util.sendApi({
+        util.sendRequest({
             path: util.urls.latestArticles,
             data: {
-                authorId: info[type].services[sort].authorId,
+                authorId: uid,
                 sortTime: sortTime[sort] || ''
             }
         }).then(res => {
@@ -229,6 +242,9 @@ Page({
                 }
             }
         }).catch(e => {
+
+            console.log(e)
+
             wx.showLoading({
                 title: '数据加载中',
             });
@@ -240,19 +256,19 @@ Page({
         }); 
     },
     //课程目录
-    collegeHandler: function() {
+    collegeHandler: function (courseId) {
         const self = this;
-        const { info, sort, type, videoInfo } = self.data;
+        const { sort, videoInfo } = self.data;
 
         wx.showLoading({
             title: '加载中',
             mask: true
         });
 
-        util.sendApi({
+        util.sendRequest({
             path: util.urls.stockCollegeVedioList,
             data: {
-                courseId: info[type].services[sort].id
+                courseId: courseId
             }
         }).then(res => {
             if (res.code == util.ERR_OK) {
@@ -355,7 +371,7 @@ Page({
 
         if(adTimes < 1) {
 
-            util.sendApi({
+            util.sendRequest({
                 path: util.urls.findAd,
                 data: {
                     adType: 'E1',
@@ -364,16 +380,20 @@ Page({
                 }
             }).then(res => {
                 if (res.code == util.ERR_OK) {
-                    const d = res.result[0];
+                    const d = res.result;
 
-                    d['w'] = w;
-                    d['h'] = h;
-                    self.setData({
-                        ad: d,
-                        noScroll: true
-                    });
+                    if (d.length > 0) {
+                        let cur = d[0];
+                        
+                        cur['w'] = w;
+                        cur['h'] = h;
+                        self.setData({
+                            ad: cur,
+                            noScroll: true
+                        });
 
-                    wx.setStorageSync('ad', 1);
+                        wx.setStorageSync('ad', 1);
+                    }
                 }
             });
         }
@@ -404,11 +424,14 @@ Page({
         self.setData({
             [str]: 0,
             sortTime: [],
-            latestArticles: {}
+            latestArticles: {
+                0: [],
+                1: []
+            }
         });
 
-        self.switchHandler(type);
         wx.stopPullDownRefresh();
+        self.switchHandler(type);
     },
     onReachBottom () {
         const { type, sort, status } = this.data;
