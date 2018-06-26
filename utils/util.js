@@ -1,3 +1,4 @@
+const api = require('./apis');
 const domain = 'https://www.moer.cn';
 const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram';
 const urls = {
@@ -102,6 +103,7 @@ const Emoji = {
         '[胜利]': 'ye_thumb.gif'
     }
 };
+
 const ERR_OK = 0; //请求结果的状态 0：成功
 
   /**
@@ -135,6 +137,23 @@ const sendRequest = function (urlPath, params, success, fail, mode) {
     })
 };
 
+const sendApi = (op = {}) => {
+    const app = getApp();
+    const pptId = app.globalData.userInfo ? app.globalData.userInfo.pptId : '';
+    const sessionId = app.globalData.userInfo ? app.globalData.userInfo.sessionId : '';
+
+    return api.request({
+        url: domain + op.path,
+        ...op,
+        header: {
+            'content-type': 'application/json',
+            'Cookie': 'JSESSIONID=' + sessionId,
+            'pptId': pptId
+        },
+        method: op.method || 'GET'
+    }).then(res => res.data);
+};
+
 // 登录接口
 const wxLoginHandler = function (success, fail) {
     const app = getApp();
@@ -145,95 +164,72 @@ const wxLoginHandler = function (success, fail) {
         mask: true
     });
 
-    wx.login({
-        success: function (res) {
-            const code = res.code;
+    login().then(res=>{
+        const code = res.code;
 
-            wx.getUserInfo({
-                success: function (d) {
-                    const params = {
-                        encryptedData: d.encryptedData,
-                        iv: d.iv,
-                        code: code,
-                        channel: app.globalData.channel,
-                        scene: app.globalData.scene
-                    };
-
-                    sendRequest(urls.authorizedLogin, params, function (r) {
-                        wx.hideLoading();
-
-                        if (r.data.code == ERR_OK) {
-                            const data = r.data.result;
-                            
-                            app.globalData.userInfo = {
-                                pptId: data.pptId,
-                                sessionId: data.sessionId,
-                                userId: data.userId,
-                                userImg: data.userImg,
-                                userName: data.userName,
-                                userPhone: data.userPhone
-                            };
-                            app.globalData.isLogin = true
-                            wx.setStorageSync('userInfo', app.globalData.userInfo);
-                            wx.setStorageSync('isLogin', app.globalData.isLogin);
-
-                            success && success(r);
-
-                            clearInterval(app.data.timer);
-                            app.data.timer = setInterval(function () {
-                                getUnReadMsg();
-                            }, 60000);
-                        } else {
-                            
-                        }
-                    });
-                },
-                fail: function (d) {
-                    if (d.errMsg == 'getUserInfo:fail auth deny') {
-                        // wx.openSetting({
-                        //     success: (res) => {
-                        //         res.authSetting = {
-                        //         "scope.userInfo": true
-                        //         }
-                        //     }
-                        // })
-                        fail && fail(d);
-                    } else {
-                        fail && fail(d);
-                    }
-                    
-                    wx.hideLoading();
+        getUserInfo().then(d => {
+            sendApi({
+                path: urls.authorizedLogin,
+                data: {
+                    code,
+                    ...d
                 }
-            })
-        }
+            }).then(r => {
+                wx.hideLoading();
+
+                if (r.code == ERR_OK) {
+                    const data = r.result;
+
+                    app.globalData.userInfo = {
+                        ...data
+                    };
+                    app.globalData.isLogin = true
+                    wx.setStorageSync('userInfo', app.globalData.userInfo);
+                    wx.setStorageSync('isLogin', app.globalData.isLogin);
+
+                    success && success(r);
+
+                    clearInterval(app.data.timer);
+                    app.data.timer = setInterval(function () {
+                        getUnReadMsg();
+                    }, 60000);
+                } else {
+
+                }
+            });
+        }).catch(e => {
+            if (e.errMsg == 'getUserInfo:fail auth deny') {
+                // fail && fail(d);
+            } else {
+                // fail && fail(d);
+            }
+
+            wx.hideLoading();
+        })
     })
 };
 
 // 摩尔统计
-const statistics = function (key, app) {
-    const params = {
-        key: key,
-        value: ''
-    };
-
-    sendRequest(urls.actLog, params, function (r) {
-
-        if (r.data.code == ERR_OK) {
-            const data = r.data.result;
-
-        } else {
-
+const statistics = (op = {}) => {
+    sendApi({
+        path: urls.actLog,
+        ...op
+    }).then(res => {
+        if (res.code == ERR_OK) {
+            const d = res.result;
         }
     });
-}
+};
 
 // 获取未读数
 const getUnReadMsg = function () {
-    sendRequest(urls.unReadMsg, {}, function (res) {
-        if (res.data.code == ERR_OK) {
-            const d = res.data.result;
+    sendApi({
+        path: urls.unReadMsg,
+    }).then(res => {
+        if (res.code == ERR_OK) {
+            const d = res.result;
 
-            if (d.msgCount > 0) {
+            if (d.msgCount == 0) {
                 wx.setTabBarBadge({
                     index: 1,
                     text: d.msgCount + ''  // 必须为字符串
@@ -283,90 +279,137 @@ const payHandler = function (params, successHandler, failHandler) {
         mask: true
     });
 
-    wx.login({
-        success: r => {
-            sendRequest(urls.payOrder, params, function (res) {
-                if (res.data.success) {
-                    const d = res.data.data;
+    login().then(r => {
+        sendApi({
+            path: urls.payOrder,
+            data: {
+                ...params
+            }
+        }).then(res => {
+            if (res.success) {
+                const d = res.data;
 
-                    sendRequest(urls.payment, {
-                        orderId: d.orderId,
-                        wxjsapiCode: r.code
-                    }, function (da) {
-                        wx.hideLoading();
-
-                        if (da.data.success) {
-                            const d = da.data.data;
-
-                            if (da.data.errorCode != 30001) {  // 30001 是使用0折优惠券 不走微信支付流程
-                                //微信支付
-                                wx.requestPayment({
-                                    timeStamp: d.timestamp,
-                                    nonceStr: d.nonceStr,
-                                    package: d.package,
-                                    signType: 'MD5',
-                                    paySign: d.paySign,
-                                    success: function() {
-                                        sendRequest(urls.sendTemplateMsg, {
-                                            orderType: params.orderType,
-                                            goodsType: params.goodsType,
-                                            goodsId: params.goodsId,
-                                            prepayId: d.package
-                                        }, function (r) {
-
-                                        });
-                                    },
-                                    complete: function (res) {
-                                        if (res.errMsg === 'requestPayment:ok') {
-                                            successHandler && successHandler();
-                                        } else if (res.errMsg === 'requestPayment:fail cancel') {
-                                            wx.showModal({
-                                                title: '提示',
-                                                content: '支付失败',
-                                                cancelText: '取消',
-                                                confirmText: '重新支付',
-                                                success: function (f) {
-                                                    if (f.confirm) {
-                                                        payHandler(params);
-                                                    } else if (f.cancel) {
-                                                        failHandler && failHandler();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            } else {
-                                // 使用免费券 弹窗提示成功！
-                                wx.showToast({
-                                    title: '使用成功',
-                                    success: () => {
-                                        wx.showLoading({
-                                            title: '加载中',
-                                            mask: true
-                                        });
-
-                                        successHandler && successHandler();
-                                    }
-                                });
-                            }
-                        }
-                    });
-                } else {
+                sendApi({
+                    path: urls.payment,
+                    data: {
+                        wxjsapiCode: r.code,
+                        ...d
+                    }
+                }).then(da => {
                     wx.hideLoading();
-                }
-            });
-        }
+
+                    if (da.success) {
+                        const d = da.data;
+
+                        if (da.errorCode != 30001) {  // 30001 是使用0折优惠券 不走微信支付流程
+                            //微信支付
+                            wx.requestPayment({
+                                timeStamp: d.timestamp,
+                                nonceStr: d.nonceStr,
+                                package: d.package,
+                                signType: 'MD5',
+                                paySign: d.paySign,
+                                success: function () {
+                                    sendTemplateMsg({
+                                        orderType: params.orderType,
+                                        goodsType: params.goodsType,
+                                        goodsId: params.goodsId,
+                                        prepayId: d.package || ''
+                                    });
+                                },
+                                complete: function (res) {
+                                    if (res.errMsg === 'requestPayment:ok') {
+                                        successHandler && successHandler();
+                                    } else if (res.errMsg === 'requestPayment:fail cancel') {
+                                        wx.showModal({
+                                            title: '提示',
+                                            content: '支付失败',
+                                            cancelText: '取消',
+                                            confirmText: '重新支付',
+                                            success: function (f) {
+                                                if (f.confirm) {
+                                                    payHandler(params);
+                                                } else if (f.cancel) {
+                                                    failHandler && failHandler();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            // 使用免费券 弹窗提示成功！
+                            wx.showToast({
+                                title: '使用成功',
+                                success: () => {
+                                    wx.showLoading({
+                                        title: '加载中',
+                                        mask: true
+                                    });
+
+                                    sendTemplateMsg({
+                                        orderType: params.orderType,
+                                        goodsType: params.goodsType,
+                                        goodsId: params.goodsId,
+                                        prepayId: d.package || ''
+                                    });
+
+                                    successHandler && successHandler();
+                                }
+                            });
+                        }
+                    }
+                })
+
+            } else {
+                wx.hideLoading();
+            }
+        });
     });
 };
 
 // 发送formId 模版消息
-const sendFormIdHandler = function (formId) {
-    sendRequest(urls.recordFormId, { formId: formId}, function (res) {
+const sendFormIdHandler = (op = {}) => {
+    sendApi({
+        path: urls.recordFormId,
+        ...op
+    }).then(res => {
+        if (res.code == ERR_OK) {
+            const d = res.result;
+
+        }
     });
 };
 
+const sendTemplateMsg = (op = {}) => {
+    sendApi({
+        path: urls.sendTemplateMsg,
+        data: {
+            ...op
+        }
+    }).then(res => {
+        if (res.code == ERR_OK) {
+            const d = res.result;
+        }
+    });
+};
+
+// 微信API封装 开始
+const login = () => {
+    return api.login().then(res => {
+        return res;
+    });
+};
+const getUserInfo = () => {
+    return api.getUserInfo().then(res => {
+        return res;
+    });
+};
+
+// 微信API封装 结束
+
 module.exports = {
+    // 自定义
     domain: domain,
     urls: urls,
     ERR_OK: ERR_OK,
@@ -378,5 +421,10 @@ module.exports = {
     Emoji: Emoji,
     formatTime: formatTime,
     payHandler: payHandler,
-    sendFormId: sendFormIdHandler
+    sendFormId: sendFormIdHandler,
+
+    // 微信API封装
+    sendApi: sendApi,
+    login: login
+    
 }

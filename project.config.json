@@ -62,7 +62,7 @@
 					"id": 3,
 					"name": "某篇文章",
 					"pathName": "pages/component/detail/detail",
-					"query": "articleId=247368&sort=0&jump=index",
+					"query": "articleId=253212&sort=0&jump=index",
 					"scene": "1001"
 				}
 			]

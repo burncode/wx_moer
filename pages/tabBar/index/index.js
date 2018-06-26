@@ -26,7 +26,7 @@ Page({
             videoLen: 4,  // 每次加载视频课程的数量
             videoMax: 4  // 视频已加载的总量： 默认是4课
         },        
-        sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
+        sortTime: [],  // 记录最新文章列表最后一次加载的时间戳, 默认为0 即当前刷新的时间戳
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
@@ -87,7 +87,7 @@ Page({
         const num = e.currentTarget.dataset.type;
         const tabStr = 'status.tabFlag';
         
-        this.setData({
+        self.setData({
             type: num,
             sort: 0,
             [tabStr]: [true, true]
@@ -137,9 +137,11 @@ Page({
 
         // //摩研社数据请求
         if (num == 0) {
-            util.sendRequest(util.urls.mResearchIndex, {}, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            util.sendApi({
+                path: util.urls.mResearchIndex
+            }).then(res=>{
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
 
                     self.setData({
                         [str]: d
@@ -150,11 +152,13 @@ Page({
                         self.tryReadArticleHandler();
                     }
                 }
-            });            
+            });                      
         } else if (num == 1) {
-            util.sendRequest(util.urls.stockCollegeHome, {}, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            util.sendApi({
+                path: util.urls.stockCollegeHome
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
 
                     self.setData({
                         [str]: d
@@ -164,7 +168,7 @@ Page({
                         self.collegeHandler();
                     }
                 }
-            });  
+            }); 
         }
     },
     //试读文章数据请求
@@ -172,21 +176,26 @@ Page({
         const self = this;
         const { info, type, sort } = self.data;
 
-        util.sendRequest(util.urls.tryReadArticles, { authorId: info[type].services[sort].authorId }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendApi({
+            path: util.urls.tryReadArticles,
+            data: {
+                authorId: info[type].services[sort].authorId
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 self.setData({
                     tryReadArticles: d
                 });
             }
-        });
+        }); 
     },
     //最新文章的数据请求
     latestArticlesHandler: function () {
         const self = this;
         const { latestArticles, sort, sortTime, info, type, status } = self.data;
-        const str = 'latestArticles[' + sort + ']';
+        const str = 'latestArticles.' + sort;
         const strTimes = 'sortTime[' + sort +']';
         const loading = 'status.loading[' + sort + ']';
 
@@ -197,12 +206,15 @@ Page({
             [loading]: 1
         });
 
-        util.sendRequest(util.urls.latestArticles, {
-            authorId: info[type].services[sort].authorId,
-            sortTime: sortTime[sort] || ''
-        }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendApi({
+            path: util.urls.latestArticles,
+            data: {
+                authorId: info[type].services[sort].authorId,
+                sortTime: sortTime[sort] || ''
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 if (d.length > 0) {
                     self.setData({
@@ -215,21 +227,17 @@ Page({
                         [loading]: 2
                     });
                 }
-
-            } else {
-
             }
-        }, function (res) {
-
+        }).catch(e => {
             wx.showLoading({
                 title: '数据加载中',
             });
 
-            self.switchHandler(type);
             self.setData({
                 [loading]: 0
             });
-        });
+            self.switchHandler(type);
+        }); 
     },
     //课程目录
     collegeHandler: function() {
@@ -241,10 +249,15 @@ Page({
             mask: true
         });
 
-        util.sendRequest(util.urls.stockCollegeVedioList, { courseId: info[type].services[sort].id }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-                const str = 'videoInfo.'+ sort;
+        util.sendApi({
+            path: util.urls.stockCollegeVedioList,
+            data: {
+                courseId: info[type].services[sort].id
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
+                const str = 'videoInfo.' + sort;
 
                 self.setData({
                     [str]: d
@@ -281,7 +294,12 @@ Page({
             briefInfo: dataList.list[type][sort]
         });
 
-        util.statistics(keys[sort], app);
+        util.statistics({
+            data: {
+                key: keys[sort], 
+                value: ''
+            }
+        });
     },
     hiddenBrief () {
         const self = this;
@@ -336,13 +354,17 @@ Page({
         const h = '654';
 
         if(adTimes < 1) {
-            util.sendRequest(util.urls.findAd, {
-                adType: 'E1',
-                advX: w,
-                advY: h
-            }, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result[0];
+
+            util.sendApi({
+                path: util.urls.findAd,
+                data: {
+                    adType: 'E1',
+                    advX: w,
+                    advY: h
+                }
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result[0];
 
                     d['w'] = w;
                     d['h'] = h;
@@ -402,7 +424,11 @@ Page({
         const isLogin = app.globalData.isLogin;
 
         if (isLogin) {
-            util.sendFormId(formId);
+            util.sendFormId({
+                data: {
+                    formId
+                }
+            });
         }
     },
     onShareAppMessage: function () {

@@ -52,45 +52,6 @@ App({
 
         } else {
 
-            // 调用登录接口  
-            // wx.login({
-            //     success: function (res) {
-            //         const code = res.code;
-
-            //         wx.getUserInfo({
-            //             success: function (d) {
-            //                 const params = {
-            //                     encryptedData: d.encryptedData,
-            //                     iv: d.iv, 
-            //                     code: code
-            //                 };
-
-            //                 util.sendRequest(util.urls.authorizedLogin, params, function(r) {
-            //                     if (r.data.code == util.ERR_OK) {
-            //                         const data = r.data.result;
-            //                         let num = null;
-
-            //                         self.globalData.userInfo = data;
-            //                         self.globalData.isLogin = true
-            //                         wx.setStorageSync('userInfo', self.globalData.userInfo);
-            //                         wx.setStorageSync('isLogin', self.globalData.isLogin);
-
-            //                         if (self.userInfoReadyCallback) {
-            //                             self.userInfoReadyCallback(self.globalData.userInfo);
-            //                         }
-
-            //                         self.data.timer = setInterval(function () {
-            //                             util.getUnReadMsg();
-            //                         }, 60000);
-            //                     }
-            //                 });
-            //             },
-            //             fail: function (d) {
-                            
-            //             }
-            //         })
-            //     }
-            // })
         }
     },  
     scanQrcode(options) {
@@ -108,12 +69,17 @@ App({
             uid: self.globalData.userInfo ? self.globalData.userInfo.userId : ''
         };
 
-        wx.login({
-            success: function (res) {
-                util.sendRequest(util.urls.scanQrcode, params, function (r) { });
-            }
-        });
-        
+        util.login().then(res => {
+            util.sendApi({
+                path: util.urls.scanQrcode,
+                data: params
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
+
+                }
+            });
+        })
     },
     globalData: {
         userInfo: null,
