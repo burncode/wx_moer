@@ -6,7 +6,8 @@ const ERR_OK = 1000; //请求结果的状态 1000：成功
 Page({
     data: {
         isLogin: false,
-        gid: '47513290735617',
+        gid: '16823659593729', // 直播间gid
+        liveUid: '106027398', // 直播间播主的uid
         staticFile: util.staticFile,
         uid: '',
         isIphoneX: app.globalData.isIphoneX,
@@ -14,7 +15,7 @@ Page({
         type: 0,   // 默认显示区域，0： 直播区 1：交流区 
         groupsCache: {}, // 直播间相关信息
         userCache: {}, // 用户的相关信息
-        num: 10, // 历史记录默认展示 3条
+        num: 8, // 历史记录默认展示 3条
         isPrivate: false,  // 只看私密 
         msgList: {},
         role: {}, // 当前用户角色： 普通用户，播主，嘉宾，管理员，主持人
@@ -30,6 +31,7 @@ Page({
         maxTop: -100, // 拖动最大高度
         scrollTop: [0, 0], // 加载数据时，滚动的高度（解决滚动到上一次的位置）
         lastTop: [0, 0],   // 记录上一次内容的高度
+        lastMsgId: [], // 上一次消息的id
     }, 
     onLoad: function (options) {
         const self = this;
@@ -38,7 +40,7 @@ Page({
     },
     init (options) {
         const self = this;
-        const { gid, num } = self.data;
+        const { gid, liveUid, num } = self.data;
         const time = new Date().getTime();
         let groupCache = {};
 
@@ -61,6 +63,10 @@ Page({
                 url: '/pages/component/login/login',
             });
         } else {
+            wx.showLoading({
+                title: '数据加载中',
+            });
+
             self.setData({
                 uid: app.globalData.userInfo.userId,
                 gid: options.gid || gid,
@@ -68,20 +74,20 @@ Page({
                 isLogin: true
             });
 
+            // 当前直播间的播主的信息
+            self.getPersonalInfo(gid, liveUid);
+
+            // 当前用户在直播间的信息
             self.getPersonalInfo(gid, app.globalData.userInfo.userId, function () {
                 const { gid, userCache, uid, num, type } = self.data;
 
                 self.setData({
-                    ['onlyPrivate.isShow']: userCache[uid + gid].private_expire_flag
+                    ['onlyPrivate.isShow']: userCache[uid + gid] ? userCache[uid + gid].private_expire_flag : false
                 });
-            });
 
-            // 初始化 加载历史消息及当前用户在该直播间的角色信息
-            self.getHistroy(gid, 0, num, function () {
-                self.scrollLast(0);
-            });
-            self.getHistroy(gid, 1, num, function () {
-                self.scrollLast(1);
+                // 初始化 加载历史消息及当前用户在该直播间的角色信息
+                self.getHistroy(gid, 0, num);
+                self.getHistroy(gid, 1, num);
             });
         }
 
@@ -129,9 +135,7 @@ Page({
         const self = this;
         const { gid, type } = self.data;
 
-        self.getHistroy(gid, type, 20, function () {
-            self.scrollLast(type);
-        });
+        self.getHistroy(gid, type, 20);
     },
     getHistroy (gid, type, amount, callback) {
         const self = this;
@@ -161,21 +165,23 @@ Page({
                     ts: groupsCache.timeFlags[type].last
                 }
             }).then(res => {
+                wx.hideLoading();
+
                 if (res.code == ERR_OK) {
                     const datas = res.data;
-
                     let ext = {},
                         msg = null;
 
                     if (datas.length > 0) {
                         const oldTs = 'groupsCache.timeFlags[' + type + '].last';
                         const newTs = 'groupsCache.timeFlags[' + type + '].first';
+                        const lastId = 'lastMsgId[' + type + ']';
                         const msgData = 'msgList[' + type + ']';
-                        let list = [], timer = 0, timeStamp = '', dList = null;
+                        let list = [], timer = 0, dList = null;
 
                         datas.forEach((item, index) => {
                             ext = JSON.parse(item.extp);
-                            msg = self.getMsgObj(item, ext, timeStamp);
+                            msg = self.getMsgObj(item, ext);
                             msg['timeStamp'] = self.timeShift(timer, ext.time_stamp); // 处理好的时间戳
                             if (item.show_type != 8 && item.show_type != 9) {
                                 msg['objects'] = self.sourceMsg(ext.objects);
@@ -197,6 +203,7 @@ Page({
                             [oldTs]: datas[datas.length - 1].send_time, //  最旧一条消息的时间戳
                             [newTs]: dList[dList.length - 1].send_time, //  最新一条消息的时间戳
                             [loading]: 0,
+                            [lastId]: 'to' + datas[0].mid,
                             [msgData]: dList,
                             isLoading: true
                         });
@@ -222,7 +229,11 @@ Page({
         const self = this;
         const { groupsCache, userCache, gid, uid} = self.data;
         const info = userCache[uid + gid];
-        let msg = null, time = null, localMsg = '', objects = null;
+        let msg = null, time = null, localMsg = '', objects = null, isPrivate = false;
+
+        if (ext.show_type == 8 || ext.show_type == 9) {
+            isPrivate = true;
+        }
 
         if (info && info.private_expire_flag != 1 && (ext.show_type == 8 || ext.show_type == 9)) {
 
@@ -243,7 +254,7 @@ Page({
                 show_type: data.show_type,
                 subReply: (data.show_type == 8 || data.show_type == 9) ? true : false,
                 subSource: (data.extp.show_type == 8 || data.extp.show_type == 9) ? true : false,
-                privateIcon: !reply
+                privateIcon: isPrivate
             };
         } else {
             switch (String(data.msg_type)) {
@@ -253,7 +264,7 @@ Page({
 
                     for (var face in emoji.map) {
                         if (emoji.map.hasOwnProperty(face)) {
-                            while (data.msg.indexOf(face) > -1) {
+                            while (data.msg && data.msg.indexOf(face) > -1) {
                                 data.msg = data.msg.replace(face, '<img style="vertical-align: top; width:20px;height:20px" class="emoji" src="' + emoji.path + emoji.map[face] + '" />');
                             }
                         }
@@ -267,7 +278,7 @@ Page({
                         recv: data.recv,
                         send_time: data.send_time,
                         show_type: data.show_type,
-                        privateIcon: false
+                        privateIcon: isPrivate
                     };
                     break;
                 case '2':
@@ -290,11 +301,23 @@ Page({
                         recv: data.recv,
                         send_time: data.send_time,
                         show_type: data.show_type,
-                        privateIcon: false
+                        privateIcon: isPrivate
                     };
                     break;
                 case '3':
                     // 语音
+
+                    msg = {
+                        data: '<div style="font-size:16px;">不支持的消息类型，请在手机APP上查看</div>',
+                        type: 'txt',
+                        mid: data.mid,
+                        send: data.send,
+                        recv: data.recv,
+                        send_time: data.send_time,
+                        show_type: data.show_type,
+                        privateIcon: isPrivate
+                    };
+                    break;
                    
                     break;
                 case '4':
@@ -332,7 +355,7 @@ Page({
 
         if (!userCache[who + gid] && who != '') {
             self.setData({
-                [cache]: '1' // 防止重复发送Ajax
+                [cache]: '1' // 防止重复发送
             });
 
             util.sendRequest({
@@ -391,22 +414,6 @@ Page({
         }
 
         return timeText;
-    },
-    scrollLast (type) {
-        const self = this;
-        let { msgList, lastTop, scrollTop } = self.data;
-        const last = 'to' + msgList[type][msgList[type].length - 1].mid; 
-        const scorllT = 'scrollTop[' + type + ']'; 
-        const lastT = 'lastTop[' + type +']';
-
-        wx.createSelectorQuery().select('#' + last).boundingClientRect(function (rect) {
-            let top = 0;
-
-            self.setData({
-                [scorllT]: rect.top - lastTop[type],
-                [lastT]: rect.top
-            })
-        }).exec()
     },
     // 订阅包时段弹窗
     subPackage () {
@@ -490,5 +497,5 @@ Page({
             });
             return
         }
-    },
+    }
 })

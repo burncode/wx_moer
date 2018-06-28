@@ -30,7 +30,6 @@ Page({
         });
     },
     onReady: function (res) {
-        this.videoContext = wx.createVideoContext('myVideo');
     },
     onLoad: function (options) {
         const { videoId, videoType, sort } = options;

@@ -2,7 +2,6 @@
     "pages": [
         "pages/tabBar/index/index",
         "pages/tabBar/user/user",
-        
         "pages/tabBar/buy/buy"
     ],
     "window": {
@@ -48,5 +47,11 @@
                 "ad/ad"
             ]
         }
-    ]
+    ],
+    "plugins": {
+        "tencentvideo": {
+            "version": "1.1.1",
+            "provider": "wxa75efa648b60994b"
+        }
+    }
 }

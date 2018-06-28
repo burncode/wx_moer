@@ -116,7 +116,7 @@
             </view>
             <view class="modal-footer">
                 <view class="btn-cancel" bindtap="hideTips">稍后加入</view>
-                <button open-type="contact" class="btn-confirm" bindtap="hideTips">加入私密直播</button>
+                <view class="btn-confirm" bindtap="JoinLive">加入私密直播</view>
             </view>
         </view>
 </view>

@@ -67,7 +67,7 @@
                     <view class="item-box">
                         <view class="item-main">
                             <view class="title">{{item.title}}</view>
-                            <view class="desc">{{item.title}}</view>
+                            <view class="desc">{{item.summary}}</view>
                             <view class="info">
                                 <view class="status">{{freeTxt[item.freeFlag]}}</view>
                                 <view class="amount {{item.freeFlag}}">

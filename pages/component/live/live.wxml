@@ -21,9 +21,9 @@
                 scroll-y="true"
                 enable-back-to-top="true"
                 scroll-top="{{scrollTop[type]}}"
+                scroll-into-view="{{lastMsgId[type]}}"
                 bindscroll="scroll"
                 >
-                <!-- scroll-into-view="{{toView[type]}}"  -->
                 <view 
                     class="box"
                     bind:touchstart="touchstart" 

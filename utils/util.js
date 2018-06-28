@@ -126,7 +126,10 @@ const sendRequest = (op = {}) => {
             'pptId': pptId
         },
         method: op.method || 'GET'
-    }).then(res => res.data);
+    }).then(res => res.data)
+    .catch(function (error) {
+        console.log(error);
+    });
 };
 
 // 登录接口

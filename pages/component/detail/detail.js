@@ -66,7 +66,6 @@ Page({
 
         this.getInfo();
         this.authorizeHandler();
-
     },
     // 获取文章信息
     getInfo: function () {
@@ -415,7 +414,7 @@ Page({
                 zanType: 1
             }
         }).then(res => {
-            if (r.data.success) {
+            if (res.success) {
                 self.setData({
                     ['count.isZan']: !isZan,
                     ['count.zanCount']: num
@@ -448,12 +447,22 @@ Page({
     hideTips() {
         const { refresh } = this.data;
 
+        
         wx.setStorageSync('isPop', 1);
 
         this.setData({
             refresh: !refresh,
             isPop: 1
-        })
+        });
+    },
+    JoinLive () {
+        const self = this;
+
+        self.hideTips();
+
+        wx.navigateTo({
+            url: `/pages/component/live/live`,
+        });
     },
     // 帮好友解锁
     unlock() {
@@ -498,7 +507,7 @@ Page({
         if (isLogin) {
             wx.navigateTo({
                 url: `/pages/component/live/live?gid=${liveInfo.gid}`,
-            })
+            });
         } else {
             wx.switchTab({
                 url: '/pages/tabBar/user/user',
@@ -512,7 +521,11 @@ Page({
         const isLogin = app.globalData.isLogin;
 
         if (isLogin) {
-            util.sendFormId(formId);
+            util.sendFormId({
+                data: {
+                    formId
+                }
+            });
         }
     },
     // 转发分享

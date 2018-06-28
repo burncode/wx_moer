@@ -33,7 +33,7 @@ Page({
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
-        freeTxt: ['免费', '收费'],
+        freeTxt: ['免费', '付费'],
         ad: {}, // 首页广告相关信息
         noScroll: false
     },
@@ -434,11 +434,11 @@ Page({
         self.switchHandler(type);
     },
     onReachBottom () {
-        const { type, sort, status } = this.data;
-        const str = 'status.loading[' + sort +']';
+        const { info, type, sort } = this.data;
+        const uid = info[type].services[sort].authorId;
 
         if( type == 0) {
-            this.latestArticlesHandler();
+            this.latestArticlesHandler(uid);
         }
     },
     sendMsgId(e) {
