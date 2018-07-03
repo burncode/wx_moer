@@ -1,7 +1,8 @@
 {
     "pages": [
-        "pages/tabBar/index/index",
         "pages/tabBar/user/user",
+        "pages/tabBar/index/index",
+        
         "pages/tabBar/buy/buy"
     ],
     "window": {

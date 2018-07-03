@@ -1,7 +1,7 @@
 <!--pages/course/course.wxml-->
 <view class="container">
     <form name="notice" report-submit bindsubmit='sendMsgId'>
-    <txv-video vid="w061668kkog" playerid="txv1" autoplay="{{true}}"></txv-video>
+    <!-- <txv-video vid="w061668kkog" playerid="txv1" autoplay="{{true}}"></txv-video> -->
     <view class="course" wx:if="{{list.length > 0}}">
         <!-- 课程视频播放 开始 -->
         <view class="video">
@@ -10,7 +10,7 @@
                 open-type="getUserInfo"  
                 wx:if="{{!isLogin}}"
                 bindgetuserinfo="bindgetuserinfo">
-                    <image src="img/play.png" class="play-icon"></image>
+                    <image src="{{staticFile}}/course/play.png" class="play-icon"></image>
                     <image src="{{list[index].videoImg}}" lazy-load mode="aspectFill" class="play-bg"></image>
                 </button> 
             <video id="myVideo" class="myVideo" src="{{list[index].videoUrl}}" 

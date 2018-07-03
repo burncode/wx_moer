@@ -3,6 +3,7 @@ const util = require('../../../utils/util.js');
 
 Page({
     data: {
+        staticFile: util.staticFile,
         types: 1, //数据类型：0、我的优惠券；
         title: ['我的优惠券'],
         list: []

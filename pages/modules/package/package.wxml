@@ -53,12 +53,12 @@
                                 不使用优惠券
                             </block>
                         </view>
-                        <view wx:else class="useCoupon">{{saveTxt}}</view> 
+                        <view wx:else class="useCoupon saveText">{{item.saveTxt}}</view> 
                     </view>
                     
                     <button class="goSub" id="{{item.id}}" catchtap="goSub" data-index="{{index}}">
                         <block wx:if="{{item.couponType == 1}}">
-                            ￥{{(item.realPrice * 100 - item.couponNum * 100) / 100}}
+                            {{(item.realPrice * 100 - item.couponNum * 100) / 100 > 0 ? '￥'+(item.realPrice * 100 - item.couponNum * 100) / 100 : '免费'}}
                         </block>
                         <block wx:elif="{{item.couponType == 2}}">
                            ￥{{item.realPrice * 100 * item.couponNum / 10 /100}}

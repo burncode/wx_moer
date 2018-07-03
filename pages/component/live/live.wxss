@@ -48,7 +48,7 @@ page {
 }
 
 .box {
-    padding-bottom: 60rpx;
+    padding-bottom: 80rpx;
 }
 
 /** 单个气泡内容   开始 **/
@@ -304,5 +304,5 @@ page {
     bottom: 240rpx;
 }
 .isIphoneX .box {
-    padding-bottom: 120rpx;
+    padding-bottom: 140rpx;
 }

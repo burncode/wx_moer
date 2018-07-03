@@ -27,7 +27,7 @@
                         <image 
                             class="img" 
                             mode="aspectFill" 
-                            src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png?ver=20180524"></image>
+                            src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png"></image>
                         <text>{{count.isZan?'已赞':'点赞'}}</text>
                     </button>
                 </view>
@@ -102,13 +102,13 @@
                 <image src="{{staticFile}}/contact.png?ver=20180523"></image>
             </button> 
             <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
-                <image src="img/live.gif"></image>
+                <image src="{{staticFile}}/detail/live.gif"></image>
                 <view class="join">{{liveInfo.subscibe_num}}已加入</view>
             </view>
         </view>
         <!--弹窗-->
         <view class="modal-mask" bindtap="hideTips" wx:if="{{refresh && !isPop}}"></view>
-        <view class="modal-dialog" wx:if="{{refresh && !isPop}}">
+        <view class="modal-dialog"mei wx:if="{{refresh && !isPop}}">
             <image class="modal-head" src="{{staticFile}}/detail/pop-head.png" mode="aspectFit"></image>
             <view class="modal-content">
                 <view class="modal-title">盘中私密指导和问题反馈</view>

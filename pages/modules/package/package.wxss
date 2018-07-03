@@ -128,6 +128,9 @@
     color: #5193ad;
     text-decoration: inherit;
 }
+.sub-service .saveText {
+    color: #879193;
+}
 .sub-service .goSub {
     display:inline-block;
     width:150rpx;

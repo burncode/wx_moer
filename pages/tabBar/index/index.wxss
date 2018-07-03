@@ -302,7 +302,6 @@
     background-color: #f4f4f4;
 }
 .newest .item-box {
-    display: flex;
     padding: 40rpx 0;
     border-bottom: 1rpx solid #dedede;
 }
@@ -317,7 +316,6 @@
     border-radius: 6rpx;
 }
 .newest .item-main {
-    flex: 1;
     position: relative;
     text-align: left;
 }
@@ -341,6 +339,7 @@
     margin: 20rpx 0;
     font-size:28rpx;
     color:rgba(72,83,89,1);
+    word-wrap: break-word;
 }
 .newest .info {
     display: flex;
@@ -603,7 +602,7 @@
 }
 .ad image {
     display: block;
-    max-width: 90%;
+    max-width: 96%;
     margin: 20% auto 0;
 }
 .ad .adClose {

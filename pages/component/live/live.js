@@ -6,6 +6,7 @@ const ERR_OK = 1000; //请求结果的状态 1000：成功
 Page({
     data: {
         isLogin: false,
+        staticFile: util.staticFile,
         gid: '16823659593729', // 直播间gid
         liveUid: '106027398', // 直播间播主的uid
         staticFile: util.staticFile,
@@ -15,7 +16,7 @@ Page({
         type: 0,   // 默认显示区域，0： 直播区 1：交流区 
         groupsCache: {}, // 直播间相关信息
         userCache: {}, // 用户的相关信息
-        num: 8, // 历史记录默认展示 3条
+        num: 20, // 历史记录默认展示 2条
         isPrivate: false,  // 只看私密 
         msgList: {},
         role: {}, // 当前用户角色： 普通用户，播主，嘉宾，管理员，主持人
@@ -27,10 +28,8 @@ Page({
             isChange: 0
         }, // 只看私密
         isLoading: true, //  能否加载数据
-        isMove: false,  // 是否能够拖拽加载
-        maxTop: -100, // 拖动最大高度
+        scroll: [0, 0], // 记录滚动条滚动的位置
         scrollTop: [0, 0], // 加载数据时，滚动的高度（解决滚动到上一次的位置）
-        lastTop: [0, 0],   // 记录上一次内容的高度
         lastMsgId: [], // 上一次消息的id
     }, 
     onLoad: function (options) {
@@ -125,11 +124,20 @@ Page({
     },
     tapTab (e) {
         const self = this;
+        const { type, scroll, lastMsgId } = self.data;
         const { current } = e.currentTarget.dataset;
 
         self.setData({
-            type: current
+            type: current,
+            ['scrollTop[' + type + ']']: scroll[type],
+            ['lastMsgId[' + type + ']']: ''
         });
+
+        setTimeout(function () {
+            self.setData({
+                ['lastMsgId[' + current + ']']: lastMsgId[current]
+            });
+        }, 10);
     },
     loadHistory () {
         const self = this;
@@ -204,24 +212,31 @@ Page({
                             [newTs]: dList[dList.length - 1].send_time, //  最新一条消息的时间戳
                             [loading]: 0,
                             [lastId]: 'to' + datas[0].mid,
-                            [msgData]: dList,
-                            isLoading: true
+                            [msgData]: dList
                         });
 
                         callback && callback();
                     } else {
                         self.setData({
-                            [loading]: 2,
-                            isLoading: true
+                            [loading]: 2
                         });
                     }
                 } else {
                     self.setData({
-                        [loading]: 0,
-                        isLoading: true
+                        [loading]: 0
                     });
                 }
+
+                setTimeout(function () {
+                    self.setData({
+                        isLoading: true
+                    });
+                }, 1500);
             }); 
+        } else {
+            self.setData({
+                isLoading: true
+            });
         }
     },
     // 消息处理
@@ -286,7 +301,7 @@ Page({
                     let iSrc = null;
 
                     if (data.msg.flag) {
-                        iSrc = data.msg.nurl.replace(/static.moer.cn/, 'www.moer.cn').replace(/.amr/, '.mp3');
+                        iSrc = dataMsg.nurl;
                     } else {
                         iSrc = data.msg.url;
                     }
@@ -447,55 +462,48 @@ Page({
             })
         } 
     },
-    imgError (e) {
+    
+    imgLoad (e) {
         const self = this;
+        const { index, src } = e.currentTarget.dataset;
+        const { type, msgList } = self.data;
+        const str = 'msgList[' + type + '].' + index +'.data';
 
-        if (e.type == 'error') {
-            
+        if (e.type == 'load') {
         }
-        console.log(e)
+    },
+    imgError(e) {
+        const self = this;
+        const { index, src, type } = e.currentTarget.dataset;
+        const { msgList, staticFile } = self.data;
+        const str = 'msgList[' + type + '][' + index + '].data';
+
+        if(e.type == 'error') {
+            self.setData({
+                [str]: staticFile + '/live/imgError.gif'
+            });
+        }
     },
     // 拖动加载历史消息
     scroll (ev) {
         const self = this;
-        const { maxTop, isMove } = self.data;
+        const { type } = self.data;
         const { scrollTop, scrollHeight } = ev.detail;
 
-        if (scrollTop <= maxTop && !isMove) {
-            self.setData({
-                isMove: true
-            });
-        }
-    },
-    touchstart() {
-        const self = this;
-
         self.setData({
-            isMove: false,
-            isLoading: true
+            ['scroll[' + type + ']']: scrollTop
         });
     },
-    touchmove(ev) {
+    loadMore () {
         const self = this;
-        const { isMove, type } = self.data;
-        const loading = 'status.loading[' + type + ']';
+        const { isLoading } = self.data;
 
-        if (isMove) {
+        if (isLoading) {
             self.setData({
-                [loading]: 1
+                isLoading:  false
             });
-        }
-    },
-    touchend() {
-        const self = this;
-        const { isMove, isLoading } = self.data;
 
-        if (isMove && isLoading) {
             self.loadHistory();
-            self.setData({
-                isMove: false
-            });
-            return
         }
     }
 })

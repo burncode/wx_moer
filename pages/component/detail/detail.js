@@ -120,7 +120,7 @@ Page({
                 util.statistics(keys[index], app);
             } else {
                 wx.showToast({
-                    title: res.data.message,
+                    title: res.message,
                     icon: 'none',
                     complete: function (r) {
                         setTimeout(() => {

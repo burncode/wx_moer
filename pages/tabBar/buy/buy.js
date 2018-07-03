@@ -100,7 +100,7 @@ Page({
 
                 self.setData({
                     noticeNum: num,
-                    msg: [...msg, ...d],
+                    msg: num == 1 ? d : msg.concat(d),
                     ['info[0].loading']: load
                 });
             }
@@ -135,7 +135,7 @@ Page({
 
                 self.setData({
                     orderNum: num,
-                    order: [...order, ...d],
+                    order: num == 1 ? d : order.concat(d),
                     ['info[1].loading']: load
                 });
             }

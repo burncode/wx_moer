@@ -362,6 +362,7 @@ Page({
             });
         }
     },
+    // 根据条件展示广告
     showAd () {
         const self = this;
         const { noScroll } = self.data;
@@ -398,6 +399,7 @@ Page({
             });
         }
     },
+    // 跳转广告页面
     jumpAd () {
         const self = this;
         const { url } = self.data.ad;
@@ -408,6 +410,7 @@ Page({
             })
         }
     },
+    // 关闭广告
     closeAd () {
         const self = this;
 
@@ -416,6 +419,7 @@ Page({
             noScroll: false
         });
     },
+    // 上拉刷新
     onPullDownRefresh() { 
         const self = this;
         const { sort, type } = self.data;
@@ -433,6 +437,7 @@ Page({
         wx.stopPullDownRefresh();
         self.switchHandler(type);
     },
+    // 加载最新文章列表
     onReachBottom () {
         const { info, type, sort } = this.data;
         const uid = info[type].services[sort].authorId;
@@ -441,6 +446,7 @@ Page({
             this.latestArticlesHandler(uid);
         }
     },
+    // 点击文章列表触发表单ID 统计
     sendMsgId(e) {
         const self = this;
         const { formId } = e.detail;

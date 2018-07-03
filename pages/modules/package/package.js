@@ -228,16 +228,19 @@ Component({
             const couponId = 'packInfo[' + choosePack + '].couponId';
             const couponNum = 'packInfo[' + choosePack + '].couponNum';
             const couponType = 'packInfo[' + choosePack + '].couponType';
+            const checkOutType = 'packInfo[' + choosePack + '].checkOutType';
 
             if (type == 'article') {
                 if (index != -1) {
                     self.setData({
+                        ['serviceBuyInfo.checkOutType']: couponList[index].checkoutType,
                         ['serviceBuyInfo.couponId']: couponList[index].id,
                         ['serviceBuyInfo.couponNum']: couponList[index].money,
                         ['serviceBuyInfo.couponType']: couponList[index].type
                     });
                 } else {
                     self.setData({
+                        ['serviceBuyInfo.checkOutType']: '',
                         ['serviceBuyInfo.couponId']: '',
                         ['serviceBuyInfo.couponNum']: '',
                         ['serviceBuyInfo.couponType']: -1
@@ -248,6 +251,7 @@ Component({
                     self.setData({
                         curIndex: couponList[index].id,
                         [couponId]: couponList[index].id,
+                        [checkOutType]: couponList[index].checkoutType,
                         [couponNum]: couponList[index].money,
                         [couponType]: couponList[index].type
                     });
