@@ -344,7 +344,7 @@ Page({
 
         if (articleId) {
             wx.navigateTo({
-                url: `/pages/component/detail/detail?articleId=${articleId}`
+                url: `/pages/component/detail/detail?articleId=${articleId}&jump=article`
             });
         } else if (gid) {
             wx.navigateTo({

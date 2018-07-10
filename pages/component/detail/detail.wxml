@@ -5,7 +5,7 @@
             <text class="title">{{articleInfo.title}}</text>
             <view class="info">
                 <view class="amount" wx:if="{{freeFlag == 1}}">
-                    <image wx:for="{{buyImg}}" wx:key="num" wx:for-item="img" src="{{img}}"></image>
+                    <image wx:for="{{buyImg}}" wx:key="num" wx:for-item="img" src="{{img}}" wx:if="{{index < 3}}"></image>
                     购买 {{count.saleCount > 500?'500+':count.saleCount}}</view>
                 <view class="view" wx:else>阅读 {{count.browseCount}}</view>
                 <view class="date">{{articleInfo.pubTime}}</view>
@@ -78,7 +78,7 @@
                 </form>
                 </view>
                 <view class="access-info">
-                    <text>{{count.saleCount}}人已购买</text>
+                    <text>{{count.saleCount > 500?'500+':count.saleCount}}人已购买</text>
                     <text>{{count.wordCount}}字/{{count.imgCount}}图</text>
                     <text>{{count.zanCount}}人赞</text>
                 </view>

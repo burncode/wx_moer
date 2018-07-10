@@ -120,9 +120,9 @@
     display: flex;
     width: 100%;
     height: 98rpx;
+    border-top: 2rpx solid #dedede;
     line-height: 98rpx;
     background: #fff;
-    box-shadow: 0 -10rpx 10rpx rgba(50,50,50,0.1);
 }
 .detail .operate button {
     display: inline-block;
@@ -147,6 +147,9 @@
     font-size: 28rpx;
     color: #879193;
     vertical-align: top;
+}
+.detail .operate .item.active text {
+    color: #e84c3d;
 }
 .detail .operate .operate-zan button {
     border-right: 2rpx solid #dedede;

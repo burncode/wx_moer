@@ -5,7 +5,7 @@
         <view class="sub-header" wx:if="{{sort == 'article'}}">
             <text class="txt">当前文章</text>
             <view class="useCoupon">
-                <text wx:if="{{serviceBuyInfo.checkOutType}}" bindtap="chooseArticleCoupon" data-id="{{serviceBuyInfo.couponId}}">
+                <text wx:if="{{serviceBuyInfo.checkOutType !== ''}}" bindtap="chooseArticleCoupon" data-id="{{serviceBuyInfo.couponId}}">
                     <block wx:if="{{serviceBuyInfo.couponType == 1}}">
                         <text>{{serviceBuyInfo.couponNum}}</text>元优惠券
                     </block>
@@ -22,10 +22,10 @@
                     class="goPay" 
                     bindtap="goPay">
                     <block wx:if="{{serviceBuyInfo.couponType == 1}}">
-                        {{(price * 100 - serviceBuyInfo.couponNum * 100) / 100}}
+                        {{(price * 100 - serviceBuyInfo.couponNum * 100) / 100 > 0 ? '￥'+(price * 100 - serviceBuyInfo.couponNum * 100) / 100 : '免费'}}
                     </block>
                     <block wx:elif="{{serviceBuyInfo.couponType == 2}}">
-                        {{price * 100 * serviceBuyInfo.couponNum / 10 /100 > 0 ? '￥' + price * 100 * serviceBuyInfo.couponNum / 10 /100 : '免费读'}}
+                        {{price * 100 * serviceBuyInfo.couponNum / 10 /100 > 0 ? '￥' + price * 100 * serviceBuyInfo.couponNum / 10 /100 : '免费'}}
                     </block>
                     <block wx:else>
                         ￥{{price}}

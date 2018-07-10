@@ -500,6 +500,34 @@
 }
 /** 联系客服 || 领取试读券 结束 **/
 
+/** 直播 开始 **/
+.goLive {
+    position: fixed;
+    right: 40rpx;
+    bottom: 250rpx;
+    z-index: 9;
+    padding: 0;
+    font-size: 0;
+    text-align: center;
+    background: none;
+}
+.goLive image{
+    width: 94rpx;
+    height: 80rpx;
+}
+.goLive .join {
+    height: 36rpx;
+    line-height: 34rpx;
+    padding: 0 15rpx;
+    margin-top: -4rpx;
+    background: rgba(11,21,26,1);
+    opacity: 0.8;
+    border-radius: 18rpx;
+    font-size: 18rpx;
+    color: #fff;
+}
+/** 直播 结束 **/
+
 .brief {
     position: fixed;
     top: 0;

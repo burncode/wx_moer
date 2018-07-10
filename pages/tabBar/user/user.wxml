@@ -56,7 +56,7 @@
                     <text class="arrow"></text>
                 </navigator>
             </view>
-            <view class="item" hover-class="active">
+            <view class="item" hover-class="active" wx:if="{{canIUse}}">
                 <button 
                     class="item-list"
                     open-type="feedback">

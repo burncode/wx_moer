@@ -144,8 +144,9 @@ Page({
     },
     goArticle (e) {
         const { id } = e.currentTarget;
+        const { type } = e.currentTarget.dataset;
 
-        if (id) {
+        if (id && type == 1) {
             wx.navigateTo({
                 url: `/pages/component/detail/detail?articleId=${id}`
             })

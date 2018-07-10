@@ -8,7 +8,8 @@ Page({
         staticFile: util.staticFile,
         userInfo: {},
         coupon: 0,
-        invite: 0
+        invite: 0,
+        canIUse: wx.canIUse('button.open-type.feedback')
     },
     onLoad: function (options) {
         

@@ -39,7 +39,7 @@
                         <view style="font-size:24rpx;">{{item.mid}}</view> -->
                         <view class="section-main {{(type==0&&userCache[item.send + item.recv].role_flag!=1)?'owner':''}}">
                             <image src="{{userCache[item.send + item.recv].img_url}}" class="avatar"></image>
-                            <image src="img/v.png" wx:if="{{userCache[item.send + item.recv].user_type == 2}}" class="certified"></image>
+                            <image src="img/v{{userCache[item.send + item.recv].user_type}}.png" wx:if="{{userCache[item.send + item.recv].user_type >= 2}}" class="certified"></image>
                             <view class="pop">
                                 <view class="info"><text class="name">{{userCache[item.send + item.recv].user_name}}</text>
                                     <text class="role {{role[item.send + item.recv].role}}">{{role[item.send + item.recv].title}}</text></view>
@@ -47,7 +47,8 @@
                                     <image class="bubble" src="img/bubble{{role[item.send + item.recv].part == 'admin'? '-admin':''}}.png"></image> 
                                     <view class="inner {{role[item.send + item.recv].part}}" bindtap="{{item.subReply?'subPackage':''}}"> 
                                         <block wx:if="{{item.type == 'img'}}">
-                                            <image bindtap="previewImg" mode="widthFix" class="img" src="{{item.data}}" data-src="{{item.data}}" data-index="{{index}}" data-type="{{idx}}" lazy-load="true" binderror="imgError" bindload="imgLoad"></image>
+                                        
+                                            <image bindtap="previewImg" mode="widthFix" class="img" src="{{!item.showSrc?staticFile + '/live/imgLoad.gif':item.data}}" data-src="{{item.data}}" data-index="{{index}}" data-type="{{idx}}" lazy-load="true" binderror="imgError" bindload="imgLoad"></image>
                                         </block>
                                         <block wx:else>
                                             <rich-text class="reply" nodes="{{item.data}}"></rich-text>

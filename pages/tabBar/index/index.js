@@ -460,6 +460,21 @@ Page({
             });
         }
     },
+    goLive() {
+        const self = this;
+        const { isLogin, info, type, sort } = self.data;
+        const { gid } = info[type].services[sort].liveInfo;
+
+        if (isLogin) {
+            wx.navigateTo({
+                url: `/pages/component/live/live?gid=${gid}`,
+            });
+        } else {
+            wx.switchTab({
+                url: '/pages/tabBar/user/user',
+            });
+        }
+    },
     onShareAppMessage: function () {
         const { type, sort, info, staticFile } = this.data;
         const  titles = {

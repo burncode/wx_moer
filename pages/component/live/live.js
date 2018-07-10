@@ -7,8 +7,8 @@ Page({
     data: {
         isLogin: false,
         staticFile: util.staticFile,
-        gid: '16823659593729', // 直播间gid
-        liveUid: '106027398', // 直播间播主的uid
+        gid: '47513290735617', // 直播间gid
+        // liveUid: '117558573', // 直播间播主的uid
         staticFile: util.staticFile,
         uid: '',
         isIphoneX: app.globalData.isIphoneX,
@@ -31,17 +31,19 @@ Page({
         scroll: [0, 0], // 记录滚动条滚动的位置
         scrollTop: [0, 0], // 加载数据时，滚动的高度（解决滚动到上一次的位置）
         lastMsgId: [], // 上一次消息的id
+        refresh: false, // 是否是购买后刷新的页面
     }, 
     onLoad: function (options) {
         const self = this;
+        const { gid } = options;
 
-        self.init(options);
+        self.init(gid);
     },
-    init (options) {
+    init(initGid) {
         const self = this;
-        const { gid, liveUid, num } = self.data;
+        const { gid, num } = self.data;
         const time = new Date().getTime();
-        let groupCache = {};
+        let groupCache = {}, curGid = initGid || gid;
 
         groupCache = {
             timeFlags: {
@@ -68,16 +70,16 @@ Page({
 
             self.setData({
                 uid: app.globalData.userInfo.userId,
-                gid: options.gid || gid,
+                gid: curGid,
                 groupsCache: groupCache,
                 isLogin: true
             });
 
             // 当前直播间的播主的信息
-            self.getPersonalInfo(gid, liveUid);
+            // self.getPersonalInfo(curGid, liveUid);
 
             // 当前用户在直播间的信息
-            self.getPersonalInfo(gid, app.globalData.userInfo.userId, function () {
+            self.getPersonalInfo(curGid, app.globalData.userInfo.userId, function () {
                 const { gid, userCache, uid, num, type } = self.data;
 
                 self.setData({
@@ -301,7 +303,7 @@ Page({
                     let iSrc = null;
 
                     if (data.msg.flag) {
-                        iSrc = dataMsg.nurl;
+                        iSrc = data.msg.nurl;
                     } else {
                         iSrc = data.msg.url;
                     }
@@ -310,6 +312,7 @@ Page({
                         // data: '<img class="img" style="width:auto; height:auto; max-width: 100%;" src="' + iSrc + '" />',
                         data: iSrc,
                         type: 'img',
+                        showSrc: false,
                         size: data.msg.size,
                         mid: data.mid,
                         send: data.send,
@@ -362,7 +365,7 @@ Page({
         return obj;
     },
     //  获取角色在直播间的相关信息
-    getPersonalInfo (gid, who, callback) {
+    getPersonalInfo(gid, who, callback) {
         const self = this;
         const { userCache, role } = self.data;
         const cache = `userCache.` + who + gid;
@@ -441,16 +444,35 @@ Page({
     // 切换私密按钮
     changePrivate () {
         const self = this;
-        const { onlyPrivate } = self.data;
+        const { onlyPrivate, type, uid, gid } = self.data;
+        const loading = 'status.loading[' + type + ']';
+        const str = 'userCache[' + uid + gid + ']';
         
         self.setData({
-            ['onlyPrivate.isChange']: !onlyPrivate.isChange
-        })
+            msgList: {},
+            [str]: '',
+            ['onlyPrivate.isChange']: onlyPrivate.isChange?0:1,
+            [loading]: onlyPrivate.isChange?0: ''
+        });
+
+        self.init(gid);
     },
     successHandler () {
         const self = this;
+        const { gid, uid } = self.data;
+        const str = 'userCache['+ uid + gid +']';
 
-        self.init();
+        // 直播间刷新 初始化
+        setTimeout(function () {
+            self.setData({
+                refresh: true,
+                [str]: '',
+                msgList: {}
+            }, function () {
+                self.init(gid);
+            });
+        }, 500);
+        
     },
     previewImg (e) {
         const self = this;
@@ -462,16 +484,20 @@ Page({
             })
         } 
     },
-    
+    // 图片加载成功
     imgLoad (e) {
         const self = this;
-        const { index, src } = e.currentTarget.dataset;
-        const { type, msgList } = self.data;
-        const str = 'msgList[' + type + '].' + index +'.data';
+        const { index, src, type  } = e.currentTarget.dataset;
+        const { msgList, staticFile } = self.data;
+        const str = 'msgList[' + type + '][' + index + '].showSrc';
 
         if (e.type == 'load') {
+            self.setData({
+                [str]: true
+            });
         }
     },
+    // 图片加载失败
     imgError(e) {
         const self = this;
         const { index, src, type } = e.currentTarget.dataset;

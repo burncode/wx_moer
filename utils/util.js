@@ -122,7 +122,7 @@ const sendRequest = (op = {}) => {
         ...op,
         header: {
             'content-type': 'application/json',
-            'Cookie': 'JSESSIONID=' + sessionId,
+            'Cookie': 'JSESSIONID=' + sessionId + '; _jm_ppt_id=' + pptId,
             'pptId': pptId
         },
         method: op.method || 'GET'
@@ -214,7 +214,10 @@ const getUnReadMsg = function () {
                 });
             }
         }
-    });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });;
 };
 
 // 时间戳转换
@@ -320,10 +323,10 @@ const payHandler = function (params, successHandler, failHandler) {
                             wx.showToast({
                                 title: '使用成功',
                                 success: () => {
-                                    wx.showLoading({
-                                        title: '加载中',
-                                        mask: true
-                                    });
+                                    // wx.showLoading({
+                                    //     title: '加载中',
+                                    //     mask: true
+                                    // });
 
                                     sendTemplateMsg({
                                         orderType: params.orderType,

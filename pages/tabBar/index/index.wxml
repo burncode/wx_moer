@@ -75,7 +75,7 @@
                                         阅读 {{item.browseCount}}
                                     </block>
                                     <block wx:else>
-                                        <image wx:for="{{item.images}}" wx:key="num" wx:for-item="img" src="{{img}}"></image>
+                                        <image wx:for="{{item.images}}" wx:key="num" wx:for-item="img" wx:if="{{index < 3}}" src="{{img}}"></image>
                                         购买 {{item.saleCount > 500?'500+':item.saleCount}}
                                     </block>
                                 </view>
@@ -129,9 +129,13 @@
             <view class="adClose" bindtap="closeAd"></view>
         </view>
         <!-- 联系客服 -->
-        <button class="contact" open-type="contact" >
+        <button class="contact" open-type="contact" wx:if="{{!info[type].services[sort].liveInfo}}">
             <image src="{{staticFile}}/contact.png?ver=20180523"></image>
-        </button> 
+        </button>
+        <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
+            <image src="{{staticFile}}/live.gif"></image>
+            <view class="join">{{info[type].services[sort].liveInfo.subscibe_num}}已加入</view>
+        </view>
 
         <!-- TAB产品的相关介绍 -->
         <view class="brief" wx:if="{{showBrief}}">

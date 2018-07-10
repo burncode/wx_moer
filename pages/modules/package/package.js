@@ -240,9 +240,9 @@ Component({
                     });
                 } else {
                     self.setData({
-                        ['serviceBuyInfo.checkOutType']: '',
-                        ['serviceBuyInfo.couponId']: '',
-                        ['serviceBuyInfo.couponNum']: '',
+                        ['serviceBuyInfo.checkOutType']: -1,
+                        ['serviceBuyInfo.couponId']: -1,
+                        ['serviceBuyInfo.couponNum']: -1,
                         ['serviceBuyInfo.couponType']: -1
                     });
                 }
@@ -259,8 +259,9 @@ Component({
                     self.setData({
                         curIndex: null,
                         [couponId]: null,
-                        [couponNum]: '',
-                        [couponType]: '-1'
+                        [couponNum]: -1,
+                        [checkOutType]: -1,
+                        [couponType]: -1
                     });
 
                 }
