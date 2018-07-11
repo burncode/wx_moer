@@ -68,7 +68,7 @@
         </block>
     </view>
     <view class="privateTab" wx:if="{{onlyPrivate.isShow}}" bindtap="changePrivate">{{onlyPrivate.isChange?'返回全部':'只看私密'}}</view>
-    <button class="contact" open-type="contact" >互动提问，请下载摩尔金融APP</button> 
+    <view class="contact" bindtap="contact">互动提问，请下载摩尔金融APP</view> 
     <package 
         id="package"
         sort="live"

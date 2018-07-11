@@ -143,10 +143,12 @@ Page({
         }); 
     },
     goArticle (e) {
+        const self = this;
+        const { type } = self.data;
         const { id } = e.currentTarget;
-        const { type } = e.currentTarget.dataset;
+        const { goodstype } = e.currentTarget.dataset;
 
-        if (id && type == 1) {
+        if (id && (goodstype == 1 || type == 0)) {
             wx.navigateTo({
                 url: `/pages/component/detail/detail?articleId=${id}`
             })

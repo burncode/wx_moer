@@ -302,7 +302,7 @@ Page({
     showDesc (e) {
         const self = this;
         const { type, sort, showBrief, noScroll } = self.data;
-        const keys = [110005, 110004];
+        const keys = [1110005, 1110004];
 
         self.setData({
             showBrief: !showBrief,

@@ -531,5 +531,13 @@ Page({
 
             self.loadHistory();
         }
+    },
+    contact () {
+        wx.showModal({
+            title: '请前往摩尔金融APP互动提问',
+            content: '小程序暂不支持主动发言，请下载摩尔金融APP跟大V互动提问，还有《风口研报》、《盘中先手》等你体验哟',
+            showCancel: false,
+            confirmText: '知道了'
+        })
     }
 })

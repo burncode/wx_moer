@@ -129,13 +129,15 @@
             <view class="adClose" bindtap="closeAd"></view>
         </view>
         <!-- 联系客服 -->
-        <button class="contact" open-type="contact" wx:if="{{!info[type].services[sort].liveInfo}}">
-            <image src="{{staticFile}}/contact.png?ver=20180523"></image>
-        </button>
-        <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
-            <image src="{{staticFile}}/live.gif"></image>
-            <view class="join">{{info[type].services[sort].liveInfo.subscibe_num}}已加入</view>
-        </view>
+        <block wx:if="{{type == 0}}">
+            <button class="contact" open-type="contact" wx:if="{{!info[type].services[sort].liveInfo}}">
+                <image src="{{staticFile}}/contact.png?ver=20180523"></image>
+            </button>
+            <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
+                <image src="{{staticFile}}/live.gif"></image>
+                <view class="join">{{info[type].services[sort].liveInfo.subscibe_num}}已加入</view>
+            </view>
+        </block>
 
         <!-- TAB产品的相关介绍 -->
         <view class="brief" wx:if="{{showBrief}}">

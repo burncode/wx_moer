@@ -85,7 +85,7 @@ Page({
                 const d = res.result;
                 const articleStr = self.showColor(d.articleInfo.content);
                 const updateLog = d.articleInfo.updateLog;
-                const keys = [110012, 110011];
+                const keys = [1110012, 1110011];
                 const uids = ['117558573', '117521660'];
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
