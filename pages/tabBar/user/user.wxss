@@ -64,25 +64,6 @@
     font-size: 36rpx;
     color: #202d33;
 }
-.home .info .phone {
-    font-size: 26rpx;
-    color: #202d33;
-}
-.home .info .phone text {
-    display: inline-block;
-    line-height: 34rpx;
-    vertical-align: top;
-}
-.home .info .bindPhone {
-    display: inline-block;
-    height: 34rpx;
-    line-height: 34rpx;
-    padding: 0;
-    vertical-align: top;
-    font-size: 26rpx;
-    color: #00C5FF;
-    background: #fff;
-}
 .home .switch {
     display: inline-block;
     font-size: 28rpx;

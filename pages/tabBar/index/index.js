@@ -10,24 +10,32 @@ Page({
         userImg: util.staticFile + '/moer.jpg',
         staticFile: util.staticFile,
         type: 0, // 展示的类型： 0、摩研社； 1、摩股学院；
-        info: {}, // 切换的TAB数据
         sort: 0, // 栏目的切换，默认显示第一项
+        info: {
+            0: [],
+            1: []
+        }, // 切换的TAB数据
         status: {
             tabFlag: [true, true], // TAB 是否滑动的状态
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
         },
         tryReadArticles: [],  // 试读文章的数据
-        latestArticles: {},  // 最新文章的数据
+        latestArticles: {
+            0: [],
+            1: []
+        },  // 最新文章的数据
         videoInfo: {},
         videoNum: {
             videoLen: 4,  // 每次加载视频课程的数量
             videoMax: 4  // 视频已加载的总量： 默认是4课
         },        
-        sortTime: [],  // 记录最新文章列表最后一次加载的时间戳
+        sortTime: [],  // 记录最新文章列表最后一次加载的时间戳, 默认为0 即当前刷新的时间戳
         showBrief: false, // TAB的各个项目的简介
         briefInfo: {},
         noMoreText: ['到底了，记得1/3/5早9点有更新哟', '到底了，记得开盘日9点15更新哟'],
-        canIUse: wx.canIUse('button.open-type.getUserInfo')
+        freeTxt: ['免费', '付费'],
+        ad: {}, // 首页广告相关信息
+        noScroll: false
     },
     onShow: function () {
         const self = this;
@@ -49,6 +57,7 @@ Page({
         const self = this;
 
         self.hiddenBrief();
+        self.closeAd();
     },
     onLoad: function (options) {
         const self = this;
@@ -64,22 +73,16 @@ Page({
                 type: type,
                 sort: sort
             });
-        } else if (self.data.canIUse) {
-            // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-            // 所以此处加入 callback 以防止这种情况
-            app.userInfoReadyCallback = res => {
-                self.setData({
-                    userInfo: app.globalData.userInfo,
-                    type: type,
-                    sort: sort
-                });
-            }
         } else {
-
+            self.setData({
+                type: type,
+                sort: sort
+            });
         }
         
         // 初始化
         self.switchHandler(type);
+        self.showAd();
     },
     //展示类型的切换： 0、摩研社； 1、摩股学院；
     changeType: function (e) {
@@ -87,7 +90,7 @@ Page({
         const num = e.currentTarget.dataset.type;
         const tabStr = 'status.tabFlag';
         
-        this.setData({
+        self.setData({
             type: num,
             sort: 0,
             [tabStr]: [true, true]
@@ -115,13 +118,17 @@ Page({
                 [videoMax]: videoLen
             });
 
-            if (info[type].services && info[type].services[sort]) {
+            if (info[type] && info[type].services && info[type].services[current]) {
                 if (type == 0) {
-                    self.latestArticlesHandler();
-                    self.tryReadArticleHandler();
+                    const uid = info[type].services[current].authorId;
+
+                    self.latestArticlesHandler(uid);
+                    self.tryReadArticleHandler(uid);
                 } else if (type == 1) {
                     if (tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
-                        self.collegeHandler();
+                        const courseId = info[type].services[current].id;
+
+                        self.collegeHandler(courseId);
                     }
                 }
             }
@@ -133,76 +140,99 @@ Page({
     switchHandler: function(num) {
         const self = this;
         let { sort } = self.data;
-        const str = 'info['+ num +']';
+        const str = 'info.'+ num;
 
         // //摩研社数据请求
         if (num == 0) {
-            util.sendRequest(util.urls.mResearchIndex, {}, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            util.sendRequest({
+                path: util.urls.mResearchIndex
+            }).then(res=>{
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
+                    
 
                     self.setData({
                         [str]: d
                     });
 
                     if (d.services && d.services[sort]) {
-                        self.latestArticlesHandler();
-                        self.tryReadArticleHandler();
+                        const uid = d.services[sort].authorId;
+
+                        self.latestArticlesHandler(uid);
+                        self.tryReadArticleHandler(uid);
                     }
                 }
-            });            
+            });                      
         } else if (num == 1) {
-            util.sendRequest(util.urls.stockCollegeHome, {}, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
+            util.sendRequest({
+                path: util.urls.stockCollegeHome
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
 
                     self.setData({
                         [str]: d
                     });
 
                     if (d.services && d.services[sort]) {
-                        self.collegeHandler();
+                        const courseId = d.services[sort].id;
+
+                        self.collegeHandler(courseId);
                     }
                 }
-            });  
+            }); 
         }
     },
     //试读文章数据请求
-    tryReadArticleHandler: function () {
+    tryReadArticleHandler: function (uid) {
         const self = this;
-        const { info, type, sort } = self.data;
 
-        util.sendRequest(util.urls.tryReadArticles, { authorId: info[type].services[sort].authorId }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        if (uid == '') return;
+
+        util.sendRequest({
+            path: util.urls.tryReadArticles,
+            data: {
+                authorId: uid
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 self.setData({
                     tryReadArticles: d
                 });
             }
-        });
+        }); 
     },
     //最新文章的数据请求
-    latestArticlesHandler: function () {
+    latestArticlesHandler: function (uid) {
         const self = this;
-        const { latestArticles, sort, sortTime, info, type } = self.data;
-        const str = 'latestArticles[' + sort + ']';
+        const { latestArticles, sort, sortTime, type, status } = self.data;
+        const str = 'latestArticles.' + sort;
         const strTimes = 'sortTime[' + sort +']';
+        const loading = 'status.loading[' + sort + ']';
+
+        if (status.loading[sort] != 0) return;
 
         wx.hideLoading();
+        self.setData({
+            [loading]: 1
+        });
 
-        util.sendRequest(util.urls.latestArticles, {
-            authorId: info[type].services[sort].authorId,
-            sortTime: sortTime[sort] || ''
-        }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-                const loading = 'status.loading[' + sort + ']';
+        util.sendRequest({
+            path: util.urls.latestArticles,
+            data: {
+                authorId: uid,
+                sortTime: sortTime[sort] || ''
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 if (d.length > 0) {
                     self.setData({
                         [loading]: 0,
-                        [str]: latestArticles[sort] ? latestArticles[sort].concat(d) : d,
+                        [str]: [...latestArticles[sort], ...d],
                         [strTimes]: d.length > 0 ? d[d.length - 1].sortTime : sortTime[sort]
                     });
                 } else {
@@ -210,37 +240,40 @@ Page({
                         [loading]: 2
                     });
                 }
-
-            } else {
-
             }
-        }, function (res) {
-            const loading = 'status.loading[' + sort + ']';
+        }).catch(e => {
+
+            console.log(e)
 
             wx.showLoading({
                 title: '数据加载中',
             });
 
-            self.switchHandler(type);
             self.setData({
                 [loading]: 0
             });
-        });
+            self.switchHandler(type);
+        }); 
     },
     //课程目录
-    collegeHandler: function() {
+    collegeHandler: function (courseId) {
         const self = this;
-        const { info, sort, type, videoInfo } = self.data;
+        const { sort, videoInfo } = self.data;
 
         wx.showLoading({
             title: '加载中',
             mask: true
         });
 
-        util.sendRequest(util.urls.stockCollegeVedioList, { courseId: info[type].services[sort].id }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-                const str = 'videoInfo.'+ sort;
+        util.sendRequest({
+            path: util.urls.stockCollegeVedioList,
+            data: {
+                courseId: courseId
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
+                const str = 'videoInfo.' + sort;
 
                 self.setData({
                     [str]: d
@@ -268,21 +301,28 @@ Page({
     //展示Tab下的简介
     showDesc (e) {
         const self = this;
-        const { type, sort, showBrief } = self.data;
-        const keys = [110005, 110004];
+        const { type, sort, showBrief, noScroll } = self.data;
+        const keys = [1110005, 1110004];
 
         self.setData({
             showBrief: !showBrief,
+            noScroll: !noScroll,
             briefInfo: dataList.list[type][sort]
         });
 
-        util.statistics(keys[sort], app);
+        util.statistics({
+            data: {
+                key: keys[sort], 
+                value: ''
+            }
+        });
     },
     hiddenBrief () {
         const self = this;
 
         self.setData({
-            showBrief: false
+            showBrief: false,
+            noScroll: false
         });
     },
     goToArticle: function(e) {
@@ -322,6 +362,64 @@ Page({
             });
         }
     },
+    // 根据条件展示广告
+    showAd () {
+        const self = this;
+        const { noScroll } = self.data;
+        const adTimes = wx.getStorageSync('ad');
+        const w = '490';
+        const h = '654';
+
+        if(adTimes < 1) {
+
+            util.sendRequest({
+                path: util.urls.findAd,
+                data: {
+                    adType: 'E1',
+                    advX: w,
+                    advY: h
+                }
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
+                    const d = res.result;
+
+                    if (d.length > 0) {
+                        let cur = d[0];
+                        
+                        cur['w'] = w;
+                        cur['h'] = h;
+                        self.setData({
+                            ad: cur,
+                            noScroll: true
+                        });
+
+                        wx.setStorageSync('ad', 1);
+                    }
+                }
+            });
+        }
+    },
+    // 跳转广告页面
+    jumpAd () {
+        const self = this;
+        const { url } = self.data.ad;
+
+        if (url) {
+            wx.navigateTo({
+                url: '/pages/component/ad/ad?url=' + url
+            })
+        }
+    },
+    // 关闭广告
+    closeAd () {
+        const self = this;
+
+        self.setData({
+            ad: {},
+            noScroll: false
+        });
+    },
+    // 上拉刷新
     onPullDownRefresh() { 
         const self = this;
         const { sort, type } = self.data;
@@ -330,21 +428,51 @@ Page({
         self.setData({
             [str]: 0,
             sortTime: [],
-            latestArticles: {}
+            latestArticles: {
+                0: [],
+                1: []
+            }
         });
 
-        self.switchHandler(type);
         wx.stopPullDownRefresh();
+        self.switchHandler(type);
     },
+    // 加载最新文章列表
     onReachBottom () {
-        const { type, sort, status } = this.data;
-        const str = 'status.loading[' + sort +']';
+        const { info, type, sort } = this.data;
+        const uid = info[type].services[sort].authorId;
 
         if( type == 0) {
-            this.setData({
-                [str]: 1
+            this.latestArticlesHandler(uid);
+        }
+    },
+    // 点击文章列表触发表单ID 统计
+    sendMsgId(e) {
+        const self = this;
+        const { formId } = e.detail;
+        const isLogin = app.globalData.isLogin;
+
+        if (isLogin) {
+            util.sendFormId({
+                data: {
+                    formId
+                }
             });
-            this.latestArticlesHandler();
+        }
+    },
+    goLive() {
+        const self = this;
+        const { isLogin, info, type, sort } = self.data;
+        const { gid } = info[type].services[sort].liveInfo;
+
+        if (isLogin) {
+            wx.navigateTo({
+                url: `/pages/component/live/live?gid=${gid}`,
+            });
+        } else {
+            wx.switchTab({
+                url: '/pages/tabBar/user/user',
+            });
         }
     },
     onShareAppMessage: function () {

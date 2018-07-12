@@ -3,8 +3,9 @@ const util = require('../../../utils/util.js');
 
 Page({
     data: {
-        types: 1, //数据类型：0、我的优惠券； 1、我的邀请
-        title: ['我的优惠券', '我的邀请'],
+        staticFile: util.staticFile,
+        types: 1, //数据类型：0、我的优惠券；
+        title: ['我的优惠券'],
         list: []
     },
 
@@ -25,33 +26,37 @@ Page({
             });
             this.getCoupon(params);
         } else {
-            this.getMsg(params);
+            
         }
     },
     getCoupon(params) {
         const self = this;
 
-        util.sendRequest(util.urls.userCouponList, params, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.userCouponList,
+            data: params
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 self.setData({
                     list: d
                 })
             }
-        });
+        }); 
     },
-    getMsg(params) {
-        const self = this;
+    useCoupon (e) {
+        const { type } = e.currentTarget.dataset;
+        let num = '';
 
-        util.sendRequest(util.urls.inviteList, params, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        if (type == 1) {
+            num = 1;
+        } else if (type == 2) {
+            num = 0;
+        }
 
-                self.setData({
-                    list: d
-                })
-            }
-        });
+        wx.reLaunch({
+            url: `/pages/tabBar/index/index?type=0&sort=${num}`
+        })
     }
 })

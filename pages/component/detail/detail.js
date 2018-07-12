@@ -10,12 +10,12 @@ Page({
         sort: 0,
         staticFile: util.staticFile,
         articleId: '',    // 文章ID
+        freeFlag: 0,      // 是否是付费文章标识 0： 免费 1：收费
         refresh: false,   // 是否 是购买后重新请求
         inviteUid: '',  // 当前文章分享者的UID
         source: null,   // 来源，是否是通过APP分享的卡片
         articleInfo: null,        // 文章的详情数据
         buttonInfo: {},         // 按钮的状态数据
-        showModalStatus: false, // 购买文章的对话框
         btnStatus: {
             pay: false,    // 单篇购买
             coupon: false, // 使用优惠券
@@ -24,16 +24,14 @@ Page({
         },
         isIphoneX: app.globalData.isIphoneX,
         count: {}, // 文章阅读数、购买数、点赞数......
-        serviceBuyInfo: {},  // 购买摩研社服务 展示价格等信息
-        pack: ['包月', '包季', '包年'],
-        agreementStatus: false,
-        isAgree: true,  // 是否同意包时段协议
-        useCouponStatus: false, 
         useButtonType: '',  // 未登录时，按钮授权登录；已登录且未填写手机号，则是授权手机号
         authorizePhone: 0, // 手机号是否弹窗授权
         tips: '',  // 解锁按钮下的提示
         isShowHome: '',  // 不是从首页进入文章的 显示 回到首页的按钮 否则显示客服的按钮
-        isPop: 0 // 是否显示购买文章后的弹窗
+        isPop: 0, // 是否显示购买文章后的弹窗
+        buyImg: [], // 付费文章购买者的头像
+        liveInfo: {}, // 直播间相关信息
+        noScroll: false
     },
     onShow: function (options) {
         const self = this;
@@ -58,7 +56,7 @@ Page({
             sort: sort || '',
             inviteUid: inviteUid || '',
             source: source || '',
-            isShowHome: jump
+            isShowHome: jump || ''
         });
 
         wx.showLoading({
@@ -68,7 +66,6 @@ Page({
 
         this.getInfo();
         this.authorizeHandler();
-
     },
     // 获取文章信息
     getInfo: function () {
@@ -76,16 +73,19 @@ Page({
         const { articleId, refresh, inviteUid, sort } = self.data;
         let index = sort;
 
-        util.sendRequest(util.urls.articleDetails, {
-            articleId: articleId, // 文章ID
-            refresh: refresh,
-            inviteUid: inviteUid         // 邀请者UID
-        }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.articleDetails,
+            data: {
+                articleId: articleId, // 文章ID
+                refresh: refresh,
+                inviteUid: inviteUid         // 邀请者UID
+            }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
                 const articleStr = self.showColor(d.articleInfo.content);
                 const updateLog = d.articleInfo.updateLog;
-                const keys = [110012, 110011];
+                const keys = [1110012, 1110011];
                 const uids = ['117558573', '117521660'];
 
                 WxParse.wxParse('article', 'html', articleStr, self, 20);
@@ -100,7 +100,10 @@ Page({
 
                 self.setData({
                     articleInfo: d.articleInfo,
-                    buttonInfo: d.buttonInfo
+                    buttonInfo: d.buttonInfo,
+                    freeFlag: d.freeFlag,
+                    buyImg: d.images,
+                    liveInfo: d.liveInfo
                 });
 
                 if ((sort == '' || sort == 0) && uids[0] == d.articleInfo.authorId) {
@@ -113,12 +116,11 @@ Page({
 
                 self.btnStatusHandler();
                 self.getBrowseCount();
-                self.articleInfo();
                 wx.hideLoading();
                 util.statistics(keys[index], app);
             } else {
                 wx.showToast({
-                    title: res.data.message,
+                    title: res.message,
                     icon: 'none',
                     complete: function (r) {
                         setTimeout(() => {
@@ -127,7 +129,7 @@ Page({
                     }
                 })
             }
-        });
+        }); 
 
         self.authorizeHandler();
     },
@@ -136,67 +138,28 @@ Page({
         const self = this;
         const { articleId } = self.data;
 
-        util.sendRequest(util.urls.getArticleCount, { articleId: articleId }, function (res) {
-            if (res.data.code == util.ERR_OK) {
+        util.sendRequest({
+            path: util.urls.getArticleCount,
+            data: { articleId: articleId }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
+
                 self.setData({
-                    count: res.data.result
+                    count: d
                 });
             }
         });
     },
-    // 单篇文章支付购买
-    goPay: function () {
+    // 购买包时段成功后的回调
+    successHandler () {
         const self = this;
-        const { articleId, useCouponStatus, buttonInfo } = self.data;
-        const params = {
-            goodsId: articleId, // 文章ID
-            goodsType: '1',   //  商品类型 1、文章； 6、包时段
-            orderType: '1', // 订单类型  1、文章购买  6、包时段购买
-            payType: '19',  // 小程序购买
-            couponId: '',  // 优惠券id
-            checkoutType: ''  // 优惠券类型 1,.优惠券 2.卡券
-        };
 
-        if (useCouponStatus) {
-            params['couponId'] = buttonInfo.couponId;
-            params['checkoutType'] = buttonInfo.checkoutType;
+        self.setData({
+            refresh: true
+        });
 
-            wx.showModal({
-                title: '确认使用免费券吗？',
-                content: '',
-                success: function (res) {
-                    if (res.confirm) {
-                        self.payHandler(params);
-                    }
-                }
-            });
-        } else {
-            self.payHandler(params);
-        }
-    },
-    // 购买包时段服务
-    goSub: function (e) {
-        const self = this;
-        const { id } = e.currentTarget;
-        const { articleInfo, isAgree } = self.data;
-
-        if (isAgree) {
-            util.sendRequest(util.urls.payPacket, { writerId: articleInfo.authorId, packetPay_id: id }, function (res) {
-                if (res.data.code == util.ERR_OK) {
-                    const d = res.data.result;
-                    const params = {
-                        goodsId: d.id, // 文章ID
-                        goodsType: '6',   //  商品类型 1、文章； 6、包时段
-                        orderType: '6', // 订单类型  1、文章购买  6、包时段购买
-                        payType: '19',  // 小程序购买
-                        couponId: '',  // 优惠券id
-                        checkoutType: ''  // 优惠券类型 1,.优惠券 2.卡券
-                    };
-
-                    self.payHandler(params);
-                }
-            });
-        }
+        self.getInfo();
     },
     // 按钮状态
     btnStatusHandler: function () {
@@ -257,6 +220,7 @@ Page({
     // 单篇购买文章 || 使用优惠券
     payArticle(options) {
         const self = this;
+        const { noScroll } = self.data;
         const { kind } = options.currentTarget.dataset;
 
         if (!app.globalData.isLogin) {
@@ -267,144 +231,12 @@ Page({
 
             // 用户登录 且 (用户信息中有手机号 || 用户没有手机号但是弹过一次授权)
             if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
-                if (kind == 1) {
-                    self.setData({
-                        useCouponStatus: true
-                    });
 
-                }
-                self.showModal();
+                // 调用自定义组件里 包时段接口
+                self.package = self.selectComponent("#package");
+                self.package.subInfo();
             }
         }
-    },
-    // 购买摩研社服务 展示价格等信息
-    articleInfo() {
-        const self = this;
-        const { articleInfo } = self.data;
-
-        util.sendRequest(util.urls.serviceBuyInfo, {
-            articleId: articleInfo.articleId,
-            writerId: articleInfo.authorId
-        }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
-
-                self.setData({
-                    serviceBuyInfo: d
-                });
-            }
-        });
-    },
-    agreementHanler() {
-        const self = this;
-        const { isAgree } = self.data;
-
-        self.setData({
-            isAgree: !isAgree
-        })
-    },
-    // 线上摩尔金融包时段服务协议内容
-    showAgreement: function () {
-        const { agreementStatus } = this.data;
-
-        this.setData({
-            agreementStatus: !agreementStatus
-        })
-    },
-    // 选择是否使用优惠券
-    couponHandler: function () {
-        const self = this;
-        const { useCouponStatus } = this.data;
-
-        self.setData({
-            useCouponStatus: !useCouponStatus
-        });
-    },
-    // 支付流程
-    payHandler: function (params) {
-        const self = this;
-
-        // 生成购买订单
-        wx.showLoading({
-            title: '加载中',
-            mask: true
-        });
-
-        wx.login({
-            success: r => {
-                util.sendRequest(util.urls.payOrder, params, function (res) {
-                    if (res.data.success) {
-                        const d = res.data.data;
-
-                        util.sendRequest(util.urls.payment, {
-                            orderId: d.orderId,
-                            wxjsapiCode: r.code
-                        }, function (da) {
-                            wx.hideLoading();
-
-                            if (da.data.success) {
-                                const d = da.data.data;
-
-                                if (da.data.errorCode == 30001) {  // 使用优惠券
-                                    //使用免费券 弹窗提示成功！
-                                    wx.showToast({
-                                        title: '使用成功',
-                                        success: () => {
-                                            wx.showLoading({
-                                                title: '加载中',
-                                                mask: true
-                                            });
-
-                                            self.setData({
-                                                refresh: true
-                                            });
-                                            self.getInfo();
-                                            self.hideModal();
-                                        }
-                                    });
-                                } else {
-                                    //微信支付
-                                    wx.requestPayment({
-                                        timeStamp: d.timestamp,
-                                        nonceStr: d.nonceStr,
-                                        package: d.package,
-                                        signType: 'MD5',
-                                        paySign: d.paySign,
-                                        complete: function (res) {
-                                            if (res.errMsg === 'requestPayment:ok') {
-
-                                                self.setData({
-                                                    refresh: true
-                                                });
-
-                                                self.getInfo();
-                                                self.hideModal();
-                                            } else if (res.errMsg === 'requestPayment:fail cancel') {
-                                                wx.showModal({
-                                                    title: '提示',
-                                                    content: '支付失败',
-                                                    cancelText: '取消',
-                                                    confirmText: '重新支付',
-                                                    success: function (f) {
-                                                        if (f.confirm) {
-                                                            self.payHandler(params);
-                                                        } else if (f.cancel) {
-
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        wx.hideLoading();
-                    }
-                });
-            }
-        });
     },
     // 未登录，获取用户信息
     userBtnHandler(res) {
@@ -432,36 +264,41 @@ Page({
         if (d == 'getPhoneNumber:ok') {
             wx.checkSession({
                 success: function () {
-                    util.sendRequest(util.urls.savePhoneNumber, {
-                        iv: options.detail.iv,
-                        encryptedData: options.detail.encryptedData
-                    }, function (r) {
-                        const aaa = r;
-                        if (r.data.code == util.ERR_OK) {
 
-                            app.globalData.userInfo.userPhone = r.data.result;
+                    util.sendRequest({
+                        path: util.urls.savePhoneNumber,
+                        data: {
+                            iv: options.detail.iv,
+                            encryptedData: options.detail.encryptedData
+                        }
+                    }).then(res => {
+                        if (res.code == util.ERR_OK) {
+                            const d = res.result;
+
+                            app.globalData.userInfo.userPhone = d;
                             wx.setStorageSync('userInfo', app.globalData.userInfo);
                         }
                     });
                 },
                 fail: function () {
-                    wx.login({
-                        success: res => {
-                            const code = res.code;
+                    util.login().then(res => {
+                        const code = res.code;
 
-                            util.sendRequest(util.urls.savePhoneNumber, {
+                        util.sendRequest({
+                            path: util.urls.savePhoneNumber,
+                            data: {
                                 code: code,
                                 iv: options.detail.iv,
                                 encryptedData: options.detail.encryptedData
-                            }, function (r) {
-                                const aaa = r;
-                                if (r.data.code == util.ERR_OK) {
+                            }
+                        }).then(res => {
+                            if (res.code == util.ERR_OK) {
+                                const d = res.result;
 
-                                    app.globalData.userInfo.userPhone = r.data.result;
-                                    wx.setStorageSync('userInfo', app.globalData.userInfo);
-                                }
-                            });
-                        }
+                                app.globalData.userInfo.userPhone = d;
+                                wx.setStorageSync('userInfo', app.globalData.userInfo);
+                            }
+                        });
                     });
                 }
             });
@@ -500,13 +337,18 @@ Page({
     // 文章之间跳转
     wxParseTagATap(e) {
         const { src } = e.currentTarget.dataset;
-        let articleId = '';
+        let articleId = '', gid = '';
 
         articleId = this.GetQueryString(src, 'articleId');
+        gid = this.GetQueryString(src, 'gid');
 
         if (articleId) {
             wx.navigateTo({
-                url: `/pages/component/detail/detail?articleId=${articleId}`
+                url: `/pages/component/detail/detail?articleId=${articleId}&jump=article`
+            });
+        } else if (gid) {
+            wx.navigateTo({
+                url: `/pages/component/live/live?gid=${gid}`
             });
         }
     },
@@ -525,7 +367,7 @@ Page({
             var href = item.match(/href=\"([^(\}>)]+)\"/);
 
             if (href) {
-                if (GetQueryString(href[1], 'articleId')) {
+                if (GetQueryString(href[1], 'articleId') || GetQueryString(href[1], 'gid')) {
                     temp += item;
                 } else {
                     temp += '<span>' + item.replace(/<a.+?">|<\/a>/g, "") + '</span>';
@@ -545,20 +387,6 @@ Page({
 
         return temp;
     },
-    // 显示对话框 
-    showModal: function () {
-        const self = this;
-
-        self.setData({
-            showModalStatus: true
-        })
-    },
-    // 隐藏对话框
-    hideModal: function () {
-        this.setData({
-            showModalStatus: false
-        });
-    },
     // 点赞
     doZan() {
         const self = this;
@@ -577,13 +405,16 @@ Page({
             num++;
         }
 
-        util.sendRequest(util.urls.doZan, {
-            targetId: articleId,
-            isDoZan: flag,
-            from: 'miniProgram',
-            zanType: 1
-        }, function (r) {
-            if (r.data.success) {
+        util.sendRequest({
+            path: util.urls.doZan,
+            data: {
+                targetId: articleId,
+                isDoZan: flag,
+                from: 'miniProgram',
+                zanType: 1
+            }
+        }).then(res => {
+            if (res.success) {
                 self.setData({
                     ['count.isZan']: !isZan,
                     ['count.zanCount']: num
@@ -616,12 +447,22 @@ Page({
     hideTips() {
         const { refresh } = this.data;
 
+        
         wx.setStorageSync('isPop', 1);
 
         this.setData({
             refresh: !refresh,
             isPop: 1
-        })
+        });
+    },
+    JoinLive () {
+        const self = this;
+
+        self.hideTips();
+
+        wx.navigateTo({
+            url: `/pages/component/live/live`,
+        });
     },
     // 帮好友解锁
     unlock() {
@@ -629,30 +470,60 @@ Page({
         const { articleId, inviteUid, articleInfo } = self.data;
 
         if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
-            util.sendRequest(util.urls.unlock, {
-                inviteUid: inviteUid,
-                articleId: articleId,
-                authorId: articleInfo.authorId
-            }, function (r) {
-                if (r.data.code == util.ERR_OK) {
+
+            util.sendRequest({
+                path: util.urls.unlock,
+                data: {
+                    inviteUid: inviteUid,
+                    articleId: articleId,
+                    authorId: articleInfo.authorId
+                }
+            }).then(res => {
+                if (res.code == util.ERR_OK) {
                     wx.showModal({
                         title: '解锁成功',
                         content: '您获得了一张试读券',
                         showCancel: false,
-                        complete: function (res) {
-                            self.hideModal();
+                        complete: function () {
                             self.getInfo();
                         }
                     });
                 } else {
                     wx.showModal({
-                        content: r.data.message,
+                        content: res.message,
                         showCancel: false,
-                        complete: function (res) {
-                            self.hideModal();
+                        complete: function () {
                             self.getInfo();
                         }
                     });
+                }
+            });
+        }
+    },
+    goLive () {
+        const self = this;
+        const { isLogin, liveInfo } = self.data;
+
+        if (isLogin) {
+            wx.navigateTo({
+                url: `/pages/component/live/live?gid=${liveInfo.gid}`,
+            });
+        } else {
+            wx.switchTab({
+                url: '/pages/tabBar/user/user',
+            });
+        }
+    },
+    // 发送模版消息
+    sendMsgId(e) {
+        const self = this;
+        const { formId } = e.detail;
+        const isLogin = app.globalData.isLogin;
+
+        if (isLogin) {
+            util.sendFormId({
+                data: {
+                    formId
                 }
             });
         }
@@ -672,5 +543,5 @@ Page({
             fail: function (res) {
             }
         }
-    }
+    },
 })

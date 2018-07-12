@@ -1,0 +1,310 @@
+/* pages/component/package/package.wxss */
+.sub {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    transform: translateY(100%);
+    transition: transform .6s ease;
+    background: #fff;
+}
+.sub.active {
+    transform: translateY(0);
+}
+.sub-header .txt {
+    display: inline-block;
+    padding: 20rpx 0;
+    font-size: 34rpx;
+}
+.sub-header {
+    display: flex;
+    line-height: 60rpx;
+    font-size: 0;
+    border-bottom: 2rpx solid #dedede;
+}
+.sub-header .share {
+    flex: 1;
+    padding: 0 0 0 30rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 28rpx;
+    color: #5193ad;
+    text-align: left;
+    background: none;
+}
+.sub-header .useCoupon {
+    flex: 1;
+    display: inline-block;
+    padding: 20rpx;
+    font-size: 28rpx;
+    color: #5193ad;
+    text-align: right;
+}
+.sub-header .useCoupon view {
+    display: inline-block;
+    width: 20rpx;
+    height: 20rpx;
+    border: 2rpx solid #5193ad;
+    margin: 18rpx 10rpx 0 0;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 100%;
+}
+.sub-header .useCoupon view icon {
+    display: none;
+    line-height: 20rpx;
+    height: 20rpx;
+    margin-top: 2rpx;
+    vertical-align: top;
+}
+.sub-header .useCoupon .active {
+    background: #5193ad;
+}
+.sub-header .useCoupon .active icon {
+    display: inline-block;
+}
+.sub-header .goPay {
+    display: inline-block;
+    width: 150rpx;
+    height: 60rpx;
+    padding: 0;
+    margin: 20rpx 0;
+    line-height: 60rpx;
+    font-size: 26rpx;
+    color: #fff;
+    border-radius: 60rpx;
+    vertical-align: top;
+    background: #e84c3d;
+}
+.sub-header .del {
+    text-decoration: line-through;
+}
+.sub-main {
+    padding: 0 30rpx;
+}
+.sub-main .txt {
+    display: inline-block;
+    padding: 20rpx 0;
+    font-size: 34rpx;
+}
+.sub-service {
+    padding-bottom: 50rpx;
+}
+.sub-service .sub-type {
+    font-size: 0;
+}
+.sub-service .sub-type.active .goSub {
+    color:#dedede;
+    border: 2rpx solid #dedede;
+}
+.sub-service .type-item {
+    display: flex;
+    height: 60rpx;
+    line-height: 60rpx;
+    padding-bottom: 30rpx;
+}
+.sub-service .name {
+    display: inline-block;
+    width: 120rpx;
+    font-size: 32rpx;
+}
+.sub-service .name image {
+    display: inline-block;
+    width: 36rpx;
+    height: 36rpx;
+    margin-top: 12rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+}
+.sub-service .cost {
+    flex: 1;
+    padding-right: 25rpx;
+    text-align: right;
+    font-size: 28rpx;
+    color: #879193;
+}
+.sub-service .useCoupon {
+    color: #5193ad;
+    text-decoration: inherit;
+}
+.sub-service .saveText {
+    color: #879193;
+}
+.sub-service .goSub {
+    display:inline-block;
+    width:150rpx;
+    padding:0;
+    border: 2rpx solid #e84c3d;
+    line-height:56rpx;
+    font-size:26rpx;
+    color:#e84c3d;
+    border-radius:60rpx;
+    vertical-align:top;
+    background: none;
+}
+.sub-service .agreement {
+    padding-bottom: 10rpx;
+    border-bottom: 2rpx solid #dedede;
+    font-size: 24rpx;
+    color: #5193ad;
+}
+.sub-service .agreebtn .active icon {
+    display: inline-block;
+}
+.sub-service .agreebtn view {
+    display: inline-block;
+    width: 20rpx;
+    height: 20rpx;
+    border: 2rpx solid #5193ad;
+    margin: 4rpx 10rpx 0 0;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 100%;
+}
+.sub-service .agreebtn view.active{
+    background: #5193ad;
+}
+.sub-service .agreebtn view icon {
+    display: none;
+    line-height: 20rpx;
+    height: 20rpx;
+    margin-top: 2rpx;
+    vertical-align: top;
+}
+.sub-service .agreetext {
+    height: 0;
+    font-size: 0;
+    padding: 4rpx 0 0;
+    line-height: 40rpx;
+    color: #879193;
+    transition: height ease 0.4s;
+    overflow: hidden;
+}
+.sub-service .agreetext text {
+    display: block;
+    font-size: 24rpx;
+}
+.sub-service .agreement.active .agreetext {
+    height: auto;
+    /* height: 130rpx; */
+}
+.sub-service .welfare {
+    display: flex;
+    line-height: 62rpx;
+    font-size: 24rpx;
+    color: #202d33
+}
+.sub-service .welfare image {
+    width: 62rpx;
+    height: 62rpx;
+    margin-right: 15rpx;
+    vertical-align: top;
+}
+.sub-service .welfare view {
+    flex: 1;
+}
+
+/* 选择优惠券 */
+.sub-coupon {
+    position: fixed;
+    top: 400rpx;
+    left: 50%;
+    z-index: 1002;
+    width:600rpx;
+    margin-left: -300rpx;
+    background:rgba(255,255,255,1);
+    border-radius:15rpx;
+    box-shadow:0px 0px 10px rgba(0,0,0,1);
+}
+.coupon-head {
+    height:32rpx;
+    line-height:32rpx;
+    padding: 30rpx 0;
+    font-size:32rpx;
+    color:rgba(32,45,51,1);
+    text-align: center
+}
+.coupon-main {
+    max-height: 400rpx;
+    overflow-y: auto;
+}
+.sub-coupon .item {
+    display: flex;
+    height: 40rpx;
+    padding: 25rpx 0;
+    border-top: 2rpx solid #dedede;
+    margin: 0 25rpx;
+    font-size: 0;
+}
+.sub-coupon .discount {
+    width: 160rpx;
+    font-size: 18rpx;
+    line-height: 40rpx;
+    text-align: center;
+    color: #E84C3D;
+}
+.sub-coupon .discount text {
+    display: inline-block;
+    font-size: 40rpx;
+}
+.sub-coupon .time {
+    flex: 1;
+    height: 32rpx;
+    padding-left: 18rpx;
+    border-left: 2rpx solid rgba(222,222,222,1);
+    margin-top: 4rpx;
+    font-size: 24rpx;
+    color: rgba(135,145,147,1);
+    line-height:32rpx;
+}
+.sub-coupon .btn {
+    display: inline-block;
+    width: 28rpx;
+    height: 28rpx;
+    border: 2rpx solid #E84C3D;
+    margin-top: 6rpx;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 100%;
+    
+}
+.sub-coupon .btn icon {
+    display: none;
+    line-height: 28rpx;
+    height: 28rpx;
+    margin-top: 2rpx;
+}
+.sub-coupon .btn.active {
+    background:#E84C3D;
+}
+.sub-coupon .btn.active icon {
+    display:inline-block;
+}
+.sub-coupon .noUsed {
+    height: 88rpx;
+    line-height: 88rpx;
+    border-top: 2rpx solid #dedede;
+    margin:0 25rpx;
+    text-align: center; 
+    font-size:24rpx;
+    color:rgba(135,145,147,1);
+}
+
+.sub-mask {
+    width: 100%;
+    height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    opacity: 0;
+    overflow: hidden;
+    z-index: 1000;
+    color: #fff;
+    transition: opacity 0.6s ease;
+}
+.sub-mask.active {
+    height: 100%;
+    opacity: 0.4;
+}

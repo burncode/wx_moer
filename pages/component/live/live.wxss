@@ -1,0 +1,309 @@
+/* pages/component/live/live.wxss */
+page {
+    background: #ebeff2;
+}
+/** 顶部样式   开始 **/
+.header {
+    width: 100%;
+    display: flex;
+    height: 88rpx;
+    line-height: 88rpx;
+    border-bottom: 2rpx solid #dedede;
+    font-size: 32rpx;
+    background: #fff;
+}
+.header .item {
+    flex: 1;
+    text-align: center;
+}
+.header .item text {
+    display: inline-block;
+}
+.header .item.active {
+    color: #e64d43;
+}
+.header .line {
+    display: inline-block;
+    width: 2rpx;
+    height: 32rpx;
+    margin: 29rpx 0;
+    background: #dedede;
+}
+.header .item.active text {
+    height: 84rpx;
+    line-height: 84rpx;
+    border-bottom: 4rpx solid #e64d43;
+}
+/** 顶部样式   结束 **/
+
+/** 内容区域   开始 **/
+.main {
+    height: calc(100% - 90rpx);
+    padding: 0;
+    background: #ebeff2;
+}
+
+.chat-main {
+    height: 100%;
+}
+
+.box {
+    padding-bottom: 80rpx;
+}
+
+/** 单个气泡内容   开始 **/
+.section {
+    padding: 0 25rpx;
+    font-size: 0;
+}
+/** 时间戳 **/
+.notice {
+    width: 100%;
+    padding: 50rpx 0;
+    text-align: center;
+}
+.notice text {
+    display: inline-block;
+    height:40rpx;
+    line-height: 40rpx;
+    padding: 0 10rpx;
+    font-size:28rpx;
+    color:rgba(255,255,255,1);
+    background:rgba(205,209,212,1);
+    border-radius:4rpx;
+}
+/** 气泡内容主体 **/
+.section-main {
+    position: relative;
+    display: flex;
+    width:100%;
+    font-size: 28rpx;
+    margin-bottom: 50rpx;
+}
+/** 头像 **/
+.avatar {
+    width:80rpx;
+    height:80rpx;
+    margin-right: 20rpx;
+    border-radius: 100%;
+}
+.certified {
+    position: absolute;
+    left: 60rpx;
+    top: 60rpx;
+    width: 28rpx;
+    height: 28rpx;
+}
+.bubble {
+    position: relative;
+    z-index: 3;
+    width: 14rpx;
+    height: 20rpx;
+    margin: 24rpx -2rpx 0 0;
+    vertical-align: top;
+}
+.info {
+    display: flex;
+    width:100%;
+    height: 40rpx;
+    line-height: 40rpx;
+    margin-bottom: 20rpx;
+}
+.info .name {
+    display: inline-block;
+    padding: 0 0 0 15rpx;
+    color: #879193;
+}
+.info .role {
+    display: inline-block;
+    height: 36rpx;
+    line-height: 36rpx;
+    padding: 0 10rpx;
+    margin: 2rpx 0 2rpx 10rpx;
+    border-radius: 20rpx;
+    font-size: 22rpx;
+    color: #fff;
+}
+.info .admin {
+    background-color: #e6461a;
+}
+.info .host, .info .manager {
+    background-color: #56d0e5;
+}
+.info .guest {
+    background-color: #d4be9c;
+}
+.info .normal {
+    display: none;
+}
+
+.content {
+    display: flex;
+}
+.content .inner {
+    position: relative;
+    display: inline-block;
+    max-width: 420rpx;
+    min-height: 40rpx;
+    padding: 16rpx 30rpx;
+    border: 2rpx solid #d9dde0;
+    border-radius: 10rpx;
+    background-color: #fff;
+    word-wrap:break-word;
+}
+.content .inner .img {
+    display: block;
+    max-width:420rpx;
+}
+.content .inner .reply {
+    font-size: 0;
+}
+.content .inner .source {
+    font-size: 0;
+    padding: 25rpx 20rpx;
+    margin-top: 20rpx;
+    border-radius: 6rpx;
+    background: #f2f2f2;
+}
+.content .inner.admin .source {
+    background:rgba(255,218,216,1);
+}
+.private {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 25rpx;
+    height: 27rpx;
+}
+.content .admin {
+    border: 2rpx solid #ffd4d1;
+    background: #ffe7e5;
+}
+/** 单个气泡内容   结束 **/
+
+.owner, .owner .info, .owner .content {
+    text-align: right;
+    -webkit-box-orient:horizontal;
+    -webkit-box-direction:reverse;
+    -webkit-flex-direction:row-reverse;
+    -ms-flex-direction:row-reverse;
+    flex-direction:row-reverse;
+}
+.owner .name {
+    padding: 0 15rpx 0 0;
+}
+.owner .role {
+    margin: 0 10rpx 0 0;
+}
+.owner .inner {
+    text-align: left;
+}
+.owner .bubble {
+    transform: scaleX(-1);
+    margin: 24rpx 0 0 -2rpx;
+}
+.owner .certified {
+    left: auto;
+    right: 15rpx;
+}
+/** 内容区域   结束 **/
+
+.contact {
+    position: fixed;
+    bottom: 20rpx;
+    left: 0;
+    height:64rpx;
+    line-height: 64rpx;
+    padding: 0 50rpx;
+    transform: translateX(27%);
+    border-radius:32rpx;
+    font-size:28rpx;
+    color: #fff;
+    background:rgba(232,76,61,1);
+    box-shadow:1px 0px 10px rgba(242,90,75,0.54);
+}
+
+
+/** 加载更多   结束 **/
+.more-status .more, .more-status .loading-more,  .more-status .no-more {
+    display: none;  
+    padding: 30rpx 0;
+    font-size: 24rpx;
+    line-height: 24rpx;
+    color:#879194;
+    text-align: center;
+}
+.more-status image {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    vertical-align: top;
+}
+.more-status-00 .more {
+    display: block;
+}
+.more-status-01 .loading-more {
+    display: block;
+}
+.more-status-02 .no-more {
+    display: block;
+}
+/** 加载更多   结束 **/
+.privateTab {
+    position: fixed;
+    bottom: 180rpx;
+    right: 30rpx;
+    z-index: 9;
+    height:46rpx;
+    line-height: 46rpx;
+    padding: 0 20rpx;
+    opacity:0.8;
+    font-size: 24rpx;
+    color: #fff;
+    border-radius:23rpx;
+    background:rgba(234,75,54,1);
+    box-shadow:4px 0px 5px rgba(12,3,6,0.2);
+}
+
+/** 包时段 内容区域 开始  **/
+.sub {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2000;
+    transform: translateY(100%);
+    transition: transform .6s ease;
+    background: #fff;
+}
+.sub.active {
+    transform: translateY(0);
+}
+.mask {
+  width: 100%;
+  height: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0;
+  overflow: hidden;
+  z-index: 1000;
+  color: #fff;
+  transition: opacity 0.6s ease;
+}
+.mask.active {
+    height: 100%;
+    opacity: 0.4;
+}
+/** 包时段 内容区域 结束  **/
+
+.isIphoneX .contact {
+    bottom: 80rpx;
+}
+.isIphoneX .privateTab {
+    bottom: 240rpx;
+}
+.isIphoneX .box {
+    padding-bottom: 140rpx;
+}

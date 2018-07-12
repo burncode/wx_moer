@@ -8,7 +8,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.9.98",
+	"libVersion": "2.1.0",
 	"appid": "wx318665667d80203e",
 	"projectname": "moer",
 	"isGameTourist": false,
@@ -38,10 +38,32 @@
 			"current": -1,
 			"list": [
 				{
-					"id": -1,
-					"name": "ios",
+					"id": 0,
+					"name": "二维码生成",
+					"pathName": "pages/tabBar/index/index",
+					"query": "type=1&sort=1&channel=dianxin2",
+					"scene": "1011"
+				},
+				{
+					"id": 1,
+					"name": "包时段",
 					"pathName": "pages/component/detail/detail",
-					"query": ""
+					"query": "articleId=254613&sort=0",
+					"scene": "1001"
+				},
+				{
+					"id": -1,
+					"name": "直播间",
+					"pathName": "pages/component/live/live",
+					"query": "",
+					"scene": "1001"
+				},
+				{
+					"id": 3,
+					"name": "某篇文章",
+					"pathName": "pages/component/detail/detail",
+					"query": "articleId=253212&sort=0&jump=index",
+					"scene": "1001"
 				}
 			]
 		}

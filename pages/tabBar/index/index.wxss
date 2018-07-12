@@ -190,7 +190,7 @@
 
 /** 摩研社试读文章   开始 **/
 .trial {
-    display: flex;
+    display: flex; 
     height: 234rpx;
     padding-top: 10rpx;
     margin: 30rpx 0 70rpx 0;
@@ -244,7 +244,9 @@
 .trial .item-main {
     position: relative;
     padding: 60rpx 30rpx 50rpx;
-    height: 90rpx;
+    height: 200rpx;
+    line-height: 45rpx;
+    text-align: left;
     overflow: hidden;
 }
 .trial .item-main.active::before {
@@ -292,13 +294,14 @@
 /** 摩研社最新文章   开始 **/
 .newest .item {
     padding: 0 30rpx;
+    border-radius: 0;
+    background: #fff;
 }
 .newest .item.active {
     transform: scale(1);
     background-color: #f4f4f4;
 }
 .newest .item-box {
-    display: flex;
     padding: 40rpx 0;
     border-bottom: 1rpx solid #dedede;
 }
@@ -313,34 +316,58 @@
     border-radius: 6rpx;
 }
 .newest .item-main {
-    flex: 1;
     position: relative;
+    text-align: left;
 }
 .newest .title {
-    font-size: 32rpx;
-    line-height: 44rpx;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 36rpx;
+    line-height: 52rpx;
     color: #202d33;
     word-break: break-all;
-    overflow:hidden;
-    height:132rpx;
-    display:-webkit-box;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:3;
-    -webkit-box-direction:normal;
-    white-space: pre-wrap;
+    
+}
+.newest .desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    line-height:44rpx;
+    margin: 20rpx 0;
+    font-size:28rpx;
+    color:rgba(72,83,89,1);
+    word-wrap: break-word;
 }
 .newest .info {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     display: flex;
+    width: 100%;
+    color: #879193;
+}
+.newest .status {
+    width: 50rpx;
+    padding-right: 20rpx;
+    border-right: 2rpx solid #dedede;
+    margin-right: 20rpx;
+    font-size: 24rpx;
+    line-height: 24rpx;
 }
 .newest .date, .newest .amount {
     flex: 1;
     font-size: 24rpx;
-    color: #879193;
+    line-height: 24rpx;
 }
-.newest .amount {
+.newest .amount image {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
+    border-radius: 100%;
+    vertical-align: top;
+}
+.newest .date {
     text-align: right;
 }
 .more-status .loading-more,  .more-status .no-more {
@@ -376,6 +403,7 @@
 .course .item-main {
     padding-bottom: 40rpx;
     margin: 0 30rpx;
+    text-align: left;
     border-bottom: 1rpx solid #dedede;
 }
 .course .title {
@@ -472,6 +500,34 @@
 }
 /** 联系客服 || 领取试读券 结束 **/
 
+/** 直播 开始 **/
+.goLive {
+    position: fixed;
+    right: 40rpx;
+    bottom: 250rpx;
+    z-index: 9;
+    padding: 0;
+    font-size: 0;
+    text-align: center;
+    background: none;
+}
+.goLive image{
+    width: 94rpx;
+    height: 80rpx;
+}
+.goLive .join {
+    height: 36rpx;
+    line-height: 34rpx;
+    padding: 0 15rpx;
+    margin-top: -4rpx;
+    background: rgba(11,21,26,1);
+    opacity: 0.8;
+    border-radius: 18rpx;
+    font-size: 18rpx;
+    color: #fff;
+}
+/** 直播 结束 **/
+
 .brief {
     position: fixed;
     top: 0;
@@ -559,5 +615,50 @@
 }
 .brief .close::after {
     left: 22.5%;
+    transform: rotate(-45deg);
+}
+
+
+/* 广告 */
+.ad {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    width:100%;
+    height:100%;
+}
+.ad image {
+    display: block;
+    max-width: 96%;
+    margin: 20% auto 0;
+}
+.ad .adClose {
+    position: relative;
+    width: 70rpx;
+    height: 70rpx;
+    margin: 5% auto 0;
+    border-radius: 100%;
+    background: rgba(255,255,255,1);
+    box-shadow: 0 0 32rpx rgba(51,51,51,1);
+}
+.ad .adClose.active {
+    background: rgba(0, 0, 0, 0.9);
+}
+.ad .adClose::before, .ad .adClose::after {
+    position: absolute;
+    top: 48%;
+    content: '';
+    width: 38rpx;
+    height: 4rpx;
+    background: rgba(148,148,148,1);
+    border-radius: 4rpx;
+}
+.ad .adClose::before {
+    left: 22.9%;
+    transform: rotate(45deg);
+}
+.ad .adClose::after {
+    left: 22.9%;
     transform: rotate(-45deg);
 }

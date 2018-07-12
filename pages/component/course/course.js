@@ -30,7 +30,6 @@ Page({
         });
     },
     onReady: function (res) {
-        this.videoContext = wx.createVideoContext('myVideo');
     },
     onLoad: function (options) {
         const { videoId, videoType, sort } = options;
@@ -52,9 +51,12 @@ Page({
             mask: true
         });
 
-        util.sendRequest(util.urls.stockCollegeVedioList, { courseId: id }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.stockCollegeVedioList,
+            data: { courseId: id }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
 
                 wx.hideLoading();
                 self.setData({
@@ -105,20 +107,17 @@ Page({
         const self = this;
         const { videoId, courseId } = self.data;
 
-        util.sendRequest(util.urls.playCount, { period_id: videoId, course_id: courseId }, function (res) {
-            if (res.data.code == util.ERR_OK) {
-                const d = res.data.result;
+        util.sendRequest({
+            path: util.urls.playCount,
+            data: { period_id: videoId, course_id: courseId }
+        }).then(res => {
+            if (res.code == util.ERR_OK) {
+                const d = res.result;
             }
-        });
+        }); 
     },
     waitHandler () {
         const self = this;
-
-        // wx.showToast({
-        //     title: '拼命加载中',
-        //     icon: 'loading',
-        //     duration: 2000
-        // })
     },
     // 下一课 ||  视频播放完成后自动播放下一课
     nextHandler() {
@@ -138,6 +137,15 @@ Page({
         this.setData({
             index: index
         });
+    },
+    sendMsgId(e) {
+        const self = this;
+        const { formId } = e.detail;
+        const isLogin = app.globalData.isLogin;
+
+        if (isLogin) {
+            util.sendFormId(formId);
+        }
     },
     onShareAppMessage: function () {
         const { sort } = this.data;

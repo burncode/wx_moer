@@ -1,5 +1,14 @@
 /* pages/detail/detail.wxss */
 @import "/plugin/wxParse/wxParse.wxss";
+.no-scroll {
+    position: fixed;
+    z-index: 0;
+    top:0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 
 .detail {
     padding: 0 25rpx;
@@ -13,7 +22,6 @@
     word-break:break-all;
 }
 .detail .info {
-    display: flex;
     height: 24rpx;
     margin: 20rpx 0 0;
     font-size: 0;
@@ -21,14 +29,23 @@
     color: #879193;
     overflow: hidden;
 }
-.detail .author {
+.detail .amount {
+    display: inline-block;
     height: 24rpx;
     font-size: 24rpx;
-    padding-right: 0.4rem;
+    padding-right: 16rpx;
+    vertical-align: top;
+}
+.detail .amount image {
+    display: inline-block;
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
+    border-radius: 100%;
     vertical-align: top;
 }
 .detail .date {
-    flex: 2;
+    display: inline-block;
     height: 24rpx;
     font-size: 24rpx;
 }
@@ -43,7 +60,9 @@
     vertical-align: middle;
 }
 .detail .view {
+    display: inline-block;
     height: 24rpx;
+    padding-right: 16rpx;
     font-size: 24rpx;
     text-align: right;
 }
@@ -101,9 +120,9 @@
     display: flex;
     width: 100%;
     height: 98rpx;
+    border-top: 2rpx solid #dedede;
     line-height: 98rpx;
     background: #fff;
-    box-shadow: 0 -10rpx 10rpx rgba(50,50,50,0.1);
 }
 .detail .operate button {
     display: inline-block;
@@ -128,6 +147,9 @@
     font-size: 28rpx;
     color: #879193;
     vertical-align: top;
+}
+.detail .operate .item.active text {
+    color: #e84c3d;
 }
 .detail .operate .operate-zan button {
     border-right: 2rpx solid #dedede;
@@ -212,197 +234,10 @@
     border: 0;
 }
 
-.sub {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 2000;
-    transform: translateY(100%);
-    transition: transform .6s ease;
-    background: #fff;
-}
-.sub.active {
-    transform: translateY(0);
-}
-.sub .sub-main {
-    padding: 0 30rpx;
-}
-.sub .txt {
-    display: inline-block;
-    padding: 20rpx 0;
-    font-size: 34rpx;
-}
-.sub .sub-header {
-    display: flex;
-    line-height: 60rpx;
-    font-size: 0;
-    border-bottom: 2rpx solid #dedede;
-}
-.sub-header .share {
-    flex: 1;
-    padding: 0 0 0 30rpx;
-    height: 100rpx;
-    line-height: 100rpx;
-    font-size: 28rpx;
-    color: #5193ad;
-    text-align: left;
-    background: none;
-}
-.sub-header .useCoupon {
-    flex: 1;
-    display: inline-block;
-    padding: 20rpx;
-    font-size: 28rpx;
-    color: #e84c3d;
-    text-align: right;
-}
-.sub-header .useCoupon view {
-    display: inline-block;
-    width: 20rpx;
-    height: 20rpx;
-    border: 2rpx solid #e84c3d;
-    margin: 18rpx 10rpx 0 0;
-    vertical-align: top;
-    text-align: center;
-    border-radius: 100%;
-}
-.sub-header .useCoupon view icon {
-    display: none;
-    line-height: 20rpx;
-    height: 20rpx;
-    margin-top: 2rpx;
-    vertical-align: top;
-}
-.sub-header .useCoupon .active {
-    background: #e84c3d;
-}
-.sub-header .useCoupon .active icon {
-    display: inline-block;
-}
-.sub-header .goPay {
-    display: inline-block;
-    width: 150rpx;
-    height: 60rpx;
-    padding: 0;
-    margin: 20rpx 0;
-    line-height: 60rpx;
-    font-size: 26rpx;
-    color: #fff;
-    border-radius: 60rpx;
-    vertical-align: top;
-    background: #e84c3d;
-}
-.sub-header .del {
-    text-decoration: line-through;
-}
-.sub-service {
-    padding-bottom: 50rpx;
-}
-.sub-service .sub-type {
-    font-size: 0;
-}
-.sub-service .sub-type.active .goSub {
-    color:#dedede;
-    border: 2rpx solid #dedede;
-}
-.sub-service .type-item {
-    display: flex;
-    height: 60rpx;
-    line-height: 60rpx;
-    padding-bottom: 30rpx;
-}
-.sub-service .name {
-    display: inline-block;
-    width: 120rpx;
-    font-size: 32rpx;
-}
-.sub-service .name image {
-    display: inline-block;
-    width: 36rpx;
-    height: 36rpx;
-    margin-top: 12rpx;
-    margin-right: 10rpx;
-    vertical-align: top;
-}
-.sub-service .cost {
-    flex: 1;
-    padding-right: 50rpx;
-    text-align: right;
-    font-size: 32rpx;
-    color: #879193;
-    text-decoration:line-through;
-}
-.sub-service .goSub {
-    display:inline-block;
-    width:150rpx;
-    padding:0;
-    border: 2rpx solid #e84c3d;
-    line-height:56rpx;
-    font-size:26rpx;
-    color:#e84c3d;
-    border-radius:60rpx;
-    vertical-align:top;
-    background: none;
-}
-.sub-service .agreement {
-    padding-bottom: 10rpx;
-    border-bottom: 2rpx solid #dedede;
-    font-size: 24rpx;
-    color: #5193ad;
-}
-.sub-service .agreebtn .active icon {
-    display: inline-block;
-}
-.sub-service .agreebtn view {
-    display: inline-block;
-    width: 20rpx;
-    height: 20rpx;
-    border: 2rpx solid #5193ad;
-    margin: 4rpx 10rpx 0 0;
-    vertical-align: top;
-    text-align: center;
-    border-radius: 100%;
-}
-.sub-service .agreebtn view icon {
-    display: none;
-    line-height: 20rpx;
-    height: 20rpx;
-    margin-top: 2rpx;
-    vertical-align: top;
-}
-.sub-service .agreetext {
-    height: 0;
-    font-size: 0;
-    padding: 4rpx 0 0;
-    line-height: 40rpx;
-    color: #879193;
-    transition: height ease 0.4s;
-    overflow: hidden;
-}
-.sub-service .agreetext text {
-    display: block;
-    font-size: 24rpx;
-}
-.sub-service .agreement.active .agreetext {
-    height: auto;
-    /* height: 130rpx; */
-}
-.sub-service .welfare {
-    display: flex;
-    line-height: 62rpx;
-    font-size: 24rpx;
-    color: #202d33
-}
-.sub-service .welfare image {
-    width: 62rpx;
-    height: 62rpx;
-    margin-right: 15rpx;
-    vertical-align: top;
-}
-.sub-service .welfare view {
-    flex: 1;
-}
+/* 包时段弹窗  开始 */
+
+/* 包时段弹窗  结束 */
+
 
 .goHome {
     position: fixed;
@@ -435,6 +270,32 @@
 .contact image{
     width: 130rpx;
     height: 100rpx;
+}
+
+.goLive {
+    position: fixed;
+    right: 40rpx;
+    bottom: 250rpx;
+    z-index: 9;
+    padding: 0;
+    font-size: 0;
+    text-align: center;
+    background: none;
+}
+.goLive image{
+    width: 94rpx;
+    height: 80rpx;
+}
+.goLive .join {
+    height: 36rpx;
+    line-height: 34rpx;
+    padding: 0 15rpx;
+    margin-top: -4rpx;
+    background: rgba(11,21,26,1);
+    opacity: 0.8;
+    border-radius: 18rpx;
+    font-size: 18rpx;
+    color: #fff;
 }
 
 .mask {

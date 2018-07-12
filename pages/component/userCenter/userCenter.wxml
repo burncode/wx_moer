@@ -3,33 +3,32 @@
     <view class="coupon" wx:if="{{types == 0}}">
         <view class="main">
             <view class="empty coupon-empty" wx:if="{{list.length <= 0}}">
-                <image class="empty-bg" src="img/coupon-empty.jpg" mode="aspectFit" lazy-load="true"></image>
+                <image class="empty-bg" src="{{staticFile}}/userCenter/coupon-empty.jpg" mode="aspectFit" lazy-load="true"></image>
                 <text>暂无优惠券</text>
             </view>
             <view class="item" wx:for="{{list}}" wx:key="index"  wx:if="{{list.length > 0}}">
-                <image class="img" src="{{item.img}}"></image>
-                <view class="info">
-                    <view class="type">{{item.title}}</view>
-                    <view class="desc">{{item.description}}</view>       
+                <view class="expire" wx:if="{{item.expiredFlag > 0}}">{{item.expiredTitle}}</view>
+                <view class="info {{item.lowPrice?'info-3':''}}">
+                    <view class="type">{{item.serviceName}}</view>
+                    <view class="desc" wx:if="{{item.lowPrice}}">满{{item.lowPrice}}可用</view>       
+                    <view class="date">{{item.effectiveDate}}</view>       
                 </view>
-                <view class="discount"><text>{{item.discount}}</text>折</view>
+                <view class="discount">
+                    <view class="rebate {{item.productType == 0?'rebate-1':''}}">
+                        <block wx:if="{{item.type == 1}}">
+                            <text>{{item.money}}</text>元
+                        </block>
+                        <block wx:else>
+                            <text>{{item.money}}</text>折
+                        </block>
+                    </view>
+                    <view class="use" bindtap="useCoupon" wx:if="{{item.productType != 0}}" data-type="{{item.productType}}">立即使用</view>
+                </view>
                 <view class="bg">
                     <image class="l" mode="aspectFit" src="img/coupon-bg-l.jpg"></image>
                     <image class="c" src="img/coupon-bg-c.jpg"></image>
                     <image class="r" src="img/coupon-bg-r.jpg"></image>
                 </view>
-            </view>
-        </view>
-    </view>
-    <view class="invite" wx:if="{{types == 1}}">
-        <view class="main">
-            <view class="item" wx:for="{{list}}" wx:key="index">
-                <navigator url="/pages/tabBar/index/index?type={{item.channel}}&sort={{item.carousel}}" 
-                    class="brief"
-                    open-type="reLaunch">
-                    {{item.msgContent}}<text>快去选择文章吧</text>
-                </navigator>
-                <view class="date">{{item.creatTime}}</view>
             </view>
         </view>
     </view>

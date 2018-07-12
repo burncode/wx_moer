@@ -1,147 +1,122 @@
 <!--pages/detail/detail.wxml-->
 <import src="../../../plugin/wxParse/wxParse.wxml"/>
-<view class="container">
-    <view class="detail" hidden="{{!articleInfo}}">
-        <text class="title">{{articleInfo.title}}</text>
-        <view class="info">
-            <text class="author">{{articleInfo.source}} </text><text class="date">{{articleInfo.pubTime}}</text><text class="view">阅读 {{count.browseCount}}</text>
-        </view>
-        <view class="tips" wx:if="{{articleInfo.summary != ''}}">{{articleInfo.summary}}</view>
-        <view class="main">
-            <view class="updateMain" wx:for="{{articleInfo.updateLog}}" wx:key="index">
-                <view class="updateTime">{{item.pubTime}}</view>
-                <template is="wxParse" data="{{wxParseData:upArticle[index].nodes}}"/> 
+<view class="container {{noScroll?'no-scroll':''}}">
+        <view class="detail" hidden="{{!articleInfo}}">
+            <text class="title">{{articleInfo.title}}</text>
+            <view class="info">
+                <view class="amount" wx:if="{{freeFlag == 1}}">
+                    <image wx:for="{{buyImg}}" wx:key="num" wx:for-item="img" src="{{img}}" wx:if="{{index < 3}}"></image>
+                    购买 {{count.saleCount > 500?'500+':count.saleCount}}</view>
+                <view class="view" wx:else>阅读 {{count.browseCount}}</view>
+                <view class="date">{{articleInfo.pubTime}}</view>
             </view>
-            <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
-        </view>
-        <view class="warn" wx:if="{{articleInfo.buyFlag == 1}}"><image src="{{staticFile}}/detail/warn.jpg"></image> 尊敬的用户，您购买的内容不构成投资建议，投资需谨慎，请独立判断。</view>
-        <view class="operate {{isIphoneX?'isIphoneX':''}}" wx:if="{{articleInfo.buyFlag == 1}}">
-            <view class="item operate-zan {{count.isZan?'active':''}}">
-                <button 
-                    open-type="{{!isLogin?'getUserInfo':''}}" 
-                    bindtap="doZan" bindgetuserinfo="bindgetuserinfo" hover-class="none">
-                    <image 
-                        class="img" 
-                        mode="aspectFill" 
-                        src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png?ver=20180524"></image>
-                    <text>{{count.isZan?'已赞':'点赞'}}</text>
-                </button>
+            <view class="tips" wx:if="{{articleInfo.summary != ''}}">{{articleInfo.summary}}</view>
+            <view class="main">
+                <view class="updateMain" wx:for="{{articleInfo.updateLog}}" wx:key="index">
+                    <view class="updateTime">{{item.pubTime}}</view>
+                    <template is="wxParse" data="{{wxParseData:upArticle[index].nodes}}"/> 
+                </view>
+                <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
             </view>
-            <view class="item operate-share">
-                <button open-type="share" hover-class="none">
-                    <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png?ver=20180524"></image>
-                    <text>分享</text>
-                </button>
+            <view class="warn" wx:if="{{articleInfo.buyFlag == 1}}"><image src="{{staticFile}}/detail/warn.jpg"></image> 尊敬的用户，您购买的内容不构成投资建议，投资需谨慎，请独立判断。</view>
+            <view class="operate {{isIphoneX?'isIphoneX':''}}" wx:if="{{articleInfo.buyFlag == 1}}">
+                <view class="item operate-zan {{count.isZan?'active':''}}">
+                    <button 
+                        open-type="{{!isLogin?'getUserInfo':''}}" 
+                        bindtap="doZan" bindgetuserinfo="bindgetuserinfo" hover-class="none">
+                        <image 
+                            class="img" 
+                            mode="aspectFill" 
+                            src="{{staticFile}}/detail/zan{{count.isZan?'-active':''}}.png"></image>
+                        <text>{{count.isZan?'已赞':'点赞'}}</text>
+                    </button>
+                </view>
+                <view class="item operate-share">
+                    <button open-type="share" hover-class="none">
+                        <image class="img" mode="aspectFill" src="{{staticFile}}/detail/share.png?ver=20180524"></image>
+                        <text>分享</text>
+                    </button>
+                </view>
             </view>
-        </view>
-        <view class="access" wx:if="{{articleInfo.buyFlag != 1}}">
-            <view class="access-main">
-                <button 
-                    class="btn btn-buy" 
-                    data-kind="0"
-                    open-type="{{useButtonType}}" 
-                    bindgetuserinfo="userBtnHandler"
-                    bindgetphonenumber="phoneBtnHandler"
-                    bindtap="payArticle" 
-                    wx:if="{{btnStatus.pay}}"
-                    >单篇￥{{articleInfo.price}}</button>
-                <button 
-                    class="btn btn-buy" 
-                    data-kind="1"
-                    open-type="{{useButtonType}}" 
-                    bindgetuserinfo="userBtnHandler"
-                    bindgetphonenumber="phoneBtnHandler"
-                    bindtap="payArticle" 
-                    wx:if="{{btnStatus.coupon}}"
-                    >使用一张试读券</button>
-                <button 
-                    class="btn btn-help" 
-                    open-type="{{useButtonType}}" 
-                    bindgetuserinfo="userBtnHandler"
-                    bindtap="unlock" 
-                    wx:if="{{btnStatus.help}}"
-                    >帮<view>{{buttonInfo.inviterName}}</view>解锁</button>
-                <button 
-                    class="btn btn-share" 
-                    open-type="share" 
-                    wx:if="{{btnStatus.share}}"
-                    >您已达上线<text>●</text>帮转</button>
-                <view class="remind" wx:if="{{btnStatus.help || btnStatus.share}}"><image src="{{staticFile}}/detail/invite-tip.jpg"></image>{{tips}}</view>
+            <view class="access" wx:if="{{articleInfo.buyFlag != 1}}">
+                <view class="access-main">
+                <form name="notice" report-submit bindsubmit='sendMsgId'>
+                    <button 
+                        class="btn btn-buy" 
+                        data-kind="0"
+                        formType="submit"
+                        open-type="{{useButtonType}}" 
+                        bindgetuserinfo="userBtnHandler"
+                        bindgetphonenumber="phoneBtnHandler"
+                        bindtap="payArticle" 
+                        wx:if="{{btnStatus.pay}}"
+                        >单篇￥{{articleInfo.price}}</button>
+                    <button 
+                        class="btn btn-buy" 
+                        data-kind="1"
+                        formType="submit"
+                        open-type="{{useButtonType}}" 
+                        bindgetuserinfo="userBtnHandler"
+                        bindgetphonenumber="phoneBtnHandler"
+                        bindtap="payArticle" 
+                        wx:if="{{btnStatus.coupon}}"
+                        >使用一张试读券</button>
+                    <button 
+                        class="btn btn-help" 
+                        formType="submit"
+                        open-type="{{useButtonType}}" 
+                        bindgetuserinfo="userBtnHandler"
+                        bindtap="unlock" 
+                        wx:if="{{btnStatus.help}}"
+                        >帮<view>{{buttonInfo.inviterName}}</view>解锁</button>
+                    <button 
+                        class="btn btn-share" 
+                        open-type="share" 
+                        wx:if="{{btnStatus.share}}"
+                        >您已达上线<text>●</text>帮转</button>
+                    <view class="remind" wx:if="{{btnStatus.help || btnStatus.share}}"><image src="{{staticFile}}/detail/invite-tip.jpg"></image>{{tips}}</view>
+                </form>
+                </view>
+                <view class="access-info">
+                    <text>{{count.saleCount > 500?'500+':count.saleCount}}人已购买</text>
+                    <text>{{count.wordCount}}字/{{count.imgCount}}图</text>
+                    <text>{{count.zanCount}}人赞</text>
+                </view>
             </view>
-            <view class="access-info">
-                <text>{{count.saleCount}}人已购买</text>
-                <text>{{count.wordCount}}字/{{count.imgCount}}图</text>
-                <text>{{count.zanCount}}人赞</text>
-            </view>
-        </view>
 
-        <view class="sub {{showModalStatus?'active':''}}">
-            <view class="sub-main">
-                <view class="sub-header">
-                    <text class="txt">当前文章</text>
-                    <!-- <button class="share" open-type="share">请好友解锁 免费</button> -->
-                    <view class="useCoupon" bindtap="couponHandler">
-                        <view class="{{useCouponStatus?'active':''}}" wx:if="{{buttonInfo.userCouponCount > 0}}">
-                            <icon type="success_no_circle" size="8" color="#fff"/>
-                        </view>
-                        <text wx:if="{{buttonInfo.userCouponCount > 0}}">使用试读券</text>
-                    </view>
-                    <form name="notice" report-submit bindsubmit='orderSign'> 
-                        <button 
-                            class="goPay" 
-                            bindtap="goPay">{{useCouponStatus?'免费读':'￥'+serviceBuyInfo.price}}</button>
-                    </form>
-                </view>
-                <view class="sub-service">
-                    <text class="txt">订阅{{serviceBuyInfo.serviceName}}</text>
-                    <view class="sub-type {{!isAgree?'active':''}}">
-                        <view class="type-item" wx:for="{{serviceBuyInfo.packet}}" wx:key="index">
-                            <view class="name"><image src="{{staticFile}}/detail/unpack-0{{item.type}}.jpg"></image>{{pack[item.type - 1]}}</view>
-                            <text class="cost">{{real_price > 0 ?item.original_price:''}}</text>
-                            <button class="goSub" id="{{item.id}}" bindtap="goSub">￥{{item.real_price?item.real_price:item.original_price}}</button>
-                        </view>
-                    </view>
-                    <view class="agreement {{agreementStatus?'active':''}}">
-                        <view class="agreebtn">
-                            <view class="{{isAgree?'active':''}}"  bindtap="agreementHanler">
-                                <icon type="success_no_circle" size="8" color="#5193ad"/>
-                            </view>
-                            <text bindtap="showAgreement">摩尔金融包时段服务协议</text>    </view>
-                        <view class="agreetext">
-                             <text wx:for="{{serviceBuyInfo.agreement}}" wx:key="index">{{item}}</text> 
-                        </view>
-                    </view>
-                    <view class="privilege">
-                        <text class="txt">订阅特权</text>
-                        <view class="welfare">
-                            <view wx:for="{{serviceBuyInfo.franchise}}" wx:key="index">
-                                <image src="{{staticFile}}/detail/{{index}}.gif"></image>
-                                {{item}}
-                            </view>
-                        </view>
-                    </view>
-                </view>
+            <!-- 包时段弹窗 开始 -->
+            <package 
+                id="package"
+                goodsId="{{articleId}}"
+                sort="article"
+                writerUid="{{articleInfo.authorId}}" 
+                articlePrice="{{articleInfo.price}}"
+                bind:successHandler="successHandler"
+                >
+            </package>
+            <!-- 包时段弹窗 结束 -->
+            <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
+                <image src="{{staticFile}}/detail/goHome.png"></image>
+            </navigator>
+            <button class="contact" open-type="contact" wx:if="{{articleInfo.buyFlag != 1}}">
+                <image src="{{staticFile}}/contact.png?ver=20180523"></image>
+            </button> 
+            <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
+                <image src="{{staticFile}}/detail/live.gif"></image>
+                <view class="join">{{liveInfo.subscibe_num}}已加入</view>
             </view>
         </view>
-        <view class="mask {{showModalStatus?'active':''}}" bindtap="hideModal"></view>
-        <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
-            <image src="{{staticFile}}/detail/goHome.png"></image>
-        </navigator>
-        <button class="contact" open-type="contact">
-            <image src="{{staticFile}}/contact.png?ver=20180523"></image>
-        </button> 
-    </view>
-    <!--弹窗-->
-    <view class="modal-mask" bindtap="hideTips" wx:if="{{refresh && !isPop}}"></view>
-    <view class="modal-dialog" wx:if="{{refresh && !isPop}}">
-        <image class="modal-head" src="{{staticFile}}/detail/pop-head.png" mode="aspectFit"></image>
-        <view class="modal-content">
-            <view class="modal-title">盘中私密指导和问题反馈</view>
-            <view class="modal-desc">工作日 8:00-22:00</view>
+        <!--弹窗-->
+        <view class="modal-mask" bindtap="hideTips" wx:if="{{refresh && !isPop}}"></view>
+        <view class="modal-dialog"mei wx:if="{{refresh && !isPop}}">
+            <image class="modal-head" src="{{staticFile}}/detail/pop-head.png" mode="aspectFit"></image>
+            <view class="modal-content">
+                <view class="modal-title">盘中私密指导和问题反馈</view>
+                <view class="modal-desc">工作日 8:00-22:00</view>
+            </view>
+            <view class="modal-footer">
+                <view class="btn-cancel" bindtap="hideTips">稍后加入</view>
+                <view class="btn-confirm" bindtap="JoinLive">加入私密直播</view>
+            </view>
         </view>
-        <view class="modal-footer">
-            <view class="btn-cancel" bindtap="hideTips">稍后加入</view>
-            <button open-type="contact" class="btn-confirm" bindtap="hideTips">加入私密直播</button>
-        </view>
-    </view>
 </view>
