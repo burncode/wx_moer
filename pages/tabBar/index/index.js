@@ -16,7 +16,7 @@ Page({
             1: []
         }, // 切换的TAB数据
         status: {
-            tabFlag: [true, true], // TAB 是否滑动的状态
+            tabFlag: [], // TAB 是否滑动的状态
             loading: [0, 0]  // 加载更多的状态： 0、未加载； 1、加载中； 2、没有更多内容
         },
         tryReadArticles: [],  // 试读文章的数据
@@ -93,7 +93,7 @@ Page({
         self.setData({
             type: num,
             sort: 0,
-            [tabStr]: [true, true]
+            [tabStr]: []
         });
 
         self.switchHandler(num);
@@ -114,7 +114,7 @@ Page({
             
             self.setData({
                 sort: current,
-                [tabStr]: false,
+                [tabStr]: true,
                 [videoMax]: videoLen
             });
 
@@ -125,7 +125,7 @@ Page({
                     self.latestArticlesHandler(uid);
                     self.tryReadArticleHandler(uid);
                 } else if (type == 1) {
-                    if (tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
+                    if (!tabFlag[current]) {  //  左右滑动的时候 不重新请求数据
                         const courseId = info[type].services[current].id;
 
                         self.collegeHandler(courseId);
@@ -214,9 +214,12 @@ Page({
 
         if (status.loading[sort] != 0) return;
 
-        wx.hideLoading();
         self.setData({
             [loading]: 1
+        });
+
+        wx.showLoading({
+            title: '数据加载中',
         });
 
         util.sendRequest({
@@ -241,14 +244,9 @@ Page({
                     });
                 }
             }
+            wx.hideLoading();
         }).catch(e => {
-
-            console.log(e)
-
-            wx.showLoading({
-                title: '数据加载中',
-            });
-
+            wx.hideLoading();
             self.setData({
                 [loading]: 0
             });

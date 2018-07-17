@@ -5,14 +5,11 @@
         <!-- 头部详情 开始 -->
         <view class="header">
             <!-- 为了切换有淡入淡出的效果 改变背景图的透明度 -->
-            <image class="header-bg {{(sort==0&&type==0)?'active':''}}" 
-            src="{{staticFile}}/index/header-00.jpg" mode="aspectFill" lazy-load="true"></image>
-            <image class="header-bg {{(sort==1&&type==0)?'active':''}}" 
-            src="{{staticFile}}/index/header-01.jpg" mode="aspectFill" lazy-load="true"></image>
-            <image class="header-bg {{(sort==0&&type==1)?'active':''}}" 
-            src="{{staticFile}}/index/header-10.jpg" mode="aspectFill" lazy-load="true"></image>
-            <image class="header-bg {{(sort==1&&type==1)?'active':''}}" 
-            src="{{staticFile}}/index/header-11.jpg" mode="aspectFill" lazy-load="true"></image>
+            <block wx:for="{{info[type].services}}" wx:key="index">
+                <image class="header-bg {{(sort==index)?'active':''}}" 
+                src="{{item.bgImg}}" mode="aspectFill" lazy-load="true"></image>
+            </block>
+            
             <!-- 淡入淡出的效果  结束-->
             <view class="tab">
                 <view class="society {{ type == 0 ? 'active': ''}}" bindtap="changeType" data-type="0">摩研社</view>
@@ -38,7 +35,7 @@
             <block wx:for="{{info[type].services}}" wx:key="index">
                 <swiper-item id="{{item.id}}">
                     <view class="slide-item">
-                        <image src="{{staticFile}}/index/banner-{{type}}{{index}}.jpg" class="slide-image"></image>
+                        <image src="{{item.serviceImg+'?v=20180713'}}" class="slide-image"></image>
                     </view>
                 </swiper-item>
             </block>

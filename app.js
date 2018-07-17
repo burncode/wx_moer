@@ -56,6 +56,7 @@ App({
     },  
     scanQrcode(options) {
         const self = this;
+        if (!options) return;
         const { channel } = options.query;
         const scene = decodeURIComponent(options.scene);
         let params = {};
