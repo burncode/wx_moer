@@ -181,11 +181,29 @@
 .topic-10 text::before, .topic-10 text::after {
     background: #304291;
 }
-.topic-11 {
+.topic-11, .topic-12 {
     color: #85594b;
 }
-.topic-11 text::before, .topic-11 text::after {
+.topic-11 text::before, .topic-11 text::after, .topic-12 text::before, .topic-12 text::after {
     background: #85594b;
+}
+.topic-13 {
+    color: #98291c;
+}
+.topic-13 text::before, .topic-13 text::after {
+    background: #98291c;
+}
+.topic-14 {
+    color: #753a39;
+}
+.topic-14 text::before, .topic-14 text::after {
+    background: #753a39;
+}
+.topic-15 {
+    color: #753a39;
+}
+.topic-15 text::before, .topic-15 text::after {
+    background: #305392;
 }
 
 /** 摩研社试读文章   开始 **/

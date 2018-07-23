@@ -467,7 +467,7 @@ Page({
     // 帮好友解锁
     unlock() {
         const self = this;
-        const { articleId, inviteUid, articleInfo } = self.data;
+        const { articleId, inviteUid, articleInfo, authorizePhone } = self.data;
 
         if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
 

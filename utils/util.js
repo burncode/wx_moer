@@ -1,6 +1,6 @@
 const api = require('./apis');
 const domain = 'https://www.moer.cn';
-const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram';
+const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram/20180712';
 const urls = {
     'stockCollegeHome': '/miniProgram/v1/stockCollegeHome.json', // 摩股学院
     'mResearchIndex': '/miniProgram/v1/mResearchIndex.json',  //摩研社首页
