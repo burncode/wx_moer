@@ -7,7 +7,7 @@ Page({
     data: {
         isLogin: false,
         staticFile: util.staticFile,
-        gid: '47513290735617', // 直播间gid
+        gid: '46080855179265', // 直播间gid
         // liveUid: '117558573', // 直播间播主的uid
         staticFile: util.staticFile,
         uid: '',
