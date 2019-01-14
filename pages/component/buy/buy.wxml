@@ -1,0 +1,87 @@
+<!--pages/buy/buy.wxml-->
+<view class="container {{loader.up?'loading':''}}">
+    <!-- 已购页面 顶部 TAB 开始 -->
+    <view class="header">
+        <view class="tab">
+            <view class="msg-tab {{type==0?'active':''}}" bindtap="changeType" data-type="0"><text>更新消息</text></view>
+            <view class="order-tab {{type==1?'active':''}}" bindtap="changeType" data-type="1"><text>我的订单</text></view>
+        </view> 
+    </view>
+    <!-- 已购页面 顶部 TAB 结束 -->
+
+    <scroll-view class="list-inner {{info[type].text}}" 
+        scroll-y 
+        scroll-top="{{info[type].scroll}}"
+        bindscroll="scrollHandler"
+        bindscrolltoupper="refresh"
+        bindscrolltolower="loadMore"
+        upper-threshold="-100"
+        lower-threshold="100"
+        style="height:{{info[type].scrollHeight}}px;"
+        >
+        <view class="loader upper">
+            <view class="loader-inner ball-beat">
+                <view></view>
+                <view></view>
+                <view></view>
+            </view>
+        </view> 
+
+        <!-- 更新消息 开始 -->
+        <view class="page msg-page" hidden="{{ type != 0}}">
+            <view class="empty msg-empty" wx:if="{{msg.length <= 0}}">
+                <image class="empty-bg" src="{{staticFile}}/buy/{{info[type].text}}-empty.jpg" mode="aspectFit" lazy-load="true"></image>
+                <text>订阅后及时获取更新消息</text>
+            </view>
+            <view class="msg-main" wx:if="{{msg.length > 0}}">
+                <view bindtap="goArticle" 
+                    class="item"
+                    id="{{item.id}}"
+                    wx:for="{{msg}}" 
+                    wx:key="index">
+                    <view class="info">
+                        <view class="name"><image src="{{item.authorImg}}"></image>{{item.authorName}}</view>
+                        <text class="date">{{item.updateTime}}</text>
+                    </view>
+                    <view class="desc">{{item.noticeContent}}</view>
+                </view>
+            </view>
+            <view class="more-status more-status-0{{info[type].loading}}">
+                <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
+                <view class="no-more">没有更多了</view>
+            </view>
+        </view>
+        <!-- 更新消息 结束 -->
+        <!-- 我的订单 开始 -->
+        <view class="page order-page" hidden="{{ type != 1}}">
+            <view class="empty msg-empty" wx:if="{{order.length <= 0}}">
+                <image class="empty-bg" src="{{staticFile}}/buy/{{info[type].text}}-empty.jpg" mode="aspectFit" lazy-load="true"></image>
+                <text>暂无订单</text>
+            </view>
+            <view class="order-main" wx:if="{{order.length > 0}}">
+                <view class="order-item">
+                    <view class="item" wx:for="{{order}}" wx:key="index">
+                        <view class="top">
+                            <view class="num">订单号： {{item.mOrder_orderId}}</view>
+                            <view class="status">{{item.payStatusName}}</view>
+                        </view>
+                        <view class="info" bindtap="goArticle" id="{{item.goodsId}}" data-goodsType="{{item.goodsType}}"> 
+                            <image class="avatar" src="{{item.authorImg}}" mode="scaleToFill" lazy-load="true"></image>
+                            <text class="theme">
+                                <text class="title">{{item.goodsTitle}}</text>
+                                <text class="name">{{item.goodsCreateUserName}}</text>
+                            </text>
+                            <text class="initPrice">¥ <text>{{item.mOrder_orderCostPrice}}</text></text>
+                        </view>
+                        <view class="payPrice">实际支付<text class="red">¥ <text class="price">{{item.mOrder_orderRealPrice}}</text></text></view>
+                    </view>
+                </view>
+            </view>
+            <view class="more-status more-status-0{{info[type].loading}}">
+                <view class="loading-more"><image src="{{staticFile}}/loading.gif"></image> 加载中...</view>
+                <view class="no-more">没有更多了</view>
+            </view>
+        </view>
+        <!-- 我的订单 结束 -->
+    </scroll-view>
+</view>

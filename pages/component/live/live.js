@@ -190,7 +190,7 @@ Page({
                         let list = [], timer = 0, dList = null;
 
                         datas.forEach((item, index) => {
-                            ext = JSON.parse(item.extp);
+                            ext = typeof (item.extp) != 'object' ? JSON.parse(item.extp) : item.extp;
                             msg = self.getMsgObj(item, ext);
                             msg['timeStamp'] = self.timeShift(timer, ext.time_stamp); // 处理好的时间戳
                             if (item.show_type != 8 && item.show_type != 9) {
@@ -244,7 +244,7 @@ Page({
     // 消息处理
     getMsgObj (data, ext, reply) {
         const self = this;
-        const { groupsCache, userCache, gid, uid} = self.data;
+        const { groupsCache, userCache, gid, uid, staticFile} = self.data;
         const info = userCache[uid + gid];
         let msg = null, time = null, localMsg = '', objects = null, isPrivate = false;
 
@@ -254,12 +254,7 @@ Page({
 
         if (info && info.private_expire_flag != 1 && (ext.show_type == 8 || ext.show_type == 9)) {
 
-            // 没有权限的私密消息文本
-            if (ext.show_type == 8) {
-                localMsg = '<div style="font-size:16px;">' + (reply ? '@' + data.nick_name + '：' : '') + '一条私密直播，<span style="color:#e84c3d">立即订阅</span></div>';
-            } else {
-                localMsg = '<div style="font-size:16px;">' + (reply ? '@' + data.nick_name + '：' : '') + '一条私密交流，<span style="color:#e84c3d">立即订阅</span></div>';
-            }
+            localMsg = '<div style="font-size:16px;">' + (reply ? '@' + data.nick_name + '：' : '') + '<img style="vertical-align: top; width:12px;height:14px;margin: 4px 2px 0 0" class="lock" src="' + staticFile + '/live/lock.png" /> 一条私密消息</div>';
 
             msg = {
                 data: localMsg,
@@ -432,14 +427,6 @@ Page({
         }
 
         return timeText;
-    },
-    // 订阅包时段弹窗
-    subPackage () {
-        const self = this;
-
-        // 调用自定义组件里 包时段接口
-        self.package = self.selectComponent("#package");
-        self.package.subInfo();
     },
     // 切换私密按钮
     changePrivate () {

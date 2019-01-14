@@ -85,15 +85,6 @@
             </view>
 
             <!-- 包时段弹窗 开始 -->
-            <package 
-                id="package"
-                goodsId="{{articleId}}"
-                sort="article"
-                writerUid="{{articleInfo.authorId}}" 
-                articlePrice="{{articleInfo.price}}"
-                bind:successHandler="successHandler"
-                >
-            </package>
             <!-- 包时段弹窗 结束 -->
             <navigator url="/pages/tabBar/index/index" open-type="switchTab" class="goHome" hover-class="active" wx:if="{{isShowHome == ''}}">
                 <image src="{{staticFile}}/detail/goHome.png"></image>

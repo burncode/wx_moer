@@ -1,8 +1,7 @@
 {
     "pages": [
         "pages/tabBar/index/index",
-        "pages/tabBar/user/user",
-        "pages/tabBar/buy/buy"
+        "pages/tabBar/user/user"
     ],
     "window": {
         "backgroundTextStyle": "light",
@@ -21,12 +20,6 @@
                 "text": "首页"
             },
             {
-                "pagePath": "pages/tabBar/buy/buy",
-                "iconPath": "assets/img/buy.png",
-                "selectedIconPath": "assets/img/buy-active.png",
-                "text": "已购"
-            },
-            {
                 "pagePath": "pages/tabBar/user/user",
                 "iconPath": "assets/img/user.png",
                 "selectedIconPath": "assets/img/user-active.png",
@@ -39,19 +32,13 @@
             "root": "pages/component",
             "pages": [
                 "course/course",
+                "buy/buy",
                 "detail/detail",
-                "userCenter/userCenter",
                 "about/about",
                 "login/login",
                 "live/live",
                 "ad/ad"
             ]
         }
-    ],
-    "plugins": {
-        "tencentvideo": {
-            "version": "1.1.1",
-            "provider": "wxa75efa648b60994b"
-        }
-    }
+    ]
 }

@@ -1,6 +1,6 @@
 const api = require('./apis');
 const domain = 'https://www.moer.cn';
-const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram/20180712';
+const staticFile = 'https://static.moer.cn/staticFile/img/miniProgram/20190114';
 const urls = {
     'stockCollegeHome': '/miniProgram/v1/stockCollegeHome.json', // 摩股学院
     'mResearchIndex': '/miniProgram/v1/mResearchIndex.json',  //摩研社首页
@@ -250,105 +250,6 @@ const formatTime = (date, format) => { // 毫秒时间戳； 日期格式："yyy
     return format;
 };
 
-// 购买文章、包时段
-const payHandler = function (params, successHandler, failHandler) {
-    const self = this;
-
-    // 生成购买订单
-    wx.showLoading({
-        title: '加载中',
-        mask: true
-    });
-
-    login().then(r => {
-        sendRequest({
-            path: urls.payOrder,
-            data: {
-                ...params
-            }
-        }).then(res => {
-            if (res.success) {
-                const d = res.data;
-
-                sendRequest({
-                    path: urls.payment,
-                    data: {
-                        wxjsapiCode: r.code,
-                        ...d
-                    }
-                }).then(da => {
-                    wx.hideLoading();
-
-                    if (da.success) {
-                        const d = da.data;
-
-                        if (da.errorCode != 30001) {  // 30001 是使用0折优惠券 不走微信支付流程
-                            //微信支付
-                            wx.requestPayment({
-                                timeStamp: d.timestamp,
-                                nonceStr: d.nonceStr,
-                                package: d.package,
-                                signType: 'MD5',
-                                paySign: d.paySign,
-                                success: function () {
-                                    sendTemplateMsg({
-                                        orderType: params.orderType,
-                                        goodsType: params.goodsType,
-                                        goodsId: params.goodsId,
-                                        prepayId: d.package || ''
-                                    });
-                                },
-                                complete: function (res) {
-                                    if (res.errMsg === 'requestPayment:ok') {
-                                        successHandler && successHandler();
-                                    } else if (res.errMsg === 'requestPayment:fail cancel') {
-                                        wx.showModal({
-                                            title: '提示',
-                                            content: '支付失败',
-                                            cancelText: '取消',
-                                            confirmText: '重新支付',
-                                            success: function (f) {
-                                                if (f.confirm) {
-                                                    payHandler(params);
-                                                } else if (f.cancel) {
-                                                    failHandler && failHandler();
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        } else {
-                            // 使用免费券 弹窗提示成功！
-                            wx.showToast({
-                                title: '使用成功',
-                                success: () => {
-                                    // wx.showLoading({
-                                    //     title: '加载中',
-                                    //     mask: true
-                                    // });
-
-                                    sendTemplateMsg({
-                                        orderType: params.orderType,
-                                        goodsType: params.goodsType,
-                                        goodsId: params.goodsId,
-                                        prepayId: d.package || ''
-                                    });
-
-                                    successHandler && successHandler();
-                                }
-                            });
-                        }
-                    }
-                })
-
-            } else {
-                wx.hideLoading();
-            }
-        });
-    });
-};
-
 // 发送formId 模版消息
 const sendFormIdHandler = (op = {}) => {
     sendRequest({
@@ -399,7 +300,6 @@ module.exports = {
     getUnReadMsg: getUnReadMsg,
     Emoji: Emoji,
     formatTime: formatTime,
-    payHandler: payHandler,
     sendFormId: sendFormIdHandler,
 
     // 微信API封装

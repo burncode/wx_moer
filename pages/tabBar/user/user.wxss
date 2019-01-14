@@ -114,7 +114,7 @@
     border-bottom: none;
 }
 .home .item image {
-    width: 50rpx;
+    width: 30rpx;
     height: 30rpx;
     margin: 28rpx 25rpx 0 0;
     vertical-align: top;

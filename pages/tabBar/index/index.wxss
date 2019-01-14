@@ -16,7 +16,7 @@
 .header {
     position: relative;
     z-index: 2;
-    padding: 0 0 400rpx;
+    padding: 90rpx 0 400rpx;
 }
 .header-bg {
     position: absolute;
@@ -73,7 +73,7 @@
 /** 头部内容切换导航   结束 **/
 /** 头部内容描述   开始 **/
 .introduction {
-    margin: 60rpx 30rpx 40rpx; 
+    margin: 0 30rpx 60rpx; 
 }
 .introduction .title, .introduction .desc {
     display: block;

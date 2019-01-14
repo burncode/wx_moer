@@ -35,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 2,
 			"list": [
 				{
 					"id": 0,
@@ -52,10 +52,10 @@
 					"scene": "1001"
 				},
 				{
-					"id": -1,
-					"name": "直播间",
+					"id": 2,
+					"name": "直播间16824291885057",
 					"pathName": "pages/component/live/live",
-					"query": "",
+					"query": "gid=16824291885057",
 					"scene": "1001"
 				},
 				{

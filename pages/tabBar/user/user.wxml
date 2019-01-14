@@ -20,11 +20,10 @@
             <view class="item" hover-class="active">
                 <navigator 
                     class="item-list"
-                    url="/pages/component/userCenter/userCenter?type=0" 
+                    url="/pages/component/buy/buy" 
                     open-type="navigate">
-                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/coupon.png"></image>
-                    <text class="type-text">我的优惠券</text>
-                    <view class="notice" wx:if="{{coupon>0}}">{{coupon}} 张</view>
+                    <image mode="aspectFit" class="coupon" src="{{staticFile}}/user/buy.png"></image>
+                    <text class="type-text">已购买</text>
                     <text class="arrow"></text>
                 </navigator>
             </view>

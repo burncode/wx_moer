@@ -9,15 +9,6 @@
                 <image class="header-bg {{(sort==index)?'active':''}}" 
                 src="{{item.bgImg}}" mode="aspectFill" lazy-load="true"></image>
             </block>
-            
-            <!-- 淡入淡出的效果  结束-->
-            <view class="tab">
-                <view class="society {{ type == 0 ? 'active': ''}}" bindtap="changeType" data-type="0">摩研社</view>
-                <view class="college {{ type == 1 ? 'active': ''}}" bindtap="changeType" data-type="1">摩股学院</view>
-                <navigator url="/pages/tabBar/user/user" open-type="switchTab" class="avatar" hover-class="none">
-                    <image src="{{userInfo?userInfo.userImg:userImg}}" class="avatar-img"></image>
-                </navigator>
-            </view>
             <view class="introduction">
                 <text class="desc" wx:for="{{info[type].desc}}" wx:key="index">{{item}}</text>
             </view>

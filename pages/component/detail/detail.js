@@ -233,8 +233,8 @@ Page({
             if (app.globalData.isLogin && (app.globalData.userInfo.userPhone || authorizePhone)) {
 
                 // 调用自定义组件里 包时段接口
-                self.package = self.selectComponent("#package");
-                self.package.subInfo();
+                // self.package = self.selectComponent("#package");
+                // self.package.subInfo();
             }
         }
     },

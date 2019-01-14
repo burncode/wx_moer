@@ -45,7 +45,7 @@
                                     <text class="role {{role[item.send + item.recv].role}}">{{role[item.send + item.recv].title}}</text></view>
                                 <view class="content">
                                     <image class="bubble" src="img/bubble{{role[item.send + item.recv].part == 'admin'? '-admin':''}}.png"></image> 
-                                    <view class="inner {{role[item.send + item.recv].part}}" bindtap="{{item.subReply?'subPackage':''}}"> 
+                                    <view class="inner {{role[item.send + item.recv].part}}"> 
                                         <block wx:if="{{item.type == 'img'}}">
                                         
                                             <image bindtap="previewImg" mode="widthFix" class="img" src="{{!item.showSrc?staticFile + '/live/imgLoad.gif':item.data}}" data-src="{{item.data}}" data-index="{{index}}" data-type="{{idx}}" lazy-load="true" binderror="imgError" bindload="imgLoad"></image>
@@ -69,12 +69,5 @@
     </view>
     <view class="privateTab" wx:if="{{onlyPrivate.isShow}}" bindtap="changePrivate">{{onlyPrivate.isChange?'返回全部':'只看私密'}}</view>
     <view class="contact" bindtap="contact">互动提问，请下载摩尔金融APP</view> 
-    <package 
-        id="package"
-        sort="live"
-        writerUid="{{groupInfo.owner.uid}}" 
-        bind:successHandler="successHandler"
-        >
-    </package>
     <view class="mask {{showModalStatus?'active':''}}" bindtap="hideModal"></view>
 </view>

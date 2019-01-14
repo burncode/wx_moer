@@ -1,7 +1,4 @@
 {
     "backgroundColorTop": "#ebeff2",
-    "backgroundColorBottom": "#ebeff2",
-    "usingComponents": {
-        "package": "/pages/modules/package/package"
-    }
+    "backgroundColorBottom": "#ebeff2"
 }

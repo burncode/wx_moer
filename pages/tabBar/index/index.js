@@ -9,7 +9,7 @@ Page({
         userInfo: null,
         userImg: util.staticFile + '/moer.jpg',
         staticFile: util.staticFile,
-        type: 0, // 展示的类型： 0、摩研社； 1、摩股学院；
+        type: 1, // 展示的类型： 0、摩研社； 1、摩股学院；
         sort: 0, // 栏目的切换，默认显示第一项
         info: {
             0: [],
