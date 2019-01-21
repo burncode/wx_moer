@@ -17,7 +17,7 @@
             <button class="switch" bindtap="switchAccount">切换帐号</button>
         </view>
         <view class="main">
-            <view class="item" hover-class="active">
+            <!-- <view class="item" hover-class="active">
                 <navigator 
                     class="item-list"
                     url="/pages/component/buy/buy" 
@@ -26,8 +26,8 @@
                     <text class="type-text">已购买</text>
                     <text class="arrow"></text>
                 </navigator>
-            </view>
-            <view class="item" hover-class="active">
+            </view> -->
+            <!-- <view class="item" hover-class="active">
                 <button 
                     class="item-list"
                     open-type="share">
@@ -35,7 +35,7 @@
                     <text class="type-text">分享小程序</text>
                     <text class="arrow"></text>
                 </button>
-            </view>
+            </view> -->
             <view class="item" hover-class="active">
                 <navigator 
                     class="item-list"

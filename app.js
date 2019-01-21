@@ -46,9 +46,9 @@ App({
             typeof callback == "function" && callback(self.globalData.userInfo);
 
             // 已购消息
-            self.data.timer = setInterval(function () {
-                util.getUnReadMsg();
-            }, 60000);
+            // self.data.timer = setInterval(function () {
+            //     util.getUnReadMsg();
+            // }, 60000);
 
         } else {
 

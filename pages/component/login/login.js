@@ -73,10 +73,10 @@ Page({
                         wx.setStorageSync('userInfo', app.globalData.userInfo);
                         wx.setStorageSync('isLogin', app.globalData.isLogin);
 
-                        clearInterval(app.data.timer);
-                        app.data.timer = setInterval(function () {
-                            util.getUnReadMsg();
-                        }, 60000);
+                        // clearInterval(app.data.timer);
+                        // app.data.timer = setInterval(function () {
+                        //     util.getUnReadMsg();
+                        // }, 60000);
 
                         wx.switchTab({
                             url: '/pages/tabBar/user/user',

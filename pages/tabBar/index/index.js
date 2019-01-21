@@ -461,11 +461,10 @@ Page({
     goLive() {
         const self = this;
         const { isLogin, info, type, sort } = self.data;
-        const { gid } = info[type].services[sort].liveInfo;
 
         if (isLogin) {
             wx.navigateTo({
-                url: `/pages/component/live/live?gid=${gid}`,
+                url: `/pages/component/live/live?gid=47513290735617`,
             });
         } else {
             wx.switchTab({

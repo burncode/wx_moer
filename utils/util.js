@@ -167,10 +167,10 @@ const wxLoginHandler = function (success, fail) {
 
                     success && success(r);
 
-                    clearInterval(app.data.timer);
-                    app.data.timer = setInterval(function () {
-                        getUnReadMsg();
-                    }, 60000);
+                    // clearInterval(app.data.timer);
+                    // app.data.timer = setInterval(function () {
+                    //     getUnReadMsg();
+                    // }, 60000);
                 } else {
 
                 }

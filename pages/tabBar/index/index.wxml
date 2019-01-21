@@ -117,13 +117,14 @@
             <view class="adClose" bindtap="closeAd"></view>
         </view>
         <!-- 联系客服 -->
-        <block wx:if="{{type == 0}}">
-            <button class="contact" open-type="contact" wx:if="{{!info[type].services[sort].liveInfo}}">
+        <block wx:if="{{type == 1}}">
+            <button class="contact" open-type="contact" wx:if="{{false}}">
+            <!-- <button class="contact" open-type="contact" wx:if="{{!info[type].services[sort].liveInfo}}"> -->
                 <image src="{{staticFile}}/contact.png?ver=20180523"></image>
             </button>
             <view class="goLive" hover-class="active" bindtap="goLive" wx:else>
                 <image src="{{staticFile}}/live.gif"></image>
-                <view class="join">{{info[type].services[sort].liveInfo.subscibe_num}}已加入</view>
+                <view class="join">58388 已加入</view>
             </view>
         </block>
 

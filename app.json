@@ -32,7 +32,6 @@
             "root": "pages/component",
             "pages": [
                 "course/course",
-                "buy/buy",
                 "detail/detail",
                 "about/about",
                 "login/login",
